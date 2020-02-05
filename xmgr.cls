@@ -25,12 +25,18 @@
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=xmgrBrickRed,bookmarks=true}
 %
+
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%
+
 \RequirePackage{url}
 %\RequirePackage[polish]{polyglossia}
 % polyglossia >= v1.2.0 no longer supports loading language definition files
 \RequirePackage{polyglossia}
 \setdefaultlanguage{polish} 
 %
+%sazon
+
 \newboolean{@brudnopis}
 %
 % Oznakowanie wersji dokumentu na każdej stronie w postaci
@@ -277,7 +283,7 @@ i~materialnych innych osób.\endgraf }
     {-3.25ex\@plus -1ex \@minus -.2ex}%
     {1.5ex \@plus .2ex}%
     {\reset@font\normalsize\bfseries\raggedright}}
-\renewcommand{\paragraph}{???\ClassError{xmgr}{Zbyt duzo srodtytulow}\@ehc}%
+% \renewcommand{\paragraph}{???\ClassError{xmgr}{Zbyt duzo srodtytulow}\@ehc}%
 %
 \newbox \abspagebox %% *tp **
 \def\InsertAbstractHere{\unvbox \abspagebox}
@@ -341,3 +347,12 @@ i~materialnych innych osób.\endgraf }
 \def\SourceName{Źródło}
 %
 \endinput
+
+% sazon
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4}
+% 
+
+%

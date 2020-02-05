@@ -1,9 +1,8 @@
 \documentclass[brudnopis]{xmgr}
-% Jeśli nowe rozdziały mają się zaczynać na stronach nieparzystych:
-%\documentclass[openright]{xmgr}
 
-% install minted package to highlight source code
-% \usepackage{minted}
+% \documentclass[openright]{xmgr}
+
+\usepackage{minted}
 
 %\defaultfontfeatures{Scale=MatchLowercase}
 %\setmainfont[Numbers=OldStyle,Ligatures=TeX]{Minion Pro}
@@ -17,18 +16,15 @@
 % drukowany tylko z włączoną opcją 'brudnopis':
 \wersja   {wersja wstępna [\ymdtoday]}
 
-\author   {Walenty Szczęsny}
-\nralbumu {100\,001}
-\email    {walenty@szczesny.com.pl}
+\author   {Krzysztof Sazon}
+\nralbumu {243\,696}
+\email    {krzysztof.sazon@protonmail.com}
 
-\author   {Monika A.~Szczęsna-Woś}
-\nralbumu {100\,002}
-
-\title    {Dokumenty strukturalne: teoria i~zastosowania}
-\date     {2100}
+\title    {Zastosowanie modelu Partially Concurrent Open Shop Schedule przy szeregowaniu operacji na danych tabelarycznych}
+\date     {2020}
 \miejsce  {Gdańsk}
 
-\opiekun  {prof. dr hab. D. Htunk}
+\opiekun  {dr. Hanna Furmańczyk}
 
 % dodatkowe polecenia
 %\renewcommand{\filename}[1]{\texttt{#1}}
@@ -39,19 +35,18 @@
 
 % streszczenie
 \begin{abstract}
-  Aczkolwiek w~ciągu ostatnich lat skład tekstu wspomagany komputerowo
-  całkowicie wyeliminował stosowanie tradycyjnych technik drukarskich,
-  to podobny proces w~przypadku publikacji elektronicznych czyli
-  publikacji, które w~ogóle nie wykorzystują papieru, a~nośnikem
-  informacji staje się ekran komputera nie jest obserwowany.
+W pracy przedstawiono system szeregowania procesów na tabelarycznym zestawie danych w systemie komputerowym oparty o model Partially Concurrent Open Shop Schedule (PCOSS).
+Przeanalizowano również jak wydajne (zarówno pod kątem czasu przygotowania jak i pod kątem jakości wyników) są różne heurystyki opisane w pracach innych autorów.
+Szczególną uwagę przywiązano do algorytmów opierających się na integralnych czasach przetwarzania bez wywłaszczania.
 \end{abstract}
 
 % słowa kluczowe
-\keywords{SGML,
- XML,
- XSL,
- dokumenty elektroniczne,
- dokumenty strukturalne}
+\keywords{
+partially concurrent open shop schedule,
+tabular data,
+csv,
+pandas,
+sql}
 
 % tytuł i spis treści
 \maketitle
@@ -59,374 +54,256 @@
 % wstęp
 \introduction
 
-Aczkolwiek w~ciągu ostatnich lat skład tekstu wspomagany
-komputerowo całkowicie wyeliminował stosowanie tradycyjnych technik
-drukarskich, to podobny proces w~przypadku publikacji elektronicznych
-czyli publikacji, które w~ogóle nie wykorzystują papieru, a~nośnikem
-informacji staje się ekran komputera nie jest obserwowany.
+W dobie analizy danych...
 
-Formatowanie wizualne, powstało z~myślą o~przygotowaniu publikacji do
-druku i~dlatego nie może sprostać nowym potrzebom, które stwarza
-postęp techniki. Coraz większą rolę odgrywają dziś elektroniczne
-repozytoria, bazy danych, publikacje na CD-Romach oraz WWW.  Wypływa
-też stąd ważny wniosek, że tworzenie dokumentów według paradygmatu
-WYSIWYG nie jest efektywne i~stopniowo należy oczekiwać powstawania,
-wdrażania i~rozpowszechniania się systemów opartych na paradygmacie
-\emph{formatowania strukturalnego}.
+\section{Oznaczenia przyjęte w pracy}
 
-W~dokumencie formatowanym strukturalnie oznaczana jest struktura
-dokumentu a~nie określany jego wygląd. Zwróćmy uwagę, że układ
-graficzny jest pochodną struktury, tj. nadajemy jednolity wygląd
-tytułom rozdziałów, śródtytułów, przypisów, jednakowo wyróżniamy
-wyliczenia itp.  Układ graficzny jak już wspominano może ulegać zmianie
-(np. wraz z~rozpowszechnianiem się nowych technologii wydawniczych)
-ale treść i~struktura raczej nie, np. Biblia Gutenberga widziana z~tej
-perspektywy nie zmieniła się wcale.
+Hasła "tabla", "tablica", "macierz" stosowane będą zamiennie.
 
-\chapter{Wprowadzenie do standardów SGML}
+W celu uniknięcia dwuznaczności słowa "procesor" w pracy tratującej o zarówno o modelu matematycznym jak i systemach komputerowych przyjęto używanie słowa "procesor" w rozumieniu pochodzącym z modelu matematycznego (inaczej maszyna).
+Procesor w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, jak CPU czy GPU.
 
-SGML~\cite{Goldfarb:2002:CFG} jest to \emph{metajęzyk} służący do opisywania
-struktury i~zawartości dokumentów (standard ISO 8879).  Do
-podstawowych zalet takiego podejścia należy:
-\begin{itemize}
-\item
-jest to międzynarodowy
-standard dostępny na wielu platformach sprzętowo\-systemowych;
-\item
-jest to
-język opisu \emph{każdego\/} dokumentu, o~praktycznie nieograniczonych
-możliwościach (\emph{rozszerzalność\/})
-\item
-umożliwia powtórne
-wykorzystywanie dokumentów, także w sposób inny od poprzedniego
-(np. tradycyjna książka i~dokument multimedialny utworzony z~tego
-samego dokumentu SGML-owego).
-\end{itemize}
+Hasłem "komórka" oznaczony zostanie konkretny, identyfikowalny za pomocą indeksu wiersza i kolumny element tabeli.
 
-Standard służy jedynie do opisywania logicznej struktury dokumentów,
-nie determinuje ostatecznej formy prezentacji informacji, która może
-być docelowo przekształcana w~najróżniejszy sposób. Dokument
-zakodowany z~wykorzystaniem SGML-a może służyć jako postać wyjściowa
-do formatowania tej samej informacji w~różny sposób i~prezentacji
-z~użyciem różnych mediów np. w~formie drukowanej na papierze,
-w~postaci hipertekstu albo tekstowej bazy danych. Pozwala to
-zminimalizować koszty\index{koszty}, cały cykl wydawniczy dokonuje się
-na jednym dokumencie -- pliku SGML-owym, a~nie na wielu.
+\chapter{Pochodzenie modelu Partially Concurrernt Open Shop Schedule (PCOSS) i dotychczasowa literatura}
 
-\section{Elementy składowe systemu SGML}
+Model PCOSS został wytworzony przez / w / jako odpowiedź na problem przypisywania techników sprawdzających samolototy w hangarze.
+\todo[inline]{itd}
 
-Standard SGML to specyfikacja techniczna metajęzyka. Zaś systemem
-SGML nazywamy \emph{zestaw narzędzi i~środków niezbędnych do
-tworzenia, składowania i~obróbki dokumentów z~wykorzystaniem tego
-standardu}.  Typowy proces produkcji dokumentów w~standardzie SGML
-podzielony jest na kilka części. Najważniejszymi elementami tego
-procesu są~\cite[s.~45--47]{Eisenberg:2002:SXM}:
+\chapter{Dane tabelaryczne}
 
-\begin{itemize}
-\item Klasyfikacja tworzonych dokumentów w~grupy i~wynikający z~tego
-  dobór definicji typu dokumentu\footnote{Definicja typu dokumentu DTD
-    to formalny opis pewnej klasy dokumentów, spis jej elementów
-    składowych (znaczników i~ich atrybutów) oraz zasad ich stosowania
-    (hierarchii występowania czy możliwości skracania).}
-  (por.~punkt~\ref{s:dtd}).
-\item Wybraniu odpowiednich narzędzi do tworzenia i~modyfikowania
-  dokumentów SGML (edytory, konwertery, por.~punkt~\ref{s:edytor},
-  s.~\pageref{s:edytor})\footnote{Wybrany edytor winien w~maksymalnym
-    stopniu ułatwiać proces tworzenie dokumentów strukturalnych,
-    różniący się od tego, jaki jest stosowany w~narzędziach biurowych
-    typu edytor Word.}.
-\item Sprawdzenie poprawności oznaczenia dokumentów
-  (walidacja\index{walidacja}).
-\item Ustalenie metod składowania zbiorów oznakowanych dokumentów.
-\item Ustalenie sposobu prezentacji oznaczonych dokumentów i~ich
-  formatów wyjściowych -- przygotowanie odpowiednich specyfikacji
-  konwersji formatów i~dobór właściwych do tego celu narzędzi
-  (por.~punkty~\ref{s:dsssl} i~\ref{s:xsl}).
-\end{itemize}
+Stosowane są one w dziedzinach takich jak analiza statystyczna, prognozowanie trendów czy adaptacja maszyn do środowiska.
 
-Każdy z~wyżej wymienionych problemów stanowi pewne zadanie do
-wykonania, które może być w dużym stopniu lub całkowicie
-zautomatyzowane dzięki zastosowaniu odpowiednich narzędzi, co jest
-jednym z~celów i~korzyści stosowania systemu opartego na standardzie
-SGML.
+\todo[inline]{definicja "tabelaryczne", lub kilka definicji - postrgres, pandas, excel, numpy}
+\todo[inline]{przykłady zastosowania - giełda, nauczanie maszynowe, magazyn}
 
-\begin{figure}[!tbh]
-\centering
-\includegraphics[width=.8\hsize]{fig/schemat}
-\caption{Schemat archiwum\label{RYS.2}}
-\source{Opracowanie własne}
-\end{figure}
+\chapter{Zastosowanie modelu PCOSS do danych tabelarycznych}
 
-\section{Opracowanie typu dokumentu\label{s:dtd}}
-Tworzenie DTD~\cite{Eisenberg:2002:SXM,Goldfarb:2002:CFG} powinno zacząć się
-od analizy posiadanych danych oraz potrzeb dotyczących dokumentów
-wynikowych i~informacji. Rezultatem analizy dokumentów jest
-wyspecyfikowanie słownika takich elementów oraz, dla każdego typu
-dokumentu, zależności między tymi elementami. Z~tego powodu stworzenie
-dobrego DTD jest zadaniem niełatwym. Ponadto DTD jest tylko częścią
-systemu SGML; oprócz niego potrzebne są narzędzia do formatowania
-dokumentów, takie jak arkusze stylów DSSSL czy też XSL/XSLT.
+W celu uniknięcia dwuznaczności słowa "procesor" w pracy tratującej o zarówno o modelu matematycznym jak i systemach komputerowych przyjęto używanie słowa "procesor" w rozumieniu pochodzącym z modelu matematycznego (inaczej maszyna). Procesor w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, jak CPU czy GPU.
 
-Duże koszty implementacji przemawiają często za rozważeniem
-wykorzystania, czy też adaptacji w~systemie SGML udostępnionych
-publicznie gotowych DTD. W~omawianym projekcie postąpiono podobnie,
-ewentualne opracowanie własnego typu dokumentu odkładając na później.
-Rozważano wstępnie wykorzystanie trzech publicznie dostępnych typów
-dokumentów: \texttt{etd} zdefiniowanego na potrzeby projektu
-\textit{Electronic Theses and Dissertations} w~Virginia Polytechnic
-Institute and State University, \texttt{TEI} opracowanego w~ramach
-projektu \textit{Text Encoding Iniciative} oraz
-DocBook opracowany przez konsorcjum firm, głównie sektora IT,
-używających technologii SGML do tworzenia dokumentacji do swoich
-produktów.
+Praca skupia się na takich sytuacjach, gdy sekwencyjne lub naiwnie zrównolegnienie wykonywanie operacji zajmuje zbyt wiele czasu.
 
-\section{DocBook}
-\emph{DocBook DTD}\index{DocBook|(} to typ dokumentu definiujący
-strukturę i~zawartość zbioru znaczników SGML, służących do
-dokumentacji oprogramowania i~różnego rodzaju dokumentacje
-techniczne~\cite[s.~123]{Elmasri:2002:CMC}. Posiada ona bardzo rozbudowaną
-hierarchię znaczników do budowy struktur książek, dokumentacji
-technicznej itp dokumentów.  DTD dla tego typu dokumentu jest dostępne
-zarówno w~standardzie SGML jak i~XML. Dostępna jest także uproszczona
-wersja DTD o~nazwie SimpleDocbook. Zaletą używania wersji uproszczonej
-jest dużo łatwiejsze posługiwanie się nią, z~uwagi na znacznie
-mniejszą liczbę znaczników, por.~tabela~\ref{tab:dtd-cmp}.
+Sytuacje takie występują np. podczas dostępu do danych znajdujących się w zasobach sieciowych, kiedy ograniczeniem jest przepustowość sieci oraz przy dostępie do danych na dysku twardym.
+
+W takim przypadku rolę procesorów z modelu matematycznego przejmują urządzenia (lub ich systemy), takie jak API serwerów sieciowych, procesory (CPU, GPU) czy dyski twarde.
+Z kolei role zadań przypadają do kolejnych zestawów wierszy.
+Z powyższego wynika bezpośrednio, że operacją staje się praca pewnej instancji pewnego systemu (procesora w rozumieniu wynikającym z modelu) na konkretnym zbiorze kolumn.
+
+W szczególnym (a zarazem najczęstszym przypadku) zestaw wierszy zawiera jeden wiersz, a zestaw kolumn zawiera jedną kolumnę.
+
+\todo[inline]{przykład}
+
+\chapter{Typ danych analizowany w pracy}
+
+W pracy analizowane będą bardzo powszechne operacje na tabelarycznych zestawach danych.
+\todo{powtórzenie, więcej konkretów}
+
+W pracy pominięto aspekt zbierania danych jako niezwiązany bezpośrednio z szeregowaniem operacji na nich.
+
+W celu uzyskania oczekiwanych informacji z zestawu danych należy je odpowiednio spreparować a następnie uruchomić narzędzia analityczne na nich.
+
+Wprowadzimy abstrakcję, gdzie zestaw kolumn traktowany jest jako pojedyncza kolumna, a zestaw wierszy jako pojedynczy wiersz.
+\todo{rozpisać się na temat, że istnieją przypadki kiedy to ma sens i dlaczego tak robię}
+
+
+\section{Kreacja danych testowych}
+
+Danymi testowymi będzie lista n krotek o rozmiarze m.
+Każda kolejna krotka będzie traktowana jako nowy wiersz, natomiast wszystkie indeksy krotek będą odpowiadały kolumnom. 
+
+\todo{sformułować lepiej, dać matematyczna definicję}
+
+Taki zestaw danych przekłada się na wiele modeli wykorzystywanych w komputerowej analizie danych, jak na przykład tabele czy widoki w relacyjnych bazach danych, DataFrame w Pythonowym pakiecie pandas czy dwuwymiarowa macierz w numpy.
+\todo{dodać linki do tych rzeczy}
+
+W rzeczywistym zastosowaniu komórki będą zawierały dane podlegające odpowiednim procesom (obliczeniom), natomiast w danych testowych będą liczbami losowymi, reprezentującymi rozmiar wejścia do funkcji która ma wykonać obliczenia na nich.
+
+\chapter{Algorytm działania dyspozytora}
+
+\section{Wstęp}
+
+Dyspozytor to system mający na celu zaszeregowanie i rozdzielanie zadań pomiędzy pomiędzy poszczególne procesory.
+
+\todo[inline]{dać definicję z dobrego źródła}
+
+Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następujące kroki:
+
+\begin{enumerate}
+    \item pobranie i preparacja danych
+    \item przydzielenie szacunkowych czasów wykonania poszczególnych operacji
+    \item dobór algorytmu szeregowania 
+    \item przygotowanie uszeregowania
+    \item czuwanie nad prawidłowym wykonaniem uszeregowania
+\end{enumerate}
+
+Każdy z powyższych kroków szczegółowo opisany jest w tym rozdziale.
+
+\newpage
+\section{Pobranie i preparacja danych}
+
+Na wejściu algorytm otrzymuje następujące dane wejściowe:
+
+\begin{enumerate}
+    \item tabelę w wybranej reprezentacji
+    \item listę operacji do wykonania na tabeli
+    \item funkcję grupowania wierszy (argument opcjonalny)
+    \item funkcję grupowania kolumn (argument opcjonalny)
+    \item graf konfliktu (argument opcjonalny)
+    \item tabelę złożoności obliczeniowej (zgrupowanych) kolumn (argument opcjonalny)
+    \item tabelę czasów przetwarzania (zgrupowanych) kolumn (argument opcjonalny)
+    \item algorytm szeregowania (argument opcjonalny)
+    \item kryterium optymalizacyjne (argument opcjonalny)
+\end{enumerate}
+
+Tabela domyślnych \ref{tab:args-default} zawiera domyślne wartości argumentów opcjonalnych \todo{tak często się te nazwy przewijają, że być może warto nadać im symbole}
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|} \hline
-Typ dokumentu & Liczba elementów & Liczba encji \\ \hline
-Docbook & 357 & 1814 \\ \hline
-SimpleDocBook  & 93  & 234 \\ \hline
-TEI & brak danych & 3 \\ \hline
-HTML & 98  & 234 \\ \hline
+Idx. arg. & Wartość domyślna & Interpretacja wartości domyślnej \\ \hline
+3 & funkcja identyczności & brak grupowania wierszy \\ \hline
+4 & funkcja identyczności & brak grupowania kolumn \\ \hline
+5 & graf pusty & wszystkie operacje mogą być wykonywane jednocześnie \\ \hline
+6 & nil & algorytm sam ustala złożoność \\ \hline
+7 & nil & algorytm sam ustala czasy przetwarzania \\ \hline
+8 & nil & algorytm sam dobiera algorytm \\ \hline
+9 & $C_{max}$ & kryterium całkowitej długości uszeregowania \\ \hline
 \end{tabular}
-\caption{Porównanie wielkości popularnych definicji
-  typu dokumentu\label{tab:dtd-cmp}}
-\source{Obliczenia własne}
+\caption{Domyślne wartości wejściowe algorytmu i ich interpretacja\label{tab:args-default}}
+\source{Własne}
 \end{table}
 
-DocBook jest używany obecnie w~większości zarówno komercyjnych jak
-i~niekomercyjnych projektach tworzenia dokumentacji komputerowej
-(np. dokumentacja dla takich projektów jak: LDP -- \textit{Linux
-Documentation Project}, \textit{RedHat Gnome Desktop},
-\textit{Postgres SQL RDBMS}, \textit{PHP3 Hypertext Preprocesor} czy
-dokumentacja do systemu FreeBSD).\index{DocBook|)}
+Zagadnienie postępowania algorytmu w zależności od tego, które parametry zostały podane szerzej omówione zostanie w kolejnym podrozdziale.
 
-\section{Edytory sterowane składnią\label{s:edytor}}
+W przypadku, gdy podane są funkcje grupowania wierszy i kolumn, algorytm tworzy agregaty zawierające indeksy zakresów zawieranych w tych agregatach. \todo{wstawić tabelę z ładnie przykładem matematycznym}
 
-Pierwszym elementem systemu SGML jest edytor
-strukturalny\index{edytor!strukturalny}, zwany też edytorem sterowanym
-składnią. W~tradycyjnych edytorach działających według paradygmatu
-WYSIWYG\index{WYSIWYG} autor wprowadzając tekst określa na bieżąco
-jego wygląd, mając zarówno w~jednym jak i~drugim przypadku dużą
-swobodę.  Taki sposób pracy w~przypadku masowego tworzenia dokumentów
-jest zupełnie nieefektywny. W~szczególności dotyczy to pracy wielu
-autorów nad jednym lub wieloma dokumentami o~zuniformizowanym
-formacie, czy też tworzenia dokumentów, o~których z~góry wiadomo, że
-będą prezentowane w~różny sposób.
+Tak przygotowane dane gotowe są do przetwarzania w kolejnych etapach działania algorytmu.
 
-Pewnym rozwiązaniem opisywanych wyżej problemów jest wykorzystanie
-szablonów, w~które, od jakiegoś czasu są wyposażane wszystkie
-popularne edytory biurowe\index{edytor!biurowy}.  Posługując się
-szablonami, autor nie definiuje wyglądu samodzielnie tylko wypełnia
-treścią zdefiniowany z~góry szablon dokumentu.
-Stanowiąc niewątpliwy
-krok do przodu takie podejście nie rozwiązuje jednak wszystkich
-problemów.
+\newpage
+\subsubsection{Przykład}
 
-Komercyjne edytory SGML, są w~chwili obecnej ciągle bardzo
-drogie, zaś oprogramowanie rozprowadzane na różnego rodzaju licencjach
-\emph{Open Source\/} nie oferuje jeszcze wygody pracy, do której
-przyzwyczaili się użytkownicy edytorów biurowych.
+Przygotowano tabelę wejściową \ref{tab:example-input} w której znajdują się fikcyjne dane na temat sprzedaży produktów M1 i M2 na terenie trzech krajów w dwudniowym okienku czasowym.
+Dla tej tabeli przygotowana została agregacja, taka, że kluczem agregacji dla wierszy jest kolumna Kraj, natomiast z kolumn Sprzedaż$\_$M1 i Sprzedaż$\_$M2 powstaje jedna kolumna z sumą tych wartości.
+Należy to interpretować jako sumaryczną sprzedaż wszystkich produktów w całym okresie w danych krajach.
 
-\section{Emacs i~psgml}
-
-Jedynym dostępnym w~chwili
-obecnej, efektywnym, tanim (darmowy) i~dostępnym na wielu
-platformach systemowo-sprzętowych środowisku do tworzenia dokumentów
-strukturalnych jakim jest edytor Emacs\index{edytor!Emacs} z~pakietem
-psgml. Środowisko to wspomaga autora poprzez:
-kolorowanie składni dokumentów SGML i~aplikacji SGML, automatyczne
-uzupełnianie brakujących znaczników, automatyczną kontrolę jakie
-w~danym kontekście można wstawiać znaczniki i~atrybuty, wyświetlanie
-informacje odnośnie możliwych i~domyślnych wartości.
-Wszystkie funkcje są dostępne za pomocą
-odpowiednie skrótów klawiszowych a~także dostępne poprzez wybór
-wskaźnikiem myszy odpowiedniej pozycji z~menu. Pakiet ten umożliwia
-również wywołanie zewnętrznego parsera\index{parser} SGML celem
-weryfikacji poprawności dokumentu.
-
-\chapter{Narzędzia i~standardy pokrewne}
-
-Systemy SGML, ze względu na mnogość funkcji jakie spełniają i~ich
-kompleksowe podejście do oznakowywania i~przetwarzania dokumentów
-tekstowych, są bardzo skomplikowane. Możemy wyróżnić dwa podejścia do
-budowy takich systemów.  Z~jednej strony, buduje się systemy
-zindywidualizowane, oparte o~specyficzne narzędzia tworzone w~takich
-językach, jak: C, C++, Perl czy Python. Edytory strukturalne, filtry
-do transformacji formatów czy parsery\index{parser} i~biblioteki
-przydatne do konstrukcji dalszych narzędzi, tworzone są według potrzeb
-określonych, pojedynczych systemów.
-
-Z~drugiej strony, twórcy oprogramowania postanowili pójść krok dalej
-i~połączyć te różne narzędzia w~jedną całość. Tą całość miał stanowić
-DSSSL lub jego XML-owy odpowiednik -- standard XSL. Ze względu na
-oferowane możliwości można twierdzić, że tworzenie i~używanie narzędzi
-implementujących standard DSSSL/XSL, jest najwłaściwszym
-podejściem. Przemawiają za tym różne argumenty, ale najważniejszym
-z~nich jest to, że mamy tu możliwość stworzenia niezależnego od
-platformy programowej i~narzędziowej zbioru szablonów -- przepisów jak
-przetwarzać dokumenty SGML.
-
-\section{Przetwarzanie dokumentów SGML -- standard DSSSL\label{s:dsssl}}
-
-DSSSL (\textit{Document Style Semantics and Specification Language\/})
--- to międzynarodowy standard ściśle związany ze standardem SGML.
-Standard ten, można podzielić na następujące części:
-
-\begin{itemize}
-\item język transformacji (\textit{transformation language\/}).  To
-  definicja języka służącego do transformacji dokumentu oznaczonego
-  znacznikami zgodnie z~pewnym DTD na dokument oznaczony zgodnie
-  z~innym~DTD.
-\item język stylu (\textit{style language\/}) opisujący sposób
-  formatowania dokumentów SGML.
-\item język zapytań (\textit{query language\/}) służy do
-  identyfikowania poszczególnych fragmentów dokumentu SGML.
-\end{itemize}
-
-Opisane główne części składowe standardu DSSSL dają obraz tego, jak
-wiele aspektów przetwarzania zostało zdefiniowanych i~jak
-skomplikowany jest to problem. Jest to głównym powodem tego, że mimo
-upływu kilku lat od zdefiniowania standardu nie powstały ani
-komercyjne ani wolnodostępne aplikacje wspierające go
-w~całości. Istnieją natomiast \emph{nieliczne\/} narzędzia realizujące
-DSSSL w~ograniczonym zakresie, głównie w~części definiującej język
-stylu, który odpowiada za opatrzenie dokumentu czysto strukturalnego
-w~informacje formatujące. Daje to możliwość publikacji dokumentów SGML
-zarówno w~postaci elektronicznej, hipertekstowej czy też drukowanej.
-
-\section{Przetwarzanie dokumentów XML -- standard XSL\label{s:xsl}}
-
-Tak jak XML jest \emph{uproszczoną\/} wersją standardu SGML, tak XSL
-jest uproszczonym odpowiednikiem standardu DSSSL. W~szczególności,
-wyróżnić można w~tym standardzie następujące części składowe:
-
-\begin{itemize}
-\item język transformacji (XSLT) To definicja języka służącego do
-  transformacji dokumentu.
-\item język zapytań (XPath) służy do identyfikowania poszczególnych
-  fragmentów dokumentu.
-\item język stylu deefiniujący sposób formatowania dokumentów XML.
-\end{itemize}
-
-\chapter{Przegląd dostępnych narzędzi\label{PRZEGLAD.NARZEDZI}}
-
-W~celu wykorzystania standardu SGML do przetwarzania dokumentów,
-niezbędne jest zebranie odpowiedniego zestawu narzędzi. Narzędzi do
-przetwarzania dokumentów SGML jest wiele. Są to zarówno całe
-systemy zintegrowane, jak i~poszczególne programy, biblioteki czy
-skrypty wspomagające.
-
-\section{Narzędzia do przeglądania dokumentów SGML}
-
-Do tej kategorii oprogramowania zaliczamy przeglądarki dokumentów
-SGML oraz serwery sieciowe wspomagające standard SGML, przy
-czym rozwiązań wspierających standard XML jest już w~chwili obecnej
-dużo więcej i~są dużo powszechniejsze.
-
-Jeżeli chodzi o~przeglądarki to zarówno Internet Explorer jak
-i~Netscape umożliwiają bezpośrednie wyświetlenie dokumentów XML;
-ponieważ jednak nie wspierają w~całości standardu XML, prowadzi to
-ciągle do wielu problemów\footnote{Z~innych mniej popularnych
-  rozwiązań można wymienić takie aplikacje, jak: HyBrick SGML
-  Browser firmy Fujitsu Limited, Panorama Publisher firmy InterLeaf
-  Inc, DynaText firmy Inso Corporation czy darmowy QWeb. W~przypadku
-  serwerów zwykle dokonują one transformacji ,,w~locie'' żądanych
-  dokumentów na format HTML (rzadziej bezpośrednio wyświetlają
-  dokumenty XML).  Ta kategoria oprogramowania ma, z~punktu widzenia
-  projektu, znaczenie drugorzędne.}.
-
-\section{Parsery SGML}
-Program \texttt{nsgmls} (z~pakietu \texttt{SP} Jamesa Clarka) jest
-doskonałym parserem\index{parser} dokumentów SGML, dostępnym
-publicznie.  Parser \texttt{nsgmls} jest dostępny w~postaci źródłowej
-oraz w~postaci programów wykonywalnych przygotowanych na platformę
-MS~Windows, Linux/Unix i~inne. Oprócz analizy poprawności dokumentu
-parser\index{parser} ten umożliwia również konwersję danych do formatu
-ESIS\index{ESIS}, który wykorzystywany jest jako dane wejściowe przez
-wiele narzędzi do przetwarzania i~formatowania dokumentów SGML.
-Dodatkowymi, bardzo przydatnymi elementami pakietu \texttt{SP} są:
-program \texttt{sgmlnorm} do normalizacji, program \texttt{sx} służący
-do konwersji dokumentu SGML na XML oraz biblioteki programistyczne,
-przydatne przy tworzeniu specjalistycznych aplikacji służących do
-przetwarzania dokumentów SGML.
-
-W~przypadku dokumentów XML publicznie dostępnych, parserów jest
-w~chwili obecnej kilkadziesiąt. Do popularniejszych zaliczyć można
-Microsoft Java XML Parser firmy Microsoft, LT XML firmy Language
-Technology Group, Exapt oraz XP (James Clark)
-
-\section{Wykorzystanie języków skryptowych}
-
-\section{Wykorzystanie szablonów XSL}
-
-Stosując wersję XML typu DocBook można wykorzystać szablony stylów
-przygotowane w~standardzie XSL (autor N.~Walsh). W~chwili obecnej
-są dostępne narzędzia umożliwiające przetworzenie dokumentów XML do
-postaci drukowanej (Adobe PDF) oraz hipertekstowej (HTML).
-
-Podobnie jak w~przypadku szablonów DSSSL, szablony stylów XSL są
-sparametryzowane i~udokumentowane i~dzięki temu łatwe w~adaptacji. Do
-zamiany dokumentu XML na postać prezentacyjną można wykorzystać jeden
-z~dostępnych publicznie procesorów XSLT
-(por.~tabela~\ref{zest:proces:xslt}).
-
-\begin{table}[!htb]
-\begin{tabular}{|l|l|l|} \hline
-Nazwa & Autor      & Adres URL \\ \hline
-\texttt{sablotron} & Ginger Alliance & \url{http://www.gingerall.com} \\ \hline
-\texttt{Xt}        & J.~Clark & \url{http://www.jclark.com} \\ \hline
-\texttt{4XSLT}     & FourThought & \url{http://www.fourthought.com} \\ \hline
-\texttt{Saxon}     & Michael Kay &  \url{http://users.iclway.co.uk/mhkay/saxon} \\ \hline
-\texttt{Xalan}     & Apache XML Project & \url{http://xml.apache.org} \\ \hline
+\begin{table}[!tbh]
+\begin{tabular}{|l|l|l|l|l|} \hline
+Indeks & Kraj & Data & Sprzedaż$\_$M1 & Sprzedaż$\_$M2 \\ \hline
+1 & Polska & 01.01.2020 & 7 & 3 \\ \hline
+2 & Niemcy & 01.01.2020 & 2 & 6 \\ \hline
+3 & Rosja & 01.01.2020 & 5 & 1 \\ \hline
+4 & Polska & 02.01.2020 & 2 & 6 \\ \hline
+5 & Niemcy & 02.01.2020 & 4 & 2 \\ \hline
+6 & Rosja & 02.01.2020 & 17 & 3 \\ \hline
 \end{tabular}
-\caption{Publicznie dostępne procesory XLST\label{zest:proces:xslt}}
+\caption{Przykładowa tabela do zagregowania\label{tab:example-input}}
+\source{Własne}
+\end{table}
+
+Dla przejrzystości funkcji zastosowane zostały skróty
+
+\begin{itemize}
+    \item Indeks - $i$
+    \item Kraj - $k$
+    \item Data - $d$
+    \item Sprzedaż$\_$M1 - $s_{m1}$
+    \item Sprzedaż$\_$M2 - $s_{m2}$
+\end{itemize}
+
+Funkcja agregacji kolumn:
+$$\lambda (i, k, d, s_{m1}, s_{m2}) \\ \Rightarrow (i, k, d, (s_{m1}+s_{m2}))$$
+
+Funkcja agregacji wierszy:
+$$\lambda (w_1, w_2, ..., w_{n-1}, w_n) \\ \Rightarrow (w_{g1}, w_{g2}, ..., w_{gm-1}, w_{gm})$$
+gdzie $w_{gi}$ to grupa takich $w_j$, że $k$ to $i$
+
+Otrzymujemy tabelę wyjściową, gotową do obróbki w następnym etapie
+
+\begin{table}[!tbh]
+\begin{tabular}{|l|l|l|l|} \hline
+Indeks & Kraj & Dzień & Sprzedaż$\_$M1$\_$Sprzedaż$\_$M2 \\ \hline
+(1,4) & Polska & (01.01.2020, 02.01.2020) & (7+3, 2+6) \\ \hline
+(2,5) & Niemcy & (01.01.2020, 02.01.2020) & (2+6, 4+2) \\ \hline
+(3,6) & Rosja & (01.01.2020, 02.01.2020) & (5+1, 17+3) \\ \hline
+\end{tabular}
+\caption{Przykładowa tabela po agregacji\label{tab:example-output}}
+\source{Własne}
+\end{table}
+
+\todo[inline]{wstawić pseudokod?}
+
+\newpage
+\section{Przydzielenie szacunkowych czasów wykonania poszczególnych operacji}
+
+W celu przygotowania poprawnego rozkładu należy znać lub oszacować wartości czasów wykonywania poszczególnych operacji.
+
+Z założeń podanie jednocześnie czasów w postaci argumentów "tabela złożoności obliczeniowej (zgrupowanych) kolumn" oraz "tabela czasów przetwarzania (zgrupowanych) kolumn" jest prawdopodobnie błędem ze strony użytkownika. W takim wypadku zostanie zgłoszony błąd i algorytm przerwie działanie.
+
+Schemat działania przydzielania czasu:
+
+\begin{figure}[!tbh]
+\centering
+\includegraphics[width=.8\hsize]{fig/przydzielanie_czasow.png}
+\caption{Schemat postępowania przy przydzielaniu czasu\label{RYS.2}}
 \source{Opracowanie własne}
-\end{table}
+\end{figure}
 
-XSL:FO jest skomplikowanym językiem o~dużych możliwościach,
-zawierającym ponad 50 różnych ,,obiektów formatujących'', począwszy od
-najprostszych, takich jak prostokątne bloki tekstu poprzez wyliczenia,
-tabele i~odsyłacze. Obiekty te można formatować wykorzystując przeszło
-200 różnych właściwości (\emph{properties\/}), takich jak: kroje,
-odmiany i~wielkości pisma, odstępy, kolory itp.
-W~tym dokumencie przedstawione jest absolutne miniumum informacji
-na temat standardu XSL:FO.
+\subsubsection{Zachowanie algorytmu w zależności od podanych danych na temat czasu}
 
-Cały dokument XSL:FO zawarty jest wewnątrz elementu \texttt{fo:root}.
-Element ten zawiera (w~podanej niżej kolejności):
+\paragraph{Podano argument "tabela czasów przetwarzania (zgrupowanych) kolumn"}
 
-\begin{itemize}
-\item dokładnie jeden element \texttt{fo:layout-master-set} zawierający
-  szablony określające wygląd poszczególnych stron oraz sekwencji
-  stron (te ostatnie są opcjonalne, ale typowo są definiowane);
-\item zero lub więcej elementów \texttt{fo:declarations};
-\item jeden lub więcej elementów \texttt{fo:page-sequance}
- zawierających treść formatowanego dokumentu wraz z~opisem
- jego sformatowania i~podziału na strony.
-\end{itemize}
+W przypadku podania poprawnej macierzy czasów operacji ta część algorytmu nie jest wykonywana; zakładamy, że użytkownik podał prawidłowe wartości. W szczególnym przypadku zadane mogą zostać jednakowe czasy wykonywania operacji.
+
+\paragraph{Podano argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn"}
+
+Ważnym aspektem tego argumentu, jest fakt, że w dziedzinie praktycznej podanie złożoności obliczeniowej nie może ograniczać się do podania samego $O(n)$\todo{rzędu złożoności?} - konieczne jest precyzyjniejsze oszacowanie, wraz ze współczynnikiem oraz składnikiem sumy\todo{wartości dodanej? latencji?}.
+
+Jeżeli na wejściu do algorytmu znajduje się argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn", jedyną operacją która musi zostać wykonana jest podstawienie rozmiarów danych z poszczególnych komórek pod funkcje podane na wejściu.
+
+W szczególnym wypadku użytkownik może podać czasy niezależne od rozmiaru wejścia - na przykład czasy jednostkowe.
+
+\paragraph{Nie podano żadnego z argumentów odnoszących się do czasów przetwarzania}
+
+Na podstawie analizy kilku (np. losowych, lub pierwszych) (zgrupowanych) wierszy algorytm oszacuje złożoność operacji na danym procesorze.
+W tym celu zostanie porównany rozmiar wejścia z czasem w którym jest wykonywany, następnie wykorzystując funkcję curve\_fit z pakietu scipy.optimize zostaną dobrane parametry a, b, c do funkcji
+$$t = f(b * s^a + c)$$
+Gdzie $t$ to czas wykonywania, a $s$ to rozmiar danych.
+\todo{być może łatwiej będzie skorzystać z cProfile}
+
+\todo[inline]{napisać to matematycznie}
+\todo[inline]{opisać w jaki sposób oceniana jest złożoność funkcji przez curve\_fit}
+
+\section{Dobór algorytmu szeregowania}
+
+\todo[inline]{być może to dobieranie nic ciekawego nie wnosi - seria if-ów}
+
+Jeżeli użytkownik poda obsługiwany przez program algorytm szeregowania, program wykorzysta swoją implementację tego algorytmu.
+
+Jeżeli algorytm szeregowania nie zostanie podany, to przy zadanym kryterium optymalizacyjnym program dobierze odpowiedni algorytm szeregowania służący do przygotowania optymalnego rozkładu.
+Rozkład zostanie przedstawiony w formie listy krotek, gdzie krotka zawierała będzie informacje o czasie rozpoczęcia wykonania operacji, procesorze i wierszu. 
+
+\todo[inline]{w jaki sposób dobierze}
+\todo[inline]{matematycznie zapisać}
+
+\section{Czuwanie nad prawidłowym wykonaniem rozkładu}
+
+Egzekutor wykonuje w odpowiednich momentach kolejne zadania z przygotowanego rozkładu.
+
+\todo[inline]{trudność sytuacji, gdzie został źle dobrany czas - skończyło się szybciej niż planowano / nie skończyło się w oczekiwanym czasie}
+
+
+\chapter{Analiza sprawności dyspozytora}
+
+
+\chapter{Analiza sprawności algorytmów dla podproblemu}
+
+
+\chapter{Potencjalne kierunki rozwoju pracy}
+
 
 % zakończenie
 \summary
-Możliwości, jakie stoją przed archiwum prac magisterskich opartych na
-XML-u, są ograniczone jedynie czasem, jaki należy poświęcić na pełną
-implementację systemu. Nie ma przeszkód technologicznych do stworzenia
-co najmniej równie doskonałego repozytorium, jak ma to miejsce w
-przypadku ETD. Jeżeli chcemy w pełni uczestniczyć w rozwoju nowej ery
-informacji, musimy szczególną uwagę przykładać do odpowiedniej
-klasyfikacji i archiwizacji danych. Sądzę, że język XML znacznie to
-upraszcza.
+
+Wszystko poszło pięknie.
 
 % załączniki (opcjonalnie):
 \appendix
