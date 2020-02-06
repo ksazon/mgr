@@ -312,10 +312,11 @@ Mając przygotowane:
 
 można przystąpić do konstrukcji uszeregowania.
 
-Finalny rozkład zostanie przedstawiony w formie tabeli, której indeksy wierszy będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny przedstawiają procesory natomiast w komórce znajduje indeks wiersz i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki). \todo{matematycznie zapisać}
+Finalny rozkład zostanie przedstawiony w formie tabeli, której indeksy wierszy będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny przedstawiają procesory natomiast w komórce znajduje indeks wiersz i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki) w postaci dwójki [indeks wiersza, indeks kolumny]. \todo{matematycznie zapisać}
 
 Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-sched-out}
 
+Należy zauważyć, że taki rozkład jest transponowanym klasycznym wykresem Gantta z dyskretnymi\todo{całkowitymi?} czasami rozpoczynania zadań.
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|l|l|} \hline
@@ -333,9 +334,7 @@ Czas & $p_1$ & $p_2$ & ... & $p_{m-1}$ & $p_{m}$ \\ \hline
 
 Egzekutor sekwencyjnie czytając wiersze rozkładu zajmował będzie się dysponowaniem operacji w momentach wynikających z indeksu wiersza na odpowiednie procesory.
 
-Idea działania egzekutora została przedstawiona na diagramie \ref{diag:executor}
-
-Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywistością. Sytuacja została szerzej opisana w rozdziale \ref{chap:extend}
+Idea działania egzekutora została przedstawiona na diagramie \ref{diag:executor}. Znadujemy się w czasie 0, gdzie egzekutor odczytał pierwszy wiersz i rozdysponował procesowanie komórki $[1,2]$ na procesorze $p_1$ oraz komórki $[2,1]$ na procesorze $p_4$.
 
 \begin{figure}[!tbh]
 \centering
@@ -344,7 +343,7 @@ Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywis
 \source{Opracowanie własne}
 \end{figure}
 
-
+Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywistością. Sytuacja została szerzej opisana w rozdziale \ref{chap:extend}
 
 \chapter{Analiza sprawności dyspozytora}
 
