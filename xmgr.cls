@@ -23,7 +23,7 @@
 \RequirePackage{color}
 \definecolor{xmgrBrickRed}{cmyk}{0,0.89,0.94,0.28}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=xmgrBrickRed,bookmarks=true}
+\hypersetup{colorlinks=true,linkcolor=xmgrBrickRed} %,bookmarks=true}
 %
 
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
@@ -35,7 +35,6 @@
 \RequirePackage{polyglossia}
 \setdefaultlanguage{polish} 
 %
-%sazon
 
 \newboolean{@brudnopis}
 %

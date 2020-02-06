@@ -122,14 +122,13 @@ W rzeczywistym zastosowaniu komórki będą zawierały dane podlegające odpowie
 
 \section{Wstęp}
 
-Dyspozytor to system mający na celu zaszeregowanie i rozdzielanie zadań pomiędzy pomiędzy poszczególne procesory.
-
-\todo[inline]{dać definicję z dobrego źródła}
+W rozumieniu tej pracy dyspozytor to system mający na celu poprawne (wykonalne i zgodne z ograniczeniami) zaszeregowanie i rozdzielanie zadań pomiędzy pomiędzy dostępne procesory.
 
 Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następujące kroki:
 
 \begin{enumerate}
-    \item pobranie i preparacja danych
+    \item pobranie danych, ustawienie wartości domyślnych
+    \item agregacja danych
     \item przydzielenie szacunkowych czasów wykonania poszczególnych operacji
     \item dobór algorytmu szeregowania 
     \item przygotowanie uszeregowania
@@ -139,7 +138,7 @@ Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następu
 Każdy z powyższych kroków szczegółowo opisany jest w tym rozdziale.
 
 \newpage
-\section{Pobranie i preparacja danych}
+\section{Pobranie danych, ustawienie wartości domyślnych}
 
 Na wejściu algorytm otrzymuje następujące dane wejściowe:
 
@@ -155,7 +154,9 @@ Na wejściu algorytm otrzymuje następujące dane wejściowe:
     \item kryterium optymalizacyjne (argument opcjonalny)
 \end{enumerate}
 
-Tabela domyślnych \ref{tab:args-default} zawiera domyślne wartości argumentów opcjonalnych \todo{tak często się te nazwy przewijają, że być może warto nadać im symbole}
+\todo[inline]{dać przykład prawidłowego formatu każdego argumentu}
+
+Tabela \ref{tab:args-default} zawiera domyślne wartości argumentów opcjonalnych \todo{tak często się te nazwy przewijają, że być może warto nadać im symbole}
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|} \hline
@@ -174,16 +175,22 @@ Idx. arg. & Wartość domyślna & Interpretacja wartości domyślnej \\ \hline
 
 Zagadnienie postępowania algorytmu w zależności od tego, które parametry zostały podane szerzej omówione zostanie w kolejnym podrozdziale.
 
-W przypadku, gdy podane są funkcje grupowania wierszy i kolumn, algorytm tworzy agregaty zawierające indeksy zakresów zawieranych w tych agregatach. \todo{wstawić tabelę z ładnie przykładem matematycznym}
+\section{Agregacja danych}
+
+W przypadku, gdy podane są funkcje grupowania wierszy i kolumn, algorytm tworzy agregaty zawierające indeksy zakresów zawieranych w tych agregatach.
 
 Tak przygotowane dane gotowe są do przetwarzania w kolejnych etapach działania algorytmu.
+
+\todo[inline]{matematycznie co to agregat, jak to się robi}
+\todo[inline]{rozpisać się po co się agreguje w prawdziwym świecie}
+\todo[inline]{wstawić pseudokod?}
 
 \newpage
 \subsubsection{Przykład}
 
 Przygotowano tabelę wejściową \ref{tab:example-input} w której znajdują się fikcyjne dane na temat sprzedaży produktów M1 i M2 na terenie trzech krajów w dwudniowym okienku czasowym.
-Dla tej tabeli przygotowana została agregacja, taka, że kluczem agregacji dla wierszy jest kolumna Kraj, natomiast z kolumn Sprzedaż$\_$M1 i Sprzedaż$\_$M2 powstaje jedna kolumna z sumą tych wartości.
-Należy to interpretować jako sumaryczną sprzedaż wszystkich produktów w całym okresie w danych krajach.
+Dla tej tabeli przygotowana została agregacja, taka, że kluczem agregacji dla wierszy jest kolumna Kraj (funkcja \ref{eq:example-row-agg}), natomiast z kolumn Sprzedaż$\_$M1 i Sprzedaż$\_$M2 powstaje jedna kolumna z sumą tych wartości (funkcja \ref{eq:example-col-agg}).
+Po zastosowaniu funkcji sumy na wierszach wynikowej kolumny należy to interpretować jako sumaryczną sprzedaż wszystkich produktów w całym okresie w danych krajach.
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|l|} \hline
@@ -195,7 +202,7 @@ Indeks & Kraj & Data & Sprzedaż$\_$M1 & Sprzedaż$\_$M2 \\ \hline
 5 & Niemcy & 02.01.2020 & 4 & 2 \\ \hline
 6 & Rosja & 02.01.2020 & 17 & 3 \\ \hline
 \end{tabular}
-\caption{Przykładowa tabela do zagregowania\label{tab:example-input}}
+\caption{Przykładowa tabela do zagregowania \label{tab:example-input}}
 \source{Własne}
 \end{table}
 
@@ -210,13 +217,17 @@ Dla przejrzystości funkcji zastosowane zostały skróty
 \end{itemize}
 
 Funkcja agregacji kolumn:
-$$\lambda (i, k, d, s_{m1}, s_{m2}) \\ \Rightarrow (i, k, d, (s_{m1}+s_{m2}))$$
+\begin{equation} \label{eq:example-col-agg}
+\lambda (i, k, d, s_{m1}, s_{m2}) \\ \Rightarrow (i, k, d, (s_{m1}+s_{m2}))
+\end{equation}
 
 Funkcja agregacji wierszy:
-$$\lambda (w_1, w_2, ..., w_{n-1}, w_n) \\ \Rightarrow (w_{g1}, w_{g2}, ..., w_{gm-1}, w_{gm})$$
-gdzie $w_{gi}$ to grupa takich $w_j$, że $k$ to $i$
+\begin{equation} \label{eq:example-row-agg}
+\lambda (w_1, w_2, ..., w_{n-1}, w_n) \\ \Rightarrow (w_{g1}, w_{g2}, ..., w_{gm-1}, w_{gm}) 
+\end{equation}
+gdzie $w_{gx}$ po prawej stronie transformacji, to grupa takich $w_y$ (po lewej stronie), dla których $k$ (kraj) to $x$
 
-Otrzymujemy tabelę wyjściową, gotową do obróbki w następnym etapie
+Otrzymujemy tabelę wyjściową \ref{tab:example-output}, gotową do obróbki w następnym etapie.
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|} \hline
@@ -229,8 +240,6 @@ Indeks & Kraj & Dzień & Sprzedaż$\_$M1$\_$Sprzedaż$\_$M2 \\ \hline
 \source{Własne}
 \end{table}
 
-\todo[inline]{wstawić pseudokod?}
-
 \newpage
 \section{Przydzielenie szacunkowych czasów wykonania poszczególnych operacji}
 
@@ -238,12 +247,12 @@ W celu przygotowania poprawnego rozkładu należy znać lub oszacować wartości
 
 Z założeń podanie jednocześnie czasów w postaci argumentów "tabela złożoności obliczeniowej (zgrupowanych) kolumn" oraz "tabela czasów przetwarzania (zgrupowanych) kolumn" jest prawdopodobnie błędem ze strony użytkownika. W takim wypadku zostanie zgłoszony błąd i algorytm przerwie działanie.
 
-Schemat działania przydzielania czasu:
+Schemat działania przydzielania czasu został przedstawiony na diagramie \ref{diag:time-assign}.
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.8\hsize]{fig/przydzielanie_czasow.png}
-\caption{Schemat postępowania przy przydzielaniu czasu\label{RYS.2}}
+\caption{Schemat postępowania przy przydzielaniu czasu\label{diag:time-assign}}
 \source{Opracowanie własne}
 \end{figure}
 
@@ -264,11 +273,12 @@ W szczególnym wypadku użytkownik może podać czasy niezależne od rozmiaru we
 \paragraph{Nie podano żadnego z argumentów odnoszących się do czasów przetwarzania}
 
 Na podstawie analizy kilku (np. losowych, lub pierwszych) (zgrupowanych) wierszy algorytm oszacuje złożoność operacji na danym procesorze.
-W tym celu zostanie porównany rozmiar wejścia z czasem w którym jest wykonywany, następnie wykorzystując funkcję curve\_fit z pakietu scipy.optimize zostaną dobrane parametry a, b, c do funkcji
+W tym celu zostanie porównany rozmiar wejścia z czasem w którym jest wykonywany, następnie wykorzystując funkcję \emph{curve\_fit} z pakietu \emph{scipy.optimize} zostaną dobrane parametry $a$, $b$, $c$ do funkcji
 $$t = f(b * s^a + c)$$
 Gdzie $t$ to czas wykonywania, a $s$ to rozmiar danych.
-\todo{być może łatwiej będzie skorzystać z cProfile}
+Problem niepokrycia wszystkich możliwych funkcji czasów przetwarzania poruszony został w rozdziale \ref{chap:extend}.
 
+\todo[inline]{być może łatwiej będzie skorzystać z cProfile}
 \todo[inline]{napisać to matematycznie}
 \todo[inline]{opisać w jaki sposób oceniana jest złożoność funkcji przez curve\_fit}
 
@@ -277,18 +287,49 @@ Gdzie $t$ to czas wykonywania, a $s$ to rozmiar danych.
 \todo[inline]{być może to dobieranie nic ciekawego nie wnosi - seria if-ów}
 
 Jeżeli użytkownik poda obsługiwany przez program algorytm szeregowania, program wykorzysta swoją implementację tego algorytmu.
+W przypadku niezaimplementowania wymaganego przez użytkownika algorytmu szeregowania program zgłosi błąd.
 
 Jeżeli algorytm szeregowania nie zostanie podany, to przy zadanym kryterium optymalizacyjnym program dobierze odpowiedni algorytm szeregowania służący do przygotowania optymalnego rozkładu.
-Rozkład zostanie przedstawiony w formie listy krotek, gdzie krotka zawierała będzie informacje o czasie rozpoczęcia wykonania operacji, procesorze i wierszu. 
 
-\todo[inline]{w jaki sposób dobierze}
-\todo[inline]{matematycznie zapisać}
+Dobór algorytmu polegał będzie na poruszaniu się po drzewie decyzji (bez ingerencji użytkownika).
+Wybór podjęty przez rozwiązanie funkcji zwracającej \emph{prawda/fałsz} na każdym poziomu prowadził będzie do kolejnej funkcji w drzewie lub na poziomie liścia - do konkretnego algorytmu.
+
+\section{Przygotowanie uszeregowania}
+
+Mając przygotowaną w punkcie "Pobranie i preparacja danych" tabelę wejściową, tabelę czasów z punktu "Przydzielenie szacunkowych czasów wykonania poszczególnych operacji", graf konfliktu z wejścia oraz algorytm szeregowania z punktu "Dobór algorytmu szeregowania" można przystąpić do konstrukcji uszeregowania.
+
+Finalny rozkład zostanie przedstawiony w formie tabeli, której wiersze będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny przedstawiają procesory natomiast w komórce znajduje komórka tabeli wejściowej oraz funkcja która ma na niej zostać wykonania. \todo{matematycznie zapisać}
+
+Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-sched-out}
+
+
+\begin{table}[!tbh]
+\begin{tabular}{|l|l|l|l|l|l|} \hline
+Czas & $p_1$ & $p_2$ & ... & $p_{m-1}$ & $p_{m}$ \\ \hline
+0 & $f_A([a,b])$ & - & ... & $f_B([c,d])$ & - \\ \hline
+2 & - & $f_C([e,f])$ & ... & - & - \\ \hline
+5 & $f_D([e,f])$ & $f_E([g,h])$ & ... & - & $f_F([i,j])$\\ \hline
+\end{tabular}
+\caption{Przykładowe zaszeregowanie wynikowe\label{tab:example-sched-out}}
+\source{Własne}
+\end{table}
+
 
 \section{Czuwanie nad prawidłowym wykonaniem rozkładu}
 
-Egzekutor wykonuje w odpowiednich momentach kolejne zadania z przygotowanego rozkładu.
+Egzekutor sekwencyjnie czytając rozkład zajmował będzie się wysyłaniem operacji w odpowiednich momentach na różne procesory.
 
-\todo[inline]{trudność sytuacji, gdzie został źle dobrany czas - skończyło się szybciej niż planowano / nie skończyło się w oczekiwanym czasie}
+Idea działania egzekutora została przedstawiona na diagramie \ref{diag:executor}
+
+Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywistością. Sytuacja została szerzej opisana w rozdziale \ref{chap:extend}
+
+\begin{figure}[!tbh]
+\centering
+\includegraphics[width=.8\hsize]{fig/executor.png}
+\caption{Schemat działania egzekutora\label{diag:executor}}
+\source{Opracowanie własne}
+\end{figure}
+
 
 
 \chapter{Analiza sprawności dyspozytora}
@@ -297,7 +338,7 @@ Egzekutor wykonuje w odpowiednich momentach kolejne zadania z przygotowanego roz
 \chapter{Analiza sprawności algorytmów dla podproblemu}
 
 
-\chapter{Potencjalne kierunki rozwoju pracy}
+\chapter{Potencjalne kierunki rozwoju pracy} \label{chap:extend}
 
 
 % zakończenie
