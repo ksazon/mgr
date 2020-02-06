@@ -173,7 +173,7 @@ Idx. arg. & Wartość domyślna & Interpretacja wartości domyślnej \\ \hline
 \source{Własne}
 \end{table}
 
-Zagadnienie postępowania algorytmu w zależności od tego, które parametry zostały podane szerzej omówione zostanie w kolejnym podrozdziale.
+Zagadnienie postępowania algorytmu w zależności od tego, które parametry zostały podane szerzej omówione zostanie w kolejnych podrozdziałach.
 
 \section{Agregacja danych}
 
@@ -257,10 +257,12 @@ Schemat działania przydzielania czasu został przedstawiony na diagramie \ref{d
 \end{figure}
 
 \subsubsection{Zachowanie algorytmu w zależności od podanych danych na temat czasu}
+\todo[inline]{dodać odstęp między tytułem a treścią}
 
 \paragraph{Podano argument "tabela czasów przetwarzania (zgrupowanych) kolumn"}
 
-W przypadku podania poprawnej macierzy czasów operacji ta część algorytmu nie jest wykonywana; zakładamy, że użytkownik podał prawidłowe wartości. W szczególnym przypadku zadane mogą zostać jednakowe czasy wykonywania operacji.
+W przypadku podania poprawnej macierzy czasów operacji ta część algorytmu nie jest wykonywana; zakładamy, że użytkownik podał prawidłowe wartości.
+W szczególnym przypadku zadane mogą zostać jednakowe czasy wykonywania operacji.
 
 \paragraph{Podano argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn"}
 
@@ -274,7 +276,9 @@ W szczególnym wypadku użytkownik może podać czasy niezależne od rozmiaru we
 
 Na podstawie analizy kilku (np. losowych, lub pierwszych) (zgrupowanych) wierszy algorytm oszacuje złożoność operacji na danym procesorze.
 W tym celu zostanie porównany rozmiar wejścia z czasem w którym jest wykonywany, następnie wykorzystując funkcję \emph{curve\_fit} z pakietu \emph{scipy.optimize} zostaną dobrane parametry $a$, $b$, $c$ do funkcji
+
 $$t = f(b * s^a + c)$$
+
 Gdzie $t$ to czas wykonywania, a $s$ to rozmiar danych.
 Problem niepokrycia wszystkich możliwych funkcji czasów przetwarzania poruszony został w rozdziale \ref{chap:extend}.
 
@@ -295,10 +299,20 @@ Dobór algorytmu polegał będzie na poruszaniu się po drzewie decyzji (bez ing
 Wybór podjęty przez rozwiązanie funkcji zwracającej \emph{prawda/fałsz} na każdym poziomu prowadził będzie do kolejnej funkcji w drzewie lub na poziomie liścia - do konkretnego algorytmu.
 
 \section{Przygotowanie uszeregowania}
+\todo[inline]{zastosowano uproszczenie: jeden procesor wykonuje tylko jedną funkcję}
 
-Mając przygotowaną w punkcie "Pobranie i preparacja danych" tabelę wejściową, tabelę czasów z punktu "Przydzielenie szacunkowych czasów wykonania poszczególnych operacji", graf konfliktu z wejścia oraz algorytm szeregowania z punktu "Dobór algorytmu szeregowania" można przystąpić do konstrukcji uszeregowania.
+Mając przygotowane:
 
-Finalny rozkład zostanie przedstawiony w formie tabeli, której wiersze będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny przedstawiają procesory natomiast w komórce znajduje komórka tabeli wejściowej oraz funkcja która ma na niej zostać wykonania. \todo{matematycznie zapisać}
+\begin{itemize}
+    \item w punkcie "Pobranie i preparacja danych" tabelę wejściową
+    \item tabelę czasów z punktu "Przydzielenie szacunkowych czasów wykonania poszczególnych operacji"
+    \item graf konfliktu z wejścia
+    \item algorytm szeregowania z punktu "Dobór algorytmu szeregowania"
+\end{itemize}
+
+można przystąpić do konstrukcji uszeregowania.
+
+Finalny rozkład zostanie przedstawiony w formie tabeli, której indeksy wierszy będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny przedstawiają procesory natomiast w komórce znajduje indeks wiersz i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki). \todo{matematycznie zapisać}
 
 Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-sched-out}
 
@@ -306,9 +320,9 @@ Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-s
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|l|l|} \hline
 Czas & $p_1$ & $p_2$ & ... & $p_{m-1}$ & $p_{m}$ \\ \hline
-0 & $f_A([a,b])$ & - & ... & $f_B([c,d])$ & - \\ \hline
-2 & - & $f_C([e,f])$ & ... & - & - \\ \hline
-5 & $f_D([e,f])$ & $f_E([g,h])$ & ... & - & $f_F([i,j])$\\ \hline
+0 & $[a,b]$ & - & ... & $[c,d]$ & - \\ \hline
+2 & - & $[e,f]$ & ... & - & - \\ \hline
+5 & $[e,f]$ & $[g,h]$ & ... & - & $[i,j]$\\ \hline
 \end{tabular}
 \caption{Przykładowe zaszeregowanie wynikowe\label{tab:example-sched-out}}
 \source{Własne}
@@ -317,7 +331,7 @@ Czas & $p_1$ & $p_2$ & ... & $p_{m-1}$ & $p_{m}$ \\ \hline
 
 \section{Czuwanie nad prawidłowym wykonaniem rozkładu}
 
-Egzekutor sekwencyjnie czytając rozkład zajmował będzie się wysyłaniem operacji w odpowiednich momentach na różne procesory.
+Egzekutor sekwencyjnie czytając wiersze rozkładu zajmował będzie się dysponowaniem operacji w momentach wynikających z indeksu wiersza na odpowiednie procesory.
 
 Idea działania egzekutora została przedstawiona na diagramie \ref{diag:executor}
 
