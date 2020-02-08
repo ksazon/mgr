@@ -35,7 +35,7 @@
 
 % streszczenie
 \begin{abstract}
-W pracy przedstawiono system szeregowania procesów na tabelarycznym zestawie danych w systemie komputerowym oparty o model Partially Concurrent Open Shop Schedule (PCOSS).
+W pracy przedstawiono system szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym oparty o model Partially Concurrent Open Shop Schedule (PCOSS).
 Przeanalizowano również jak wydajne (zarówno pod kątem czasu przygotowania jak i pod kątem jakości wyników) są różne heurystyki opisane w pracach innych autorów.
 Szczególną uwagę przywiązano do algorytmów opierających się na integralnych czasach przetwarzania bez wywłaszczania.
 \end{abstract}
@@ -58,10 +58,10 @@ W dobie analizy danych...
 
 \section{Oznaczenia przyjęte w pracy}
 
-Hasła "tabla", "tablica", "macierz" stosowane będą zamiennie.
+Hasła "tabla", "tablica", "macierz" stosowane będą zamiennie i będą oznaczły strukturę danych składającą się z listy krotek. 
 
 W celu uniknięcia dwuznaczności słowa "procesor" w pracy tratującej o zarówno o modelu matematycznym jak i systemach komputerowych przyjęto używanie słowa "procesor" w rozumieniu pochodzącym z modelu matematycznego (inaczej maszyna).
-Procesor w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, jak CPU czy GPU.
+Procesor w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, takim jak CPU czy GPU.
 
 Hasłem "komórka" oznaczony zostanie konkretny, identyfikowalny za pomocą indeksu wiersza i kolumny element tabeli.
 
@@ -79,14 +79,16 @@ Stosowane są one w dziedzinach takich jak analiza statystyczna, prognozowanie t
 
 \chapter{Zastosowanie modelu PCOSS do danych tabelarycznych}
 
-W celu uniknięcia dwuznaczności słowa "procesor" w pracy tratującej o zarówno o modelu matematycznym jak i systemach komputerowych przyjęto używanie słowa "procesor" w rozumieniu pochodzącym z modelu matematycznego (inaczej maszyna). Procesor w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, jak CPU czy GPU.
-
 Praca skupia się na takich sytuacjach, gdy sekwencyjne lub naiwnie zrównolegnienie wykonywanie operacji zajmuje zbyt wiele czasu.
 
 Sytuacje takie występują np. podczas dostępu do danych znajdujących się w zasobach sieciowych, kiedy ograniczeniem jest przepustowość sieci oraz przy dostępie do danych na dysku twardym.
 
+\todo[inline]{Opisać, że fajnie by działało na systemach rozległych, jak sieci procesorów, czy macierze FPGA}
+
 W takim przypadku rolę procesorów z modelu matematycznego przejmują urządzenia (lub ich systemy), takie jak API serwerów sieciowych, procesory (CPU, GPU) czy dyski twarde.
+
 Z kolei role zadań przypadają do kolejnych zestawów wierszy.
+
 Z powyższego wynika bezpośrednio, że operacją staje się praca pewnej instancji pewnego systemu (procesora w rozumieniu wynikającym z modelu) na konkretnym zbiorze kolumn.
 
 W szczególnym (a zarazem najczęstszym przypadku) zestaw wierszy zawiera jeden wiersz, a zestaw kolumn zawiera jedną kolumnę.
@@ -108,7 +110,7 @@ Wprowadzimy abstrakcję, gdzie zestaw kolumn traktowany jest jako pojedyncza kol
 
 \section{Kreacja danych testowych}
 
-Danymi testowymi będzie lista n krotek o rozmiarze m.
+Danymi testowymi będzie lista $n$ krotek o rozmiarze $m$ każda.
 Każda kolejna krotka będzie traktowana jako nowy wiersz, natomiast wszystkie indeksy krotek będą odpowiadały kolumnom. 
 
 \todo{sformułować lepiej, dać matematyczna definicję}
@@ -128,7 +130,7 @@ Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następu
 
 \begin{enumerate}
     \item pobranie danych, ustawienie wartości domyślnych
-    \item agregacja danych
+    \item grupowanie danych
     \item przydzielenie szacunkowych czasów wykonania poszczególnych operacji
     \item dobór algorytmu szeregowania 
     \item przygotowanie uszeregowania
@@ -144,9 +146,9 @@ Na wejściu algorytm otrzymuje następujące dane wejściowe:
 
 \begin{enumerate}
     \item tabelę w wybranej reprezentacji
-    \item listę operacji do wykonania na tabeli
     \item funkcję grupowania wierszy (argument opcjonalny)
     \item funkcję grupowania kolumn (argument opcjonalny)
+    \item listę operacji do wykonania na tabeli
     \item graf konfliktu (argument opcjonalny)
     \item tabelę złożoności obliczeniowej (zgrupowanych) kolumn (argument opcjonalny)
     \item tabelę czasów przetwarzania (zgrupowanych) kolumn (argument opcjonalny)
@@ -154,20 +156,22 @@ Na wejściu algorytm otrzymuje następujące dane wejściowe:
     \item kryterium optymalizacyjne (argument opcjonalny)
 \end{enumerate}
 
-\todo[inline]{dać przykład prawidłowego formatu każdego argumentu}
+% \todo[inline]{dać przykład prawidłowego formatu każdego argumentu}
 
-Tabela \ref{tab:args-default} zawiera domyślne wartości argumentów opcjonalnych \todo{tak często się te nazwy przewijają, że być może warto nadać im symbole}
+Tabela \ref{tab:args-default} zawiera domyślne wartości argumentów opcjonalnych
+
+% \todo{tak często się te nazwy przewijają, że być może warto nadać im symbole}
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|} \hline
 Idx. arg. & Wartość domyślna & Interpretacja wartości domyślnej \\ \hline
-3 & funkcja identyczności & brak grupowania wierszy \\ \hline
-4 & funkcja identyczności & brak grupowania kolumn \\ \hline
-5 & graf pusty & wszystkie operacje mogą być wykonywane jednocześnie \\ \hline
-6 & nil & algorytm sam ustala złożoność \\ \hline
-7 & nil & algorytm sam ustala czasy przetwarzania \\ \hline
-8 & nil & algorytm sam dobiera algorytm \\ \hline
-9 & $C_{max}$ & kryterium całkowitej długości uszeregowania \\ \hline
+2 & funkcja identyczności   & brak grupowania wierszy \\ \hline
+3 & funkcja identyczności   & brak grupowania kolumn \\ \hline
+5 & graf pusty              & wszystkie operacje mogą być wykonywane jednocześnie \\ \hline
+6 & nil                     & algorytm sam ustala złożoność \\ \hline
+7 & nil                     & algorytm sam ustala czasy przetwarzania \\ \hline
+8 & nil                     & algorytm sam dobiera algorytm \\ \hline
+9 & $C_{max}$               & kryterium całkowitej długości uszeregowania \\ \hline
 \end{tabular}
 \caption{Domyślne wartości wejściowe algorytmu i ich interpretacja\label{tab:args-default}}
 \source{Własne}
@@ -175,22 +179,36 @@ Idx. arg. & Wartość domyślna & Interpretacja wartości domyślnej \\ \hline
 
 Zagadnienie postępowania algorytmu w zależności od tego, które parametry zostały podane szerzej omówione zostanie w kolejnych podrozdziałach.
 
-\section{Agregacja danych}
+\section{Grupowanie danych}
 
-W przypadku, gdy podane są funkcje grupowania wierszy i kolumn, algorytm tworzy agregaty zawierające indeksy zakresów zawieranych w tych agregatach.
+W tej pracy agregacja rozumiana będzie jako proces łączenia kilku wartości w jedną reprezentatywną wartość.
+
+Logika działania agregacji na wierszach podąża za logiką przyjęta między innymi przez język \emph{SQL}, technologię \emph{LINQ} na platformie \emph{.Net} czy różne moduły języka \emph{Python}, w szczególności \emph{pandas}.
+
+Agregacja w zastosowaniach praktycznych jest jedną z podstawowych operacji przy przetwarzaniu danych, np. w celu ich analizy.
+Pozwala ona łączyć duże ilości danych w logiczne grupy, które reprezentują analizowane właściwości tych danych.
+
+Agregację w takim rozumieniu można podzielić na dwa etapy:
+\begin{itemize}
+    \item grupowanie danych wg. funkcji grupującej
+    \item wykonanie funkcji docelowej na zgrupowanych wartościach
+\end{itemize}{}
+
+Przykład grupowania znajduje się poniżej.
+
+W przypadku, gdy podane są funkcje grupowania wierszy lub kolumn, algorytm tworzy zgrupowania zawierające indeksy zakresów zawieranych w tych zgrupowaniach, czyli łączy zestawy komórek w pojedyncze komórki na podstawie zadanego klucza (funkcji).
 
 Tak przygotowane dane gotowe są do przetwarzania w kolejnych etapach działania algorytmu.
-
-\todo[inline]{matematycznie co to agregat, jak to się robi}
-\todo[inline]{rozpisać się po co się agreguje w prawdziwym świecie}
-\todo[inline]{wstawić pseudokod?}
 
 \newpage
 \subsubsection{Przykład}
 
-Przygotowano tabelę wejściową \ref{tab:example-input} w której znajdują się fikcyjne dane na temat sprzedaży produktów M1 i M2 na terenie trzech krajów w dwudniowym okienku czasowym.
-Dla tej tabeli przygotowana została agregacja, taka, że kluczem agregacji dla wierszy jest kolumna Kraj (funkcja \ref{eq:example-row-agg}), natomiast z kolumn Sprzedaż$\_$M1 i Sprzedaż$\_$M2 powstaje jedna kolumna z sumą tych wartości (funkcja \ref{eq:example-col-agg}).
-Po zastosowaniu funkcji sumy na wierszach wynikowej kolumny należy to interpretować jako sumaryczną sprzedaż wszystkich produktów w całym okresie w danych krajach.
+Przygotowano tabelę wejściową \ref{tab:example-input} w której znajdują się fikcyjne dane na temat sprzedaży produktów \emph{M1} i \emph{M2} na terenie trzech krajów w dwudniowym okienku czasowym.
+
+Dla tej tabeli przygotowane zostało takie zgrupowanie wierszy, że kluczem grupowania są jednakowe wartości w kolumnie \emph{Kraj} (funkcja \ref{eq:example-row-agg}).
+Dla kolumn przygotowane zostało takie zgrupowanie, że z \emph{Sprzedaż$\_$M1} i \emph{Sprzedaż$\_$M2} że powstaje jedna kolumna \emph{Sprzedaż$\_$M1$\_$Sprzedaż$\_$M2} (funkcja \ref{eq:example-col-agg}).
+
+Po zastosowaniu funkcji sumy na zgrupowanych komórkach wynikowej kolumny należy to interpretować jako sumaryczną sprzedaż wszystkich produktów w całym okresie w danych krajach.
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|l|} \hline
@@ -216,27 +234,28 @@ Dla przejrzystości funkcji zastosowane zostały skróty
     \item Sprzedaż$\_$M2 - $s_{m2}$
 \end{itemize}
 
-Funkcja agregacji kolumn:
+Funkcja grupowania kolumn:
 \begin{equation} \label{eq:example-col-agg}
-\lambda (i, k, d, s_{m1}, s_{m2}) \\ \Rightarrow (i, k, d, (s_{m1}+s_{m2}))
+\lambda (i, k, d, s_{m1}, s_{m2}) \\ \Rightarrow (i, k, d, (s_{m1}, s_{m2}))
 \end{equation}
 
-Funkcja agregacji wierszy:
+Funkcja grupowania wierszy:
 \begin{equation} \label{eq:example-row-agg}
 \lambda (w_1, w_2, ..., w_{n-1}, w_n) \\ \Rightarrow (w_{g1}, w_{g2}, ..., w_{gm-1}, w_{gm}) 
 \end{equation}
 gdzie $w_{gx}$ po prawej stronie transformacji, to grupa takich $w_y$ (po lewej stronie), dla których $k$ (kraj) to $x$
 
 Otrzymujemy tabelę wyjściową \ref{tab:example-output}, gotową do obróbki w następnym etapie.
+Dla przejrzystości w komórkach nie znajdują się indeksy z tabeli wejściowej, tylko wartości kryjące się pod tymi indeksami.
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|} \hline
 Indeks & Kraj & Dzień & Sprzedaż$\_$M1$\_$Sprzedaż$\_$M2 \\ \hline
-(1,4) & Polska & (01.01.2020, 02.01.2020) & (7+3, 2+6) \\ \hline
-(2,5) & Niemcy & (01.01.2020, 02.01.2020) & (2+6, 4+2) \\ \hline
-(3,6) & Rosja & (01.01.2020, 02.01.2020) & (5+1, 17+3) \\ \hline
+(1,4) & Polska & (01.01.2020, 02.01.2020) & ((7,3), (2,6)) \\ \hline
+(2,5) & Niemcy & (01.01.2020, 02.01.2020) & ((2,6), (4,2)) \\ \hline
+(3,6) & Rosja & (01.01.2020, 02.01.2020) & ((5,1), (17,3)) \\ \hline
 \end{tabular}
-\caption{Przykładowa tabela po agregacji\label{tab:example-output}}
+\caption{Przykładowa tabela po grupowaniu\label{tab:example-output}}
 \source{Własne}
 \end{table}
 
@@ -257,7 +276,7 @@ Schemat działania przydzielania czasu został przedstawiony na diagramie \ref{d
 \end{figure}
 
 \subsubsection{Zachowanie algorytmu w zależności od podanych danych na temat czasu}
-\todo[inline]{dodać odstęp między tytułem a treścią}
+% \todo[inline]{dodać odstęp między tytułem a treścią}
 
 \paragraph{Podano argument "tabela czasów przetwarzania (zgrupowanych) kolumn"}
 
@@ -266,7 +285,7 @@ W szczególnym przypadku zadane mogą zostać jednakowe czasy wykonywania operac
 
 \paragraph{Podano argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn"}
 
-Ważnym aspektem tego argumentu, jest fakt, że w dziedzinie praktycznej podanie złożoności obliczeniowej nie może ograniczać się do podania samego $O(n)$\todo{rzędu złożoności?} - konieczne jest precyzyjniejsze oszacowanie, wraz ze współczynnikiem oraz składnikiem sumy\todo{wartości dodanej? latencji?}.
+Ważnym aspektem tego argumentu, jest fakt, że w dziedzinie praktycznej podanie złożoności obliczeniowej nie może ograniczać się do podania samego asymptotycznego tempa wzrostu - $O(n)$; konieczne jest precyzyjniejsze oszacowanie, wraz ze współczynnikiem oraz czynnikiem dodanym (opóźnieniem).
 
 Jeżeli na wejściu do algorytmu znajduje się argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn", jedyną operacją która musi zostać wykonana jest podstawienie rozmiarów danych z poszczególnych komórek pod funkcje podane na wejściu.
 
@@ -280,15 +299,18 @@ W tym celu zostanie porównany rozmiar wejścia z czasem w którym jest wykonywa
 $$t = f(b * s^a + c)$$
 
 Gdzie $t$ to czas wykonywania, a $s$ to rozmiar danych.
+
+Funkcja \emph{curve\_fit} działa wykorzystując metodą najmniejszych kwadratów korzystając z zadanego algorytmu, np Levenberga-Marquardta.
+
 Problem niepokrycia wszystkich możliwych funkcji czasów przetwarzania poruszony został w rozdziale \ref{chap:extend}.
 
-\todo[inline]{być może łatwiej będzie skorzystać z cProfile}
-\todo[inline]{napisać to matematycznie}
-\todo[inline]{opisać w jaki sposób oceniana jest złożoność funkcji przez curve\_fit}
+% \todo[inline]{być może łatwiej będzie skorzystać z cProfile}
+% \todo[inline]{napisać to matematycznie}
+% \todo[inline]{opisać w jaki sposób oceniana jest złożoność funkcji przez curve\_fit}
 
 \section{Dobór algorytmu szeregowania}
 
-\todo[inline]{być może to dobieranie nic ciekawego nie wnosi - seria if-ów}
+% \todo[inline]{być może to dobieranie nic ciekawego nie wnosi - seria if-ów}
 
 Jeżeli użytkownik poda obsługiwany przez program algorytm szeregowania, program wykorzysta swoją implementację tego algorytmu.
 W przypadku niezaimplementowania wymaganego przez użytkownika algorytmu szeregowania program zgłosi błąd.
@@ -299,12 +321,16 @@ Dobór algorytmu polegał będzie na poruszaniu się po drzewie decyzji (bez ing
 Wybór podjęty przez rozwiązanie funkcji zwracającej \emph{prawda/fałsz} na każdym poziomu prowadził będzie do kolejnej funkcji w drzewie lub na poziomie liścia - do konkretnego algorytmu.
 
 \section{Przygotowanie uszeregowania}
-\todo[inline]{zastosowano uproszczenie: jeden procesor wykonuje tylko jedną funkcję}
+% \todo[inline]{zastosowano uproszczenie: jeden procesor wykonuje tylko jedną funkcję}
+
+Po rozważeniu dwu metod możliwości rozdysponowania operacji pomiędzy procesory: z egzekutorem (koordynatorem) oraz w bez (w sposób nieskoordynowany) wybrana została metoda uwzględniająca egzekutora.
+
+Mimo większej prostoty mechanizmu gdzie każdemu procesorowi zadana jest seria operacji do wykonania w określonych czasach, mechanizm z koordynatorem jest bardziej odporny na błędy i oferuje możliwość łatwiejszej rozbudowy.
 
 Mając przygotowane:
 
 \begin{itemize}
-    \item w punkcie "Pobranie i preparacja danych" tabelę wejściową
+    \item tabelę wejściową z punkcie "Pobranie i preparacja danych"
     \item tabelę czasów z punktu "Przydzielenie szacunkowych czasów wykonania poszczególnych operacji"
     \item graf konfliktu z wejścia
     \item algorytm szeregowania z punktu "Dobór algorytmu szeregowania"
@@ -312,29 +338,32 @@ Mając przygotowane:
 
 można przystąpić do konstrukcji uszeregowania.
 
-Finalny rozkład zostanie przedstawiony w formie tabeli, której indeksy wierszy będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny przedstawiają procesory natomiast w komórce znajduje indeks wiersz i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki) w postaci dwójki [indeks wiersza, indeks kolumny]. \todo{matematycznie zapisać}
+Konstrukcja uszeregowania polega na wykonaniu danego algorytmu szeregowania z danymi wejściowymi.
 
-Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-sched-out}
+Finalny rozkład zostanie przedstawiony w formie tabeli, której indeksy wierszy ($t_i$) będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny ($p_j$) przedstawiają procesory natomiast w komórce (koleje małe litery alfabetu) znajduje indeks wiersz i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki) w postaci dwójki [indeks wiersza, indeks kolumny].
+% \todo{matematycznie zapisać}
 
-Należy zauważyć, że taki rozkład jest transponowanym klasycznym wykresem Gantta z dyskretnymi\todo{całkowitymi?} czasami rozpoczynania zadań.
+Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-sched-out}.
+
+Należy zauważyć, że taki rozkład jest transponowanym klasycznym wykresem Gantta z dyskretnymi czasami rozpoczynania zadań.
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|l|l|} \hline
-Czas & $p_1$ & $p_2$ & ... & $p_{m-1}$ & $p_{m}$ \\ \hline
-0 & $[a,b]$ & - & ... & $[c,d]$ & - \\ \hline
-2 & - & $[e,f]$ & ... & - & - \\ \hline
-5 & $[e,f]$ & $[g,h]$ & ... & - & $[i,j]$\\ \hline
+Czas / proc & $p_1$     & $p_2$     & ...   & $p_{m-1}$ & $p_{m}$ \\ \hline
+$t_1$       & $[a,b]$   & -         & ...   & $[c,d]$   & - \\ \hline
+$t_2$       & -         & $[e,f]$   & ...   & -         & - \\ \hline
+$t_3$       & $[e,f]$   & $[g,h]$   & ...   & -         & $[i,j]$\\ \hline
 \end{tabular}
 \caption{Przykładowe zaszeregowanie wynikowe\label{tab:example-sched-out}}
 \source{Własne}
 \end{table}
 
-
 \section{Czuwanie nad prawidłowym wykonaniem rozkładu}
 
 Egzekutor sekwencyjnie czytając wiersze rozkładu zajmował będzie się dysponowaniem operacji w momentach wynikających z indeksu wiersza na odpowiednie procesory.
 
-Idea działania egzekutora została przedstawiona na diagramie \ref{diag:executor}. Znadujemy się w czasie 0, gdzie egzekutor odczytał pierwszy wiersz i rozdysponował procesowanie komórki $[1,2]$ na procesorze $p_1$ oraz komórki $[2,1]$ na procesorze $p_4$.
+Idea działania egzekutora została przedstawiona na diagramie \ref{diag:executor}. Moment uchwycenia diagramu 
+to czas 0, gdzie egzekutor odczytał pierwszy wiersz (z indeksem czasu 0) i rozdysponował procesowanie komórki $[1,2]$ na procesorze $p_1$ oraz komórki $[2,1]$ na procesorze $p_4$.
 
 \begin{figure}[!tbh]
 \centering
