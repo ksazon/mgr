@@ -54,43 +54,68 @@ sql}
 % wstęp
 \introduction
 
-W czasach w których wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych które kiedykolwiek powstały [1] https://www.forbes.com/sites/bernardmarr/2018/05/21/how-much-data-do-we-create-every-day-the-mind-blowing-stats-everyone-should-read/#65af925260ba
-i nie ma przesłanek stanowiących o tym, że tempo wzrostu opadnie, w których prędkości przetwarzania komputerów nie rosną współmiernie, potrzebne są rozwiązania algorytmiczne które umożliwią ich analizę.
+W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych które kiedykolwiek powstały [1] https://www.forbes.com/sites/bernardmarr/2018/05/21/how-much-data-do-we-create-every-day-the-mind-blowing-stats-everyone-should-read/#65af925260ba
+i nie istnieją żadne przesłanki stanowiące o tym, że tempo wzrostu opadnie. Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie. Pozostawia to deficyt technologiczny do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności algorytmiczne.
 
-W tej pracy zaproponowano rozwiązania mogące przyspieszyć bardzo powszechne operacjach na danych w postaci tabel.
+W pracy zaproponowano rozwiązania mogące przyspieszyć bardzo powszechne operacjach na danych w postaci tabel.
 
-Przykładem takich danych są table w programie Microsoft Excel i jemu podobnych, pliki typu Comma Separated Values (CSV), tabele i widoki w relacyjnych bazach danych czy struktury tworzne przez biblioteki do manipulowania i analizy danych jak Pandas.
+Przykładem takich danych są table w programie \emph{Microsoft Excel} i jemu podobnych, pliki z wartościami rodzielanymi przecinkiem (Comma Separated Values - \emph{CSV}), tabele i widoki w relacyjnych bazach danych, pliki \emph{Parquet} czy struktury tworzne przez biblioteki do manipulowania i analizy danych jak \emph{pandas}.
 
-Przykładów danych które można reprezentować w ten sposób są między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy log połączeń do danego serwera.
+Przykładami danych które można reprezentować w ten sposób są między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy dziennik połączeń do danego serwera.
 
 \section{Oznaczenia przyjęte w pracy}
 
-Hasła "tabla", "tablica", "macierz" stosowane będą zamiennie i będą oznaczały strukturę danych składającą się z listy krotek. 
+Hasła "tabela" i "tablica" stosowane będą zamiennie i będą oznaczały strukturę danych składającą się z listy krotek. 
 
 W celu uniknięcia dwuznaczności słowa "procesor" w pracy tratującej o zarówno o modelu matematycznym jak i systemach komputerowych przyjęto używanie słowa "procesor" w rozumieniu pochodzącym z modelu matematycznego (inaczej maszyna).
-Procesor w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, takim jak CPU czy GPU.
+Procesor w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, takim jak CPU (Central Processing Unit) czy GPU (Graphics Processing Unit).
 
 Hasłem "komórka" oznaczony zostanie konkretny, identyfikowalny za pomocą indeksu wiersza i kolumny element tabeli.
 
 \chapter{Pochodzenie modelu Partially Concurrernt Open Shop Schedule (PCOSS) i dotychczasowa literatura}
 
-Model PCOSS został wytworzony przez / w / jako odpowiedź na problem przypisywania techników sprawdzających samolototy w hangarze.
-\todo[inline]{itd}
+Model PCOSS został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani, Elad Shufan w pracy Partially-Concurrent Open Shop Scheduling  [https://www.researchgate.net/publication/281837610\_Partially-Concurrent\_Open\_Shop\_Scheduling]
+jako generalizacja modelu Open Shop Schedule (OSS), wprowadzająca możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie. 
 
 \chapter{Dane tabelaryczne}
 
-Stosowane są one w dziedzinach takich jak analiza statystyczna, prognozowanie trendów czy adaptacja maszyn do środowiska.
+Dane tabelarycznie w postaci elektronicznej stały się bardzo codziennym elementem pracy wielu osób, zarówno w środowiskach naukowych jak i w p oraz jednym z najbardziej powszechnych sposobów reprezentacji zbiorów danych. Przykładami dziedzin, gdzie szczególnie są one szczególnie istotne mogą być: analiza statystyczna, prognozowanie trendów czy adaptacja maszyn do środowiska.
 
-\todo[inline]{definicja "tabelaryczne", lub kilka definicji - postrgres, pandas, excel, numpy}
+Słownik \emph{Merriam-Webster} definiuje "tabelaryczny" jako "osadzony w wierszach i kolumnach" [https://www.merriam-webster.com/dictionary/tabular]
+
+\emph{pandas} definiuje "DataFrame" jako "dwuwymiarowe, potencjalnie heterogeniczne dane tabelaryczne"
+[https://pandas.pydata.org/docs/reference/frame.html]
+
+\emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających wspólną strukturę danych (ta sama ilość atrybutów, w tej samej kolejności mających tę samą nazwę i typ per pozycja)"
+[https://www.postgresql.org/docs/13/glossary.html]
+
+Framework opisany w tej pracy może być zastosowany do danych które znajdują mogą być opisane przez każdą z tych definicji.
+
 \todo[inline]{przykłady zastosowania - giełda, nauczanie maszynowe, magazyn}
 
 \chapter{Zastosowanie modelu PCOSS do danych tabelarycznych}
 
 Praca skupia się na takich sytuacjach, gdy sekwencyjne lub naiwnie zrównolegnienie wykonywanie operacji zajmuje zbyt wiele czasu.
 
-Sytuacje takie występują np. podczas dostępu do danych znajdujących się w zasobach sieciowych, kiedy ograniczeniem jest przepustowość sieci oraz przy dostępie do danych na dysku twardym.
+Należy wziąć pod uwagę sytuacje które uniemożliwiają zrównoleglnianie operacji w sposób dowolny.
+Takie operacje można podzielić na trzy kategorie
+\begin{enumerate}
+\item skutkujące niepotrzebnie wysokim wykorzystaniem zasobów,
+\item takie gdzie zrównolegnianie prowadzi do pogorszenia wartości funkcji optymalizacji,
+\item takie, gdzie wykonywanie par operacji na jednym wierszu może prowadzić do nieprawidłowych wyników.
+\end{enumerate}
 
-\todo[inline]{Opisać, że fajnie by działało na systemach rozległych, jak sieci procesorów, czy macierze FPGA}
+Przykłady
+\begin{enumerate}
+    \item korzystając z różnych połączeń per różne wiersze, niekorzystne może być zlecenie przeliczenia wartości z dwu kolumn naraz (przełączanie kontekstów procesora po stronie serwera)
+    \item zapisując wyniki do różnych baz SQLite per różne wiersze, jednoczesny zapis wartości obliczanej na dwu kolumnach w danym serwerze spowoduje zablokowanie zapisu drugiego zapisującego, do czasu skończenia zapisu przez pierwszy
+    \item zależności cykliczne między danymi w różnych kolumnach tego samego wiersza; mając wiersze odnoszące się do związków, kolumnę "partner" i kolumnę "partnerka" w tych wierszach, nie powinniśmy jednocześnie prowadzić wyszukiwania nowych kandydatów na obydwu kolumnach gdyż może to prowadzić to niespójności danych
+\end{enumerate}
+
+Podobne rozumowanie, w szczególności w odniesieniu do nawiązywania połączeń między różnymi interfejsami można przeprowadzić dla grafu konfliktu między różnymi wierszami tej samej kolumny lub dowolnymi parami komórek.
+
+Warto zauważyć, że takie problemy mają względnie nieduże znaczenie w większości przypadków, gdy cały rozkład wykonywany jest na jednej maszynie lub przy niedużych ilościach danych. Sytuacja zmienia się gdy musimy przetworzyć duże ilości danych na systemach rozproszonych.
+Macierze FPGA, sieci procesorów, korzystanie z sieciowych API do przetwarzania danych wydaje się mieć dużo lepsze zastosowania niż pojedyncza maszyna.
 
 W takim przypadku rolę procesorów z modelu matematycznego przejmują urządzenia (lub ich systemy), takie jak API serwerów sieciowych, procesory (CPU, GPU) czy dyski twarde.
 
