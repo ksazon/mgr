@@ -35,8 +35,8 @@
 
 % streszczenie
 \begin{abstract}
-W pracy przedstawiono system szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym oparty o model Partially Concurrent Open Shop Schedule (PCOSS).
-Przeanalizowano również jak wydajne (zarówno pod kątem czasu przygotowania jak i pod kątem jakości wyników) są różne heurystyki opisane w pracach innych autorów.
+W pracy przedstawiono system szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym, oparty o model Partially Concurrent Open Shop Schedule (PCOSS). \\
+Przeanalizowano również jak wydajne (zarówno pod kątem czasu przygotowania jak i pod kątem jakości wyników) są różne heurystyki opisane w pracach innych autorów. \\
 Szczególną uwagę przywiązano do algorytmów opierających się na integralnych czasach przetwarzania bez wywłaszczania.
 \end{abstract}
 
@@ -54,111 +54,157 @@ sql}
 % wstęp
 \introduction
 
-W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych które kiedykolwiek powstały [1] https://www.forbes.com/sites/bernardmarr/2018/05/21/how-much-data-do-we-create-every-day-the-mind-blowing-stats-everyone-should-read/#65af925260ba
-i nie istnieją żadne przesłanki stanowiące o tym, że tempo wzrostu opadnie. Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie. Pozostawia to deficyt technologiczny do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności algorytmiczne.
+W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych powstałych od początku ludzkości do maja 2018 \\
+[1] https://www.forbes.com/sites/bernardmarr/2018/05/21/how-much-data-do-we-create-every-day-the-mind-blowing-stats-everyone-should-read/#65af925260ba). \\
+Nie istnieją też żadne przesłanki stanowiące o tym, że tempo wzrostu opadnie.
+Dane te pozwalają na nowe podejścia do wglądu w zjawiska, które do tej pory były niemożliwe.
+Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Pozostawia to deficyt technologiczny do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
+\medskip\\
 
 W pracy zaproponowano rozwiązania mogące przyspieszyć bardzo powszechne operacjach na danych w postaci tabel.
+\medskip\\
 
-Przykładem takich danych są table w programie \emph{Microsoft Excel} i jemu podobnych, pliki z wartościami rodzielanymi przecinkiem (Comma Separated Values - \emph{CSV}), tabele i widoki w relacyjnych bazach danych, pliki \emph{Parquet} czy struktury tworzne przez biblioteki do manipulowania i analizy danych jak \emph{pandas}.
+Przykładami danych tego typu są table w programie \emph{Microsoft Excel} i jemu podobnych, pliki z wartościami rozdzielanymi przecinkiem (Comma Separated Values - \emph{CSV}), tabele i widoki w relacyjnych bazach danych, pliki \emph{Parquet} czy struktury tworzone przez biblioteki do manipulowania i analizy danych jak \emph{pandas}.
+\medskip\\
 
-Przykładami danych które można reprezentować w ten sposób są między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy dziennik połączeń do danego serwera.
+Można za ich pomocą reprezentować informacje z szerokiego spektrum dziedzin; należą do nich między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy dziennik połączeń do danego serwera (\emph{log}).
 
 \section{Oznaczenia przyjęte w pracy}
 
-Hasła "tabela" i "tablica" stosowane będą zamiennie i będą oznaczały strukturę danych składającą się z listy krotek. 
+Hasła \emph{tabela} i \emph{tablica} stosowane będą zamiennie i będą oznaczały strukturę danych składającą się z listy krotek. 
+\medskip\\
 
-W celu uniknięcia dwuznaczności słowa "procesor" w pracy tratującej o zarówno o modelu matematycznym jak i systemach komputerowych przyjęto używanie słowa "procesor" w rozumieniu pochodzącym z modelu matematycznego (inaczej maszyna).
-Procesor w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, takim jak CPU (Central Processing Unit) czy GPU (Graphics Processing Unit).
+W celu uniknięcia dwuznaczności słowa \emph{procesor} w pracy tratującej o zarówno o modelu matematycznym jak i systemach komputerowych przyjęto używanie go w rozumieniu pochodzącym z modelu matematycznego (inaczej \emph{maszyna}).
+\emph{Procesor} w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, takim jak \emph{CPU} (\emph{Central Processing Unit}) czy \emph{GPU} (\emph{Graphics Processing Unit}).
+\medskip\\
 
-Hasłem "komórka" oznaczony zostanie konkretny, identyfikowalny za pomocą indeksu wiersza i kolumny element tabeli.
+Hasłem \emph{komórka} oznaczony zostanie konkretny, identyfikowalny za pomocą indeksu wiersza i kolumny element tabeli.
 
 \chapter{Pochodzenie modelu Partially Concurrernt Open Shop Schedule (PCOSS) i dotychczasowa literatura}
 
-Model PCOSS został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani, Elad Shufan w pracy Partially-Concurrent Open Shop Scheduling  [https://www.researchgate.net/publication/281837610\_Partially-Concurrent\_Open\_Shop\_Scheduling]
-jako generalizacja modelu Open Shop Schedule (OSS), wprowadzająca możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie. 
+Model \emph{Partially Concurrernt Open Shop Schedule} (\emph{OSS}) został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \\
+
+[https://www.researchgate.net/publication/281837610\_Partially-Concurrent\_Open\_Shop\_Scheduling] \\
+
+jako generalizacja modelu \emph{Open Shop Schedule} (\emph{OSS}). \\
+
+Względem \emph{OSS} wprowadza on możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie. 
 
 \chapter{Dane tabelaryczne}
 
-Dane tabelarycznie w postaci elektronicznej stały się bardzo codziennym elementem pracy wielu osób, zarówno w środowiskach naukowych jak i w p oraz jednym z najbardziej powszechnych sposobów reprezentacji zbiorów danych. Przykładami dziedzin, gdzie szczególnie są one szczególnie istotne mogą być: analiza statystyczna, prognozowanie trendów czy adaptacja maszyn do środowiska.
+Dane tabelarycznie w postaci elektronicznej są w dzisiejszych czasach codziennym elementem pracy wielu osób, zarówno w środowiskach naukowych jak i w świecie konsumenckim i przemysłowym. Jest to jeden z najbardziej powszechnych sposobów reprezentacji zbiorów danych. Przykładami dziedzin, gdzie szczególnie są one szczególnie istotne mogą być: analiza statystyczna, handel, magazynowanie, prognozowanie trendów czy adaptacja maszyn do środowiska.
+\medskip\\
 
 Słownik \emph{Merriam-Webster} definiuje "tabelaryczny" jako "osadzony w wierszach i kolumnach" [https://www.merriam-webster.com/dictionary/tabular]
+\medskip\\
 
-\emph{pandas} definiuje "DataFrame" jako "dwuwymiarowe, potencjalnie heterogeniczne dane tabelaryczne"
+Moduł języka \emph{Python} - \emph{pandas} definiuje "DataFrame" jako "dwuwymiarowe, potencjalnie heterogeniczne dane tabelaryczne" \\
 [https://pandas.pydata.org/docs/reference/frame.html]
+\medskip\\
 
-\emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających wspólną strukturę danych (ta sama ilość atrybutów, w tej samej kolejności mających tę samą nazwę i typ per pozycja)"
+Baza danych \emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających wspólną strukturę danych (ta sama ilość atrybutów, w tej samej kolejności mających tę samą nazwę i typ per pozycja)" \\
 [https://www.postgresql.org/docs/13/glossary.html]
+\medskip\\
 
-Framework opisany w tej pracy może być zastosowany do danych które znajdują mogą być opisane przez każdą z tych definicji.
-
-\todo[inline]{przykłady zastosowania - giełda, nauczanie maszynowe, magazyn}
+System opisany w tej pracy może być zastosowany do danych które mogą być opisane przez każdą z tych definicji z osobna.
 
 \chapter{Zastosowanie modelu PCOSS do danych tabelarycznych}
 
-Praca skupia się na takich sytuacjach, gdy sekwencyjne lub naiwnie zrównolegnienie wykonywanie operacji zajmuje zbyt wiele czasu.
+Praca skupia się na takich sytuacjach, gdy sekwencyjne lub naiwnie zrównolegnione wykonywanie operacji zajmuje zbyt wiele czasu lub jest niemożliwe z uwagi na ograniczenia narzucone na wykonywanie operacji na tabeli.
+Ograniczenia te odpowiadają grafowi konfliktu w \emph{PCOSS}
+\medskip\\
 
-Należy wziąć pod uwagę sytuacje które uniemożliwiają zrównoleglnianie operacji w sposób dowolny.
-Takie operacje można podzielić na trzy kategorie
+Źródła tych ograniczeń można podzielić na trzy kategorie
 \begin{enumerate}
-\item skutkujące niepotrzebnie wysokim wykorzystaniem zasobów,
-\item takie gdzie zrównolegnianie prowadzi do pogorszenia wartości funkcji optymalizacji,
-\item takie, gdzie wykonywanie par operacji na jednym wierszu może prowadzić do nieprawidłowych wyników.
+    \item skutkujące niepotrzebnie wysokim wykorzystaniem zasobów,
+    \item takie gdzie zrównolegnianie prowadzi do pogorszenia wartości funkcji optymalizacji (pogorszenie wydajności),
+    \item takie, gdzie wykonywanie par operacji na jednym wierszu może prowadzić do nieprawidłowych wyników.
 \end{enumerate}
+\medskip\\
 
 Przykłady
 \begin{enumerate}
-    \item korzystając z różnych połączeń per różne wiersze, niekorzystne może być zlecenie przeliczenia wartości z dwu kolumn naraz (przełączanie kontekstów procesora po stronie serwera)
-    \item zapisując wyniki do różnych baz SQLite per różne wiersze, jednoczesny zapis wartości obliczanej na dwu kolumnach w danym serwerze spowoduje zablokowanie zapisu drugiego zapisującego, do czasu skończenia zapisu przez pierwszy
-    \item zależności cykliczne między danymi w różnych kolumnach tego samego wiersza; mając wiersze odnoszące się do związków, kolumnę "partner" i kolumnę "partnerka" w tych wierszach, nie powinniśmy jednocześnie prowadzić wyszukiwania nowych kandydatów na obydwu kolumnach gdyż może to prowadzić to niespójności danych
+    \item korzystając z różnych połączeń z serwerem per różne wiersze, niekorzystne może być zlecenie przeliczenia wartości z dwu kolumn naraz na tym samym serwerze (przełączanie kontekstów procesora, odczyt z \emph{HDD} po stronie serwera etc.),
+    \item zapisując wyniki do różnych baz SQLite per różne wiersze, jednoczesny zapis wartości obliczanej na dwu kolumnach do jednej bazy spowoduje zablokowanie zapisu drugiego wyniku, do czasu skończenia zapisu pierwszego,
+    \item zależności między danymi w różnych kolumnach tego samego wiersza; mając wiersze z kolumnami wskazującymi na siebie, nie powinniśmy jednocześnie zmieniać wartości obydwu tych kolumn, gdyż może to prowadzić to niespójności danych.
 \end{enumerate}
+\medskip\\
 
-Podobne rozumowanie, w szczególności w odniesieniu do nawiązywania połączeń między różnymi interfejsami można przeprowadzić dla grafu konfliktu między różnymi wierszami tej samej kolumny lub dowolnymi parami komórek.
+Podobne rozumowanie, w szczególności w odniesieniu do nawiązywania połączeń między różnymi serwerami można przeprowadzić dla grafu konfliktu między różnymi wierszami tej samej kolumny oraz dowolnymi parami komórek.
+\medskip\\
 
-Warto zauważyć, że takie problemy mają względnie nieduże znaczenie w większości przypadków, gdy cały rozkład wykonywany jest na jednej maszynie lub przy niedużych ilościach danych. Sytuacja zmienia się gdy musimy przetworzyć duże ilości danych na systemach rozproszonych.
-Macierze FPGA, sieci procesorów, korzystanie z sieciowych API do przetwarzania danych wydaje się mieć dużo lepsze zastosowania niż pojedyncza maszyna.
+Warto zauważyć, że powyższe problemy mają względnie nieduże znaczenie w większości przypadków, gdy cały rozkład wykonywany jest na jednej maszynie lub przy niedużych ilościach danych. Można je wtedy rozwiązać między innymi za pomocą odpowiednich mechanizmów blokowania dostępu do zasobów (\emph{locking}).
+Sytuacja zmienia się gdy musimy przetworzyć duże ilości danych na systemach rozproszonych.
+\medskip\\
 
-W takim przypadku rolę procesorów z modelu matematycznego przejmują urządzenia (lub ich systemy), takie jak API serwerów sieciowych, procesory (CPU, GPU) czy dyski twarde.
+Zastosowanie proponowanego frameworku w macierzach FPGA, sieciach procesorów oraz w przypadku korzystania z sieciowych interfejsów do przetwarzania danych wydaje się być bardziej racjonalne i pożądane niż zastosowanie go dla pojedynczej maszyny.
 
-Z kolei role zadań przypadają do kolejnych zestawów wierszy.
+\chapter{Relacja między modelem matematycznym a architekturą systemu}
 
-Z powyższego wynika bezpośrednio, że operacją staje się praca pewnej instancji pewnego systemu (procesora w rozumieniu wynikającym z modelu) na konkretnym zbiorze kolumn.
+Przy przyjętych w poprzednim rozdziale założeniach rolę \emph{procesorów} z modelu matematycznego przejmują urządzenia (lub ich systemy), takie jak \emph{API} serwerów sieciowych, \emph{CPU}, \emph{GPU} czy dyski twarde.
+\medskip\\
 
-W szczególnym (a zarazem najczęstszym przypadku) zestaw wierszy zawiera jeden wiersz, a zestaw kolumn zawiera jedną kolumnę.
+\emph{Zadania} interpretowane są jako kolejne wiersze lub ich agregaty.
+\medskip\\
 
-\todo[inline]{przykład}
+Z powyższego wynika bezpośrednio, że \emph{operacją} staje się praca pewnej instancji pewnego systemu (\emph{procesora} w rozumieniu wynikającym z modelu matematycznego) na konkretnym zbiorze wierszy.
+\medskip\\
+
+W szczególnym (a zarazem najczęstszym przypadku) zestaw wierszy zawiera jeden wiersz, a zestaw kolumn zawiera jedną kolumnę, co implikuje traktowanie komórki jako operacji.
+\medskip\\
+
+Po ewentualnej agregacji kolumn i wierszy powstała tabela przestawiać będzie zestaw zadań (danych) w wierszach, maszyn (urządzeń) w kolumnach i operacje (przetwarzanie danych przez maszynę) w komórkach.
 
 \chapter{Typ danych analizowany w pracy}
 
-W pracy analizowane będą bardzo powszechne operacje na tabelarycznych zestawach danych.
-\todo{powtórzenie, więcej konkretów}
+Sposób działania systemu jest w dużej mierze niezależny od danych wejściowych - warunkiem jest reprezentowane ich w postaci tabeli z zadaniami w wierszach i maszynami w kolumnach.
+Mogą więc być to na przykład dane tekstowe, liczbowe, obiekty, adresy serwisów internetowych, obrazy, pliki czy też referencje do innych tabel.
+\medskip\\
 
 W pracy pominięto aspekt zbierania danych jako niezwiązany bezpośrednio z szeregowaniem operacji na nich.
+\medskip\\
 
 W celu uzyskania oczekiwanych informacji z zestawu danych należy je odpowiednio spreparować a następnie uruchomić narzędzia analityczne na nich.
+\medskip\\
 
-Wprowadzimy abstrakcję, gdzie zestaw kolumn traktowany jest jako pojedyncza kolumna, a zestaw wierszy jako pojedynczy wiersz.
-\todo{rozpisać się na temat, że istnieją przypadki kiedy to ma sens i dlaczego tak robię}
+Wprowadzimy abstrakcję, gdzie w wypadku operacji agregowania określone na wejściu zestawy agregowanych kolumn traktowane będą jako pojedyncze kolumny, a określone na wejściu zestawy agregowanych wierszy - jako pojedyncze wiersze.
 
+Dzięki tej abstrakcji możemy uprościć rozważania, nie tracąc zarazem poprawności działania.
 
 \section{Kreacja danych testowych}
 
-Danymi testowymi będzie lista $n$ krotek o rozmiarze $m$ każda.
+Danymi testowymi będzie lista $n$ krotek o rozmiarze $m$ elementów każda.
 Każda kolejna krotka będzie traktowana jako nowy wiersz, natomiast wszystkie indeksy krotek będą odpowiadały kolumnom. 
+\medskip\\
 
-\todo{sformułować lepiej, dać matematyczna definicję}
+Taki zestaw danych przekłada się na wiele modeli wykorzystywanych w komputerowej analizie danych, jak na przykład tabele czy widoki w relacyjnych bazach danych, \emph{DataFrame} w \emph{Pythonowym} pakiecie \emph{pandas} czy dwuwymiarowa macierz w \emph{numpy}.
+\medskip\\
 
-Taki zestaw danych przekłada się na wiele modeli wykorzystywanych w komputerowej analizie danych, jak na przykład tabele czy widoki w relacyjnych bazach danych, DataFrame w Pythonowym pakiecie pandas czy dwuwymiarowa macierz w numpy.
-\todo{dodać linki do tych rzeczy}
+W rzeczywistym zastosowaniu komórki będą zawierały dane podlegające odpowiednim procesom (obliczeniom).
+W danych testowych będą liczbami losowymi, reprezentującymi rozmiar wejścia do funkcji która ma wykonać obliczenia na nich.
+\medskip\\
 
-W rzeczywistym zastosowaniu komórki będą zawierały dane podlegające odpowiednim procesom (obliczeniom), natomiast w danych testowych będą liczbami losowymi, reprezentującymi rozmiar wejścia do funkcji która ma wykonać obliczenia na nich.
+\begin{table}[!tbh]
+\begin{tabular}{|l|l|l|l|l|l|} \hline
+$r / col$   & $c_1$     & $c_2$     & ...   & $c_{m-1}$ & $c_{m}$   \\ \hline
+$r_1$       & $2562$    & $45656$   & ...   & $54656$   & $0$       \\ \hline
+$r_2$       & $4546$    & $0$       & ...   & $7861$    & $12135$   \\ \hline
+$...$       & $...$     & $...$     & $...$ & $...$     & $...$     \\ \hline
+$r_{n-1}$   & $2541$   & $712$      & ...   & $3574$    & $9347$    \\ \hline
+$r_{n}$     & $4561$   & $4214$     & ...   & $9753$    & $4125$    \\ \hline
+\end{tabular}
+\caption{Przykład danych testowych\label{tab:example-sched-out}}
+\source{Własne}
+\end{table}
 
 \chapter{Algorytm działania dyspozytora}
 
 \section{Wstęp}
 
-W rozumieniu tej pracy dyspozytor to system mający na celu poprawne (wykonalne i zgodne z ograniczeniami) zaszeregowanie i rozdzielanie zadań pomiędzy pomiędzy dostępne procesory.
+W rozumieniu tej pracy \emph{dyspozytor} to system mający na celu poprawne (wykonalne i zgodne z ograniczeniami) zaszeregowanie i rozdzielanie zadań pomiędzy pomiędzy dostępne procesory.
+\medskip\\
 
-Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następujące kroki:
+Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następujące kroki
 
 \begin{enumerate}
     \item pobranie danych, ustawienie wartości domyślnych
@@ -170,11 +216,11 @@ Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następu
 \end{enumerate}
 
 Każdy z powyższych kroków szczegółowo opisany jest w tym rozdziale.
-
 \newpage
+
 \section{Pobranie danych, ustawienie wartości domyślnych}
 
-Na wejściu algorytm otrzymuje następujące dane wejściowe:
+Na wejściu algorytm otrzymuje następujące dane wejściowe
 
 \begin{enumerate}
     \item tabelę w wybranej reprezentacji
@@ -191,6 +237,7 @@ Na wejściu algorytm otrzymuje następujące dane wejściowe:
 % \todo[inline]{dać przykład prawidłowego formatu każdego argumentu}
 
 Tabela \ref{tab:args-default} zawiera domyślne wartości argumentów opcjonalnych
+\medskip\\
 
 % \todo{tak często się te nazwy przewijają, że być może warto nadać im symbole}
 
@@ -208,37 +255,49 @@ Idx. arg. & Wartość domyślna & Interpretacja wartości domyślnej \\ \hline
 \caption{Domyślne wartości wejściowe algorytmu i ich interpretacja\label{tab:args-default}}
 \source{Własne}
 \end{table}
+\medskip\\
 
 Zagadnienie postępowania algorytmu w zależności od tego, które parametry zostały podane szerzej omówione zostanie w kolejnych podrozdziałach.
 
 \section{Grupowanie danych}
 
 W tej pracy agregacja rozumiana będzie jako proces łączenia kilku wartości w jedną reprezentatywną wartość.
+\medskip\\
 
 Logika działania agregacji na wierszach podąża za logiką przyjęta między innymi przez język \emph{SQL}, technologię \emph{LINQ} na platformie \emph{.Net} czy różne moduły języka \emph{Python}, w szczególności \emph{pandas}.
+\medskip\\
 
 Agregacja w zastosowaniach praktycznych jest jedną z podstawowych operacji przy przetwarzaniu danych, np. w celu ich analizy.
 Pozwala ona łączyć duże ilości danych w logiczne grupy, które reprezentują analizowane właściwości tych danych.
+\medskip\\
 
 Agregację w takim rozumieniu można podzielić na dwa etapy:
 \begin{itemize}
     \item grupowanie danych wg. funkcji grupującej
     \item wykonanie funkcji docelowej na zgrupowanych wartościach
-\end{itemize}{}
+\end{itemize}
+\medskip\\
 
 Przykład grupowania znajduje się poniżej.
+\medskip\\
 
 W przypadku, gdy podane są funkcje grupowania wierszy lub kolumn, algorytm tworzy zgrupowania zawierające indeksy zakresów zawieranych w tych zgrupowaniach, czyli łączy zestawy komórek w pojedyncze komórki na podstawie zadanego klucza (funkcji).
+\medskip\\
 
 Tak przygotowane dane gotowe są do przetwarzania w kolejnych etapach działania algorytmu.
 
 \newpage
 \subsubsection{Przykład}
+\medskip\\
 
 Przygotowano tabelę wejściową \ref{tab:example-input} w której znajdują się fikcyjne dane na temat sprzedaży produktów \emph{M1} i \emph{M2} na terenie trzech krajów w dwudniowym okienku czasowym.
+\medskip\\
 
 Dla tej tabeli przygotowane zostało takie zgrupowanie wierszy, że kluczem grupowania są jednakowe wartości w kolumnie \emph{Kraj} (funkcja \ref{eq:example-row-agg}).
+\medskip\\
+
 Dla kolumn przygotowane zostało takie zgrupowanie, że z kolumn \emph{Sprzedaż$\_$M1} i \emph{Sprzedaż$\_$M2} powstaje jedna kolumna \emph{Sprzedaż$\_$M1$\_$Sprzedaż$\_$M2} (funkcja \ref{eq:example-col-agg}).
+\medskip\\
 
 Po zastosowaniu funkcji sumy na zgrupowanych komórkach wynikowej kolumny należy to interpretować jako sumaryczną sprzedaż wszystkich produktów w całym okresie w danych krajach.
 
@@ -255,8 +314,10 @@ Indeks & Kraj & Data & Sprzedaż$\_$M1 & Sprzedaż$\_$M2 \\ \hline
 \caption{Przykładowa tabela do zagregowania \label{tab:example-input}}
 \source{Własne}
 \end{table}
+\medskip\\
 
 Dla przejrzystości funkcji zastosowane zostały skróty
+\medskip\\
 
 \begin{itemize}
     \item Indeks - $i$
@@ -265,17 +326,22 @@ Dla przejrzystości funkcji zastosowane zostały skróty
     \item Sprzedaż$\_$M1 - $s_{m1}$
     \item Sprzedaż$\_$M2 - $s_{m2}$
 \end{itemize}
+\medskip\\
 
-Funkcja grupowania kolumn:
+Funkcja grupowania kolumn
 \begin{equation} \label{eq:example-col-agg}
 \lambda (i, k, d, s_{m1}, s_{m2}) \\ \Rightarrow (i, k, d, (s_{m1}, s_{m2}))
 \end{equation}
+\medskip\\
 
-Funkcja grupowania wierszy:
+Funkcja grupowania wierszy
 \begin{equation} \label{eq:example-row-agg}
 \lambda (w_1, w_2, ..., w_{n-1}, w_n) \\ \Rightarrow (w_{g1}, w_{g2}, ..., w_{gm-1}, w_{gm}) 
 \end{equation}
+\medskip\\
+
 gdzie $w_{gx}$ po prawej stronie transformacji, to grupa takich $w_y$ (po lewej stronie), dla których $k$ (kraj) to $x$
+\medskip\\
 
 Otrzymujemy tabelę wyjściową \ref{tab:example-output}, gotową do obróbki w następnym etapie.
 Dla przejrzystości w komórkach nie znajdują się indeksy z tabeli wejściowej, tylko wartości kryjące się pod tymi indeksami.
@@ -292,11 +358,14 @@ Indeks & Kraj & Dzień & Sprzedaż$\_$M1$\_$Sprzedaż$\_$M2 \\ \hline
 \end{table}
 
 \newpage
+
 \section{Przydzielenie szacunkowych czasów wykonania poszczególnych operacji}
 
 W celu przygotowania poprawnego rozkładu należy znać lub oszacować wartości czasów wykonywania poszczególnych operacji.
+\medskip\\
 
 Z założeń podanie jednocześnie czasów w postaci argumentów "tabela złożoności obliczeniowej (zgrupowanych) kolumn" oraz "tabela czasów przetwarzania (zgrupowanych) kolumn" jest prawdopodobnie błędem ze strony użytkownika. W takim wypadku zostanie zgłoszony błąd i algorytm przerwie działanie.
+\medskip\\
 
 Schemat działania przydzielania czasu został przedstawiony na diagramie \ref{diag:time-assign}.
 
@@ -306,24 +375,27 @@ Schemat działania przydzielania czasu został przedstawiony na diagramie \ref{d
 \caption{Schemat postępowania przy przydzielaniu czasu\label{diag:time-assign}}
 \source{Opracowanie własne}
 \end{figure}
+\medskip\\
 
 \subsubsection{Zachowanie algorytmu w zależności od podanych danych na temat czasu}
-% \todo[inline]{dodać odstęp między tytułem a treścią}
 
-\paragraph{Podano argument "tabela czasów przetwarzania (zgrupowanych) kolumn"}
+\myparagraph{Podano argument "tabela czasów przetwarzania (zgrupowanych) kolumn"}
 
 W przypadku podania poprawnej macierzy czasów operacji ta część algorytmu nie jest wykonywana; zakładamy, że użytkownik podał prawidłowe wartości.
 W szczególnym przypadku zadane mogą zostać jednakowe czasy wykonywania operacji.
 
-\paragraph{Podano argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn"}
+\myparagraph{Podano argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn"}
 
-Ważnym aspektem tego argumentu, jest fakt, że w dziedzinie praktycznej podanie złożoności obliczeniowej nie może ograniczać się do podania samego asymptotycznego tempa wzrostu - $O(n)$; konieczne jest precyzyjniejsze oszacowanie, wraz ze współczynnikiem oraz czynnikiem dodanym (opóźnieniem).
+Ważnym aspektem tego argumentu, jest fakt, że w dziedzinie praktycznej podanie złożoności obliczeniowej nie może ograniczać się do podania samego asymptotycznego tempa wzrostu - $O(n)$; konieczne jest precyzyjniejsze oszacowanie, wraz ze współczynnikiem oraz czynnikiem dodanym (opóźnieniem, latencją).
+\medskip\\
 
 Jeżeli na wejściu do algorytmu znajduje się argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn", jedyną operacją która musi zostać wykonana jest podstawienie rozmiarów danych z poszczególnych komórek pod funkcje podane na wejściu.
+\medskip\\
 
 W szczególnym wypadku użytkownik może podać czasy niezależne od rozmiaru wejścia - na przykład czasy jednostkowe.
+\medskip\\
 
-\paragraph{Nie podano żadnego z argumentów odnoszących się do czasów przetwarzania}
+\myparagraph{Nie podano żadnego z argumentów odnoszących się do czasów przetwarzania}
 
 Na podstawie analizy kilku (np. losowych, lub pierwszych) (zgrupowanych) wierszy algorytm oszacuje złożoność operacji na danym procesorze.
 W tym celu zostanie porównany rozmiar wejścia z czasem w którym jest wykonywany, następnie wykorzystując funkcję \emph{curve\_fit} z pakietu \emph{scipy.optimize} zostaną dobrane parametry $a$, $b$, $c$ do funkcji
@@ -331,8 +403,10 @@ W tym celu zostanie porównany rozmiar wejścia z czasem w którym jest wykonywa
 $$t = f(b * s^a + c)$$
 
 Gdzie $t$ to czas wykonywania, a $s$ to rozmiar danych.
+\medskip\\
 
 Funkcja \emph{curve\_fit} działa wykorzystując metodą najmniejszych kwadratów korzystając z zadanego algorytmu, np Levenberga-Marquardta.
+\medskip\\
 
 Problem niepokrycia wszystkich możliwych funkcji czasów przetwarzania poruszony został w rozdziale \ref{chap:extend}.
 
@@ -346,8 +420,10 @@ Problem niepokrycia wszystkich możliwych funkcji czasów przetwarzania poruszon
 
 Jeżeli użytkownik poda obsługiwany przez program algorytm szeregowania, program wykorzysta swoją implementację tego algorytmu.
 W przypadku niezaimplementowania wymaganego przez użytkownika algorytmu szeregowania program zgłosi błąd.
+\medskip\\
 
 Jeżeli algorytm szeregowania nie zostanie podany, to przy zadanym kryterium optymalizacyjnym program dobierze odpowiedni algorytm szeregowania służący do przygotowania optymalnego rozkładu.
+\medskip\\
 
 Dobór algorytmu polegał będzie na poruszaniu się po drzewie decyzji (bez ingerencji użytkownika).
 Wybór podjęty przez rozwiązanie funkcji zwracającej \emph{prawda/fałsz} na każdym poziomu prowadził będzie do kolejnej funkcji w drzewie lub na poziomie liścia - do konkretnego algorytmu.
@@ -356,26 +432,31 @@ Wybór podjęty przez rozwiązanie funkcji zwracającej \emph{prawda/fałsz} na 
 % \todo[inline]{zastosowano uproszczenie: jeden procesor wykonuje tylko jedną funkcję}
 
 Po rozważeniu dwu metod możliwości rozdysponowania operacji pomiędzy procesory: z egzekutorem (koordynatorem) oraz w bez (w sposób nieskoordynowany) wybrana została metoda uwzględniająca egzekutora.
+\medskip\\
 
 Mimo większej prostoty mechanizmu gdzie każdemu procesorowi zadana jest seria operacji do wykonania w określonych czasach, mechanizm z koordynatorem jest bardziej odporny na błędy i oferuje możliwość łatwiejszej rozbudowy.
 
-Mając przygotowane:
+Gdy przygotowane zostaną
 
 \begin{itemize}
-    \item tabelę wejściową z punkcie "Pobranie i preparacja danych"
-    \item tabelę czasów z punktu "Przydzielenie szacunkowych czasów wykonania poszczególnych operacji"
+    \item tabela wejściową z punkcie "Pobranie i preparacja danych"
+    \item tabela czasów z punktu "Przydzielenie szacunkowych czasów wykonania poszczególnych operacji"
     \item graf konfliktu z wejścia
     \item algorytm szeregowania z punktu "Dobór algorytmu szeregowania"
 \end{itemize}
 
 można przystąpić do konstrukcji uszeregowania.
+\medskip\\
 
 Konstrukcja uszeregowania polega na wykonaniu danego algorytmu szeregowania z danymi wejściowymi.
+\medskip\\
 
 Finalny rozkład zostanie przedstawiony w formie tabeli, której indeksy wierszy ($t_i$) będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny ($p_j$) przedstawiają procesory natomiast w komórce (koleje małe litery alfabetu) znajduje indeks wiersz i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki) w postaci dwójki [indeks wiersza, indeks kolumny].
 % \todo{matematycznie zapisać}
+\medskip\\
 
 Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-sched-out}.
+\medskip\\
 
 Należy zauważyć, że taki rozkład jest transponowanym klasycznym wykresem Gantta z dyskretnymi czasami rozpoczynania zadań.
 
@@ -393,9 +474,11 @@ $t_3$       & $[e,f]$   & $[g,h]$   & ...   & -         & $[i,j]$\\ \hline
 \section{Czuwanie nad prawidłowym wykonaniem rozkładu}
 
 Egzekutor sekwencyjnie czytając wiersze rozkładu zajmował będzie się dysponowaniem operacji w momentach wynikających z indeksu wiersza na odpowiednie procesory.
+\medskip\\
 
 Idea działania egzekutora została przedstawiona na diagramie \ref{diag:executor}. Moment uchwycenia diagramu 
 to czas 0, gdzie egzekutor odczytał pierwszy wiersz (z indeksem czasu 0) i rozdysponował procesowanie komórki $[1,2]$ na procesorze $p_1$ oraz komórki $[2,1]$ na procesorze $p_4$.
+\medskip\\
 
 \begin{figure}[!tbh]
 \centering
@@ -403,17 +486,42 @@ to czas 0, gdzie egzekutor odczytał pierwszy wiersz (z indeksem czasu 0) i rozd
 \caption{Schemat działania egzekutora\label{diag:executor}}
 \source{Opracowanie własne}
 \end{figure}
+\medskip\\
 
 Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywistością. Sytuacja została szerzej opisana w rozdziale \ref{chap:extend}
 
 \chapter{Analiza sprawności dyspozytora}
 
+W celu analizy sprawności dyspozytora przeprowadzono serie testów.
+Testy różniły się między sobą
+\begin{enumerate}
+    \item algorytmem szeregowania
+    \item ilością kolumn
+    \item ilością wierszy
+    \item czasem wykonywania poszczególnych operacji
+    \item wielkością danych podanych w komórkach
+\end{enumerate}
 
 \chapter{Analiza sprawności algorytmów dla podproblemu}
 
+W celu analizy sprawności algorytmów porównano sumę czasów działania dyspozytora oraz wykonywania zaszeregowania z sekwencyjnym czasem wykonywania operacji dla tych samych danych.
 
 \chapter{Potencjalne kierunki rozwoju pracy} \label{chap:extend}
 
+Praca otwiera kilka tematów o które może być rozszerzona oraz kilka potencjalnych tematów nowych prac.
+\medskip\\
+
+W celu pełnego wprowadzenia systemu do użycia, należy rozwiązać problem potencjalnych różnic założonym czasem operacji a czasem rzeczywistym. System obecnie stosuje margines bezpieczeństwa (niewielką wartość dodaną do szacowanego czasu operacji).
+W pełni rozwinięty system powinien mieć tolerancję na takie błędy i wprowadzać korekty do rozkładu w trakcie jego wykonywania.
+\medskip\\
+
+Jako całkiem nowy temat, wartościowym byłoby poddanie analizie prawdopodobnie częściej spotykanego przypadku pominięcia grafu konfliktu, czyli zaimplementowania systemu dla modelu \emph{OSS}.
+\medskip\\
+
+Kolejnym tematem który został zauważony w trakie analizy zagadnienia są szczególne przypadki \emph{PCOSS} gdy graf konfliktu sprowadza się do grafu konfliktu dla wyłącznie dla kolumn, tj. z pominięciem krawędzi "pionowych" (między wierszami).
+\medskip\\
+
+Zaproponowany system można zaimplementować jako tzw. \emph{scheduler}, na przykład w module \emph{Dask} języka \emph{Python}, który jest powszechnie stosowany przy zrównolegnianiu operacji na \emph{DataFrame}.
 
 % zakończenie
 \summary
