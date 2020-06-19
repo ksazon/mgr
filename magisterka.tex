@@ -20,11 +20,11 @@
 \nralbumu {243\,696}
 \email    {krzysztof.sazon@protonmail.com}
 
-\title    {Zastosowanie modelu Partially Concurrent Open Shop Schedule przy szeregowaniu operacji na danych tabelarycznych}
+\title    {Zastosowanie modelu szeregowania zadań częściowo zależnych w systemie otwartym w harmonogramowaniu danych tabelarycznych}
 \date     {2020}
 \miejsce  {Gdańsk}
 
-\opiekun  {dr. Hanna Furmańczyk}
+\opiekun  {dr Hanna Furmańczyk}
 
 % dodatkowe polecenia
 %\renewcommand{\filename}[1]{\texttt{#1}}
@@ -35,7 +35,7 @@
 
 % streszczenie
 \begin{abstract}
-W pracy przedstawiono system szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym, oparty o model Partially Concurrent Open Shop Schedule (PCOSS). \\
+W pracy przedstawiono system szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym, oparty o model nazwany w literaturze jako Partially Concurrent Open Shop Schedule (PCOSS). \\
 Przeanalizowano również jak wydajne (zarówno pod kątem czasu przygotowania jak i pod kątem jakości wyników) są różne heurystyki opisane w pracach innych autorów. \\
 Szczególną uwagę przywiązano do algorytmów opierających się na integralnych czasach przetwarzania bez wywłaszczania.
 \end{abstract}
@@ -54,18 +54,16 @@ sql}
 % wstęp
 \introduction
 
-W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych powstałych od początku ludzkości do maja 2018 \\
-[1] https://www.forbes.com/sites/bernardmarr/2018/05/21/how-much-data-do-we-create-every-day-the-mind-blowing-stats-everyone-should-read/#65af925260ba). \\
+W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych powstałych od początku ludzkości do maja 2018 \cite{Forbes:2018:FBS}.) \\
 Nie istnieją też żadne przesłanki stanowiące o tym, że tempo wzrostu opadnie.
 Dane te pozwalają na nowe podejścia do wglądu w zjawiska, które do tej pory były niemożliwe.
-Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Pozostawia to deficyt technologiczny do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
+Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Pozostawia to deficyt technologiczny, do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
 \medskip\\
 
-W pracy zaproponowano rozwiązania mogące przyspieszyć bardzo powszechne operacjach na danych w postaci tabel.
+W pracy zaproponowano rozwiązania mogące przyspieszyć bardzo powszechne operacje na danych w postaci tabel.
 \medskip\\
 
 Przykładami danych tego typu są table w programie \emph{Microsoft Excel} i jemu podobnych, pliki z wartościami rozdzielanymi przecinkiem (Comma Separated Values - \emph{CSV}), tabele i widoki w relacyjnych bazach danych, pliki \emph{Parquet} czy struktury tworzone przez biblioteki do manipulowania i analizy danych jak \emph{pandas}.
-\medskip\\
 
 Można za ich pomocą reprezentować informacje z szerokiego spektrum dziedzin; należą do nich między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy dziennik połączeń do danego serwera (\emph{log}).
 
@@ -74,7 +72,7 @@ Można za ich pomocą reprezentować informacje z szerokiego spektrum dziedzin; 
 Hasła \emph{tabela} i \emph{tablica} stosowane będą zamiennie i będą oznaczały strukturę danych składającą się z listy krotek. 
 \medskip\\
 
-W celu uniknięcia dwuznaczności słowa \emph{procesor} w pracy tratującej o zarówno o modelu matematycznym jak i systemach komputerowych przyjęto używanie go w rozumieniu pochodzącym z modelu matematycznego (inaczej \emph{maszyna}).
+W celu uniknięcia dwuznaczności słowa \emph{procesor} w pracy tratującej zarówno o modelu matematycznym jak i o systemach komputerowych przyjęto używanie go w rozumieniu pochodzącym z modelu matematycznego (inaczej \emph{maszyna}).
 \emph{Procesor} w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, takim jak \emph{CPU} (\emph{Central Processing Unit}) czy \emph{GPU} (\emph{Graphics Processing Unit}).
 \medskip\\
 
@@ -82,28 +80,24 @@ Hasłem \emph{komórka} oznaczony zostanie konkretny, identyfikowalny za pomocą
 
 \chapter{Pochodzenie modelu Partially Concurrernt Open Shop Schedule (PCOSS) i dotychczasowa literatura}
 
-Model \emph{Partially Concurrernt Open Shop Schedule} (\emph{OSS}) został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \\
-
-[https://www.researchgate.net/publication/281837610\_Partially-Concurrent\_Open\_Shop\_Scheduling] \\
-
-jako generalizacja modelu \emph{Open Shop Schedule} (\emph{OSS}). \\
-
+Model \emph{Partially Concurrernt Open Shop Schedule} (\emph{OSS}) został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \cite{PCOSS:2014:P} jako generalizacja modelu \emph{Open Shop Schedule} (\emph{OSS}). \\
+\medskip\\
+[tutaj o innych modelach]
+\medskip\\
 Względem \emph{OSS} wprowadza on możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie. 
 
 \chapter{Dane tabelaryczne}
 
-Dane tabelarycznie w postaci elektronicznej są w dzisiejszych czasach codziennym elementem pracy wielu osób, zarówno w środowiskach naukowych jak i w świecie konsumenckim i przemysłowym. Jest to jeden z najbardziej powszechnych sposobów reprezentacji zbiorów danych. Przykładami dziedzin, gdzie szczególnie są one szczególnie istotne mogą być: analiza statystyczna, handel, magazynowanie, prognozowanie trendów czy adaptacja maszyn do środowiska.
+Dane tabelarycznie w postaci elektronicznej są w dzisiejszych czasach codziennym elementem pracy wielu osób, zarówno w środowiskach naukowych jak i w świecie konsumenckim i przemysłowym. Jest to jeden z najbardziej powszechnych sposobów reprezentacji zbiorów danych. Przykładami dziedzin, gdzie są one szczególnie istotne mogą być: analiza statystyczna, handel, magazynowanie, prognozowanie trendów czy systemy które na bazie bodźców ze środowiska modyfikują swoje działanie.
 \medskip\\
 
-Słownik \emph{Merriam-Webster} definiuje "tabelaryczny" jako "osadzony w wierszach i kolumnach" [https://www.merriam-webster.com/dictionary/tabular]
+Słownik \emph{Merriam-Webster} definiuje "tabelaryczny" jako "osadzony w wierszach i kolumnach" \cite{MW:TAB}
 \medskip\\
 
-Moduł języka \emph{Python} - \emph{pandas} definiuje "DataFrame" jako "dwuwymiarowe, potencjalnie heterogeniczne dane tabelaryczne" \\
-[https://pandas.pydata.org/docs/reference/frame.html]
+Moduł języka \emph{Python} - \emph{pandas} definiuje "DataFrame" jako "dwuwymiarowe, potencjalnie heterogeniczne dane tabelaryczne" \cite{P:DF}.
 \medskip\\
 
-Baza danych \emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających wspólną strukturę danych (ta sama ilość atrybutów, w tej samej kolejności mających tę samą nazwę i typ per pozycja)" \\
-[https://www.postgresql.org/docs/13/glossary.html]
+Baza danych \emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających wspólną strukturę danych (ta sama ilość atrybutów, w tej samej kolejności mających tę samą nazwę i typ per pozycja)" \cite{PSQL:TAB}.
 \medskip\\
 
 System opisany w tej pracy może być zastosowany do danych które mogą być opisane przez każdą z tych definicji z osobna.
@@ -111,10 +105,10 @@ System opisany w tej pracy może być zastosowany do danych które mogą być op
 \chapter{Zastosowanie modelu PCOSS do danych tabelarycznych}
 
 Praca skupia się na takich sytuacjach, gdy sekwencyjne lub naiwnie zrównolegnione wykonywanie operacji zajmuje zbyt wiele czasu lub jest niemożliwe z uwagi na ograniczenia narzucone na wykonywanie operacji na tabeli.
-Ograniczenia te odpowiadają grafowi konfliktu w \emph{PCOSS}
+Ograniczenia te odpowiadają grafowi konfliktu w \emph{PCOSS}.
 \medskip\\
 
-Źródła tych ograniczeń można podzielić na trzy kategorie
+Źródła tych ograniczeń można podzielić na trzy kategorie:
 \begin{enumerate}
     \item skutkujące niepotrzebnie wysokim wykorzystaniem zasobów,
     \item takie gdzie zrównolegnianie prowadzi do pogorszenia wartości funkcji optymalizacji (pogorszenie wydajności),
@@ -177,11 +171,13 @@ Danymi testowymi będzie lista $n$ krotek o rozmiarze $m$ elementów każda.
 Każda kolejna krotka będzie traktowana jako nowy wiersz, natomiast wszystkie indeksy krotek będą odpowiadały kolumnom. 
 \medskip\\
 
-Taki zestaw danych przekłada się na wiele modeli wykorzystywanych w komputerowej analizie danych, jak na przykład tabele czy widoki w relacyjnych bazach danych, \emph{DataFrame} w \emph{Pythonowym} pakiecie \emph{pandas} czy dwuwymiarowa macierz w \emph{numpy}.
+Taki zestaw danych przekłada się na wiele modeli wykorzystywanych w komputerowej analizie danych, jak na przykład tabele czy widoki w relacyjnych bazach danych, \emph{DataFrame} w pythonowym pakiecie \emph{pandas} czy dwuwymiarowa macierz w numpy.
+\medskip\\
+rozszerzyć info o tych bibliotekach
 \medskip\\
 
 W rzeczywistym zastosowaniu komórki będą zawierały dane podlegające odpowiednim procesom (obliczeniom).
-W danych testowych będą liczbami losowymi, reprezentującymi rozmiar wejścia do funkcji która ma wykonać obliczenia na nich.
+W danych testowych będą liczbami losowymi, reprezentującymi rozmiar wejścia do funkcji, która ma wykonać obliczenia na nich.
 \medskip\\
 
 \begin{table}[!tbh]
