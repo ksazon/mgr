@@ -80,11 +80,22 @@ Hasłem \emph{komórka} oznaczony zostanie konkretny, identyfikowalny za pomocą
 
 \chapter{Pochodzenie modelu Partially Concurrernt Open Shop Schedule (PCOSS) i dotychczasowa literatura}
 
-Model \emph{Partially Concurrernt Open Shop Schedule} (\emph{OSS}) został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \cite{PCOSS:2014:P} jako generalizacja modelu \emph{Open Shop Schedule} (\emph{OSS}). \\
+\section{Model Open Shop Schedule}
 \medskip\\
-[tutaj o innych modelach]
+Powstały w latach siedemdziesiątych model \emph{OSS} to sposób szeregowania zadań, gdzie kolejność wykonywania operacji nie wpływa na wynik całego rozkładu. Jego klasyczna definicja to:
 \medskip\\
-Względem \emph{OSS} wprowadza on możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie. 
+{Istnieje zbiór $N={1,...,n}$ zadań, z których każde z nich posiada zbiór operacji, które muszą być procesowane na zbiorze różnych maszyn $M={1,...,m}$. Operacja $j$ na maszynie $i$ jest oznaczona jako $O_{ij}$ a czas jej trwania (procesowania) to $p_{ij}$. Jeżeli zadanie $j$ posiada czas zwolnienia oraz termin ukończenia, oznaczamy je odpowiednio przez $r_j$ i $d_j$. Kolejność procesowania zadań jest niematerialna, czyli nie ma wpływu na wynik rozkładu. Każda maszyna może wykonywać co najwyżej jedną operację na raz. Celem jest ustalenie rozkładu, czyli czasów ukończeń na maszynach, w taki sposób, że kryterium optymalizacyjne jest osiągnięte.}\cite{FourDecades:2020:X}
+\medskip\\
+
+\section{Model Partially Concurrernt Open Shop Schedule}
+Model \emph{Partially Concurrernt Open Shop Schedule} (\emph{OSS}), na którym skupia się niniejsza praca, został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \cite{PCOSS:2014:P} jako generalizacja modelu \emph{Open Shop Schedule} (\emph{OSS}). \\
+
+\medskip\\
+Model \emph{PCOSS} Względem \emph{OSS} wprowadza możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie. 
+
+\section{Inne modele skojarzone z Open Shop Schedule}
+Istnieją różne generalizacje \emph{Open Shop Schedule} oraz modele w których łączy się go z innymi typami \emph{Shop Schedule}.
+Jako przykład generalizacji można podać \emph{Multiprocessor Open Shop Schedule}, w którym kilka identycznych maszyn może pracować równolegle nad jedną operacją\cite{MPOSS:2020:X}, natomiast łączeniem \emph{OSS} z innymi modelami jest \emph{Mixed Shop Schedule} w którym zadania mogą przechodzić przez \emph{Job Shop}, \emph{Flow Shop} oraz \emph{Open Shop}.
 
 \chapter{Dane tabelaryczne}
 
