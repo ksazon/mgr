@@ -35,9 +35,8 @@
 
 % streszczenie
 \begin{abstract}
-W pracy przedstawiono system szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym, oparty o model nazwany w literaturze Partially Concurrent Open Shop Schedule (PCOSS). \\
-Przeanalizowano również jak wydajne (zarówno pod kątem czasu przygotowania jak i pod kątem jakości wyników) są różne heurystyki opisane w pracach innych autorów. \\
-Szczególną uwagę przywiązano do algorytmów bez wywłaszczania.
+W pracy przedstawiono propozycję systemu szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym, opartą o model nazwany w literaturze Partially Concurrent Open Shop Schedule (PCOSS). \\
+Przeanalizowano również jak wydajne pod kątem czasu przygotowania szeregowania są heurystyki opisane w pracach innych autorów. \\
 \end{abstract}
 
 % słowa kluczowe
@@ -57,15 +56,15 @@ sql}
 W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych powstałych od początku ludzkości do maja 2018 \cite{Forbes:2018:FBS}.) \\
 Nie istnieją też żadne przesłanki stanowiące o tym, że tempo wzrostu opadnie.
 Dane te pozwalają na nowe podejścia do wglądu w zjawiska, które do tej pory były niemożliwe.
-Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Jeszcze do niedawna trend wzrostu wydajności dostatecznie dobrze pokrywało tak zwane prawo Moore-a: ilość tranzystorów w układach zespolonych podwaja się co dwa lata.\cite{MOORE:1965:X}. Poprzez miniaturyzacje układów scalonych, procesy produkcyjne stają się coraz bardziej skomplikowane i duża wiele osób widzi perspektywę spowolnienia tego przyrostu.\cite{NOTMOORE:2020:X}  Pozostawia to deficyt technologiczny, do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
+Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Jeszcze do niedawna trend wzrostu wydajności dostatecznie dobrze pokrywało tak zwane prawo Moore-a: ilość tranzystorów w układach zespolonych podwaja się co dwa lata.\cite{MOORE:1965:X}. Poprzez miniaturyzacje układów scalonych, procesy produkcyjne stają się coraz bardziej skomplikowane i wiele osób widzi perspektywę spowolnienia tego przyrostu.\cite{NOTMOORE:2020:X}  Pozostawia to deficyt technologiczny, do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
 \medskip\\
 
-W pracy zaproponowano rozwiązania mogące przyspieszyć bardzo powszechne operacje na danych w postaci tabel.
+W pracy zaproponowano rozwiązanie mogące przyspieszyć bardzo powszechne operacje na danych w postaci tabel.
 \medskip\\
 
 Przykładami danych tego typu są table w programie \emph{Microsoft Excel} i jemu podobnych, pliki z wartościami rozdzielanymi przecinkiem (Comma Separated Values - \emph{CSV}), tabele i widoki w relacyjnych bazach danych, pliki \emph{Parquet} czy struktury tworzone przez biblioteki do manipulowania i analizy danych jak \emph{pandas}.
 
-Można za ich pomocą reprezentować informacje z szerokiego spektrum dziedzin; należą do nich między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy dziennik połączeń do danego serwera (\emph{log}).
+Można za ich pomocą reprezentować informacje z szerokiego spektrum dziedzin; należą do nich między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy dzienniki połączeń sieciowych do danego serwera (tzw. \emph{logi}).
 
 \section{Oznaczenia przyjęte w pracy}
 
@@ -78,7 +77,7 @@ W celu uniknięcia dwuznaczności słowa \emph{procesor} w pracy tratującej zar
 
 Hasłem \emph{komórka} oznaczony zostanie konkretny, identyfikowalny za pomocą indeksu wiersza i kolumny element tabeli.
 
-\chapter{Pochodzenie modelu Partially Concurrernt Open Shop Schedule (PCOSS) i dotychczasowa literatura}
+\chapter{Pochodzenie modelu Partially Concurrent Open Shop Schedule (PCOSS) i dotychczasowa literatura}
 
 \section{Początki szeregowania}
 Szeregowanie towarzyszyło ludzkości od bardzo dawna, jednak początków współczesnego szeregowania można szukać we wprowadzeniu produkcji taśmowej w fabrykach Forda, natomiast w matematycznym sensie za punkt otwierający ten rozdział można uznać algorytm Jacksona powstały w latach pięćdziesiątych dwudziestego wieku.
@@ -98,11 +97,11 @@ Modele \emph{Shop Schedule} dzielą się na
 \medskip\\
 Powstały w latach siedemdziesiątych model \emph{OSS} to sposób szeregowania zadań, gdzie kolejność wykonywania operacji nie wpływa na wynik całego rozkładu. Jego klasyczna definicja to:
 \medskip\\
-{Istnieje zbiór $N={1,...,n}$ zadań, z których każde z nich posiada zbiór operacji, które muszą być procesowane na zbiorze różnych maszyn $M={1,...,m}$. Operacja $j$ na maszynie $i$ jest oznaczona jako $O_{ij}$ a czas jej trwania (procesowania) to $p_{ij}$. Jeżeli zadanie $j$ posiada czas zwolnienia oraz termin ukończenia, oznaczamy je odpowiednio przez $r_j$ i $d_j$. Kolejność procesowania zadań jest niematerialna, czyli nie ma wpływu na wynik rozkładu. Każda maszyna może wykonywać co najwyżej jedną operację na raz. Celem jest ustalenie rozkładu, czyli czasów ukończeń na maszynach, w taki sposób, że kryterium optymalizacyjne jest osiągnięte.}\cite{FourDecades:2020:X}
+{Istnieje zbiór $N={1,...,n}$ zadań, z których każde posiada zbiór operacji, które muszą być procesowane na zbiorze różnych maszyn $M={1,...,m}$. Operacja $j$ na maszynie $i$ jest oznaczona jako $O_{ij}$ a czas jej trwania (procesowania) to $p_{ij}$. Jeżeli zadanie $j$ posiada czas zwolnienia oraz termin ukończenia, oznaczamy je odpowiednio przez $r_j$ i $d_j$. Kolejność procesowania zadań jest niematerialna, czyli nie ma wpływu na wynik rozkładu. Każda maszyna może wykonywać co najwyżej jedną operację na raz. Celem jest ustalenie rozkładu, czyli czasów ukończeń na maszynach, w taki sposób, że kryterium optymalizacyjne jest osiągnięte.}\cite{FourDecades:2020:X}
 \medskip\\
 
-\section{Model Partially Concurrernt Open Shop Schedule}
-Model \emph{Partially Concurrernt Open Shop Schedule} (\emph{OSS}), na którym skupia się niniejsza praca, został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \cite{PCOSS:2014:P} jako generalizacja modelu \emph{Open Shop Schedule} (\emph{OSS}). \\
+\section{Model Partially Concurrent Open Shop Schedule}
+Model \emph{Partially Concurrent Open Shop Schedule} (\emph{OSS}), na którym skupia się niniejsza praca, został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \cite{PCOSS:2014:P} jako generalizacja modelu \emph{Open Shop Schedule} (\emph{OSS}). \\
 
 \medskip\\
 Model \emph{PCOSS} względem \emph{OSS} wprowadza możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie.
@@ -205,12 +204,13 @@ Danymi testowymi będzie lista $n$ krotek o rozmiarze $m$ elementów każda.
 Każda kolejna krotka będzie traktowana jako nowy wiersz, natomiast wszystkie indeksy krotek będą odpowiadały kolumnom. 
 \medskip\\
 
-Taki zestaw danych przekłada się na wiele modeli wykorzystywanych w komputerowej analizie danych, jak na przykład tabele czy widoki w relacyjnych bazach danych, \emph{DataFrame} w pythonowym pakiecie \emph{pandas} czy dwuwymiarowa macierz w numpy.
+Taki zestaw danych przekłada się na wiele modeli wykorzystywanych w komputerowej analizie danych, jak na przykład tabele czy widoki w relacyjnych bazach danych, \emph{DataFrame} w pythonowym pakiecie \emph{pandas} czy dwuwymiarowa macierz w \emph{numpy}.
 \medskip\\
-Relacyjne bazy danych to sposoby reprezentacji i przechowywania zbiorów danych oparte o idee zaproponowane przez Edgara Codda, około roku 1970 naszej ery. Relacyjne bazy dane organizują dane w tabelach, które składają się z wierszy (rekordów, krotek) i kolumn (pól, atrybutów). Table posiadają relacje (związki) między sobą, pozwalające na efektywne wykorzystanie zasobów. Językiem programowania najczęściej stosowanym do operacji na bazach danych są różne wariacje \emph{Structured Query Language} - \emph{SQL}. \cite{RDB1:2020:X}\cite{RDB2:2020:X}\cite{RDB3:2010:X}
+Relacyjne bazy danych to sposoby reprezentacji i przechowywania zbiorów danych oparte o idee zaproponowane przez Edgara Codda, około roku 1970. Relacyjne bazy dane organizują dane w tabelach, które składają się z wierszy (rekordów, krotek) i kolumn (pól, atrybutów). Table posiadają relacje (związki) między sobą, pozwalające na efektywne wykorzystanie zasobów. Językiem programowania najczęściej stosowanym do operacji na bazach danych są różne wariacje \emph{Structured Query Language} - \emph{SQL}. \cite{RDB1:2020:X}\cite{RDB2:2020:X}\cite{RDB3:2010:X}
 
-\emph{pandas} to stosowana w języku python biblioteka złożonych struktur i narzędzi do pracy ze zbiorami danymi strukturalnymi powszechnie wykorzystywanych w statystyce, finansach, naukach społecznych i na wielu innych polach. Biblioteka dostarcza zintegrowane, intuitywne narzędzia do wykonywania powszechnych manipulacji danych i ich analizy. Służy ona jako silny dodatek do istniejących narzędzi w języku python, jednocześnie implementując i rozwijając narzędzia manipulacji danymi obecne w innych językach zorientowanych na programowanie statystyczne, takich jak R. \cite{PANDAS1:2011:X}\cite{PANDAS2:2020:X}
-\emph{numpy} to również stosowana w języku python biblioteka, która jest zestawem rozszerzeń do niego, pozwalającym na efektywne manipulowanie dużymi zbiorami danych zorganizowanymi w krato-podobny sposób oraz przeprowadznie obliczeń numerycznych. \cite{NUMPY1:2020:X}\cite{NUMPY2:1999:X}
+\emph{pandas} to stosowana w języku python biblioteka złożonych struktur i narzędzi do pracy ze zbiorami danymi strukturalnymi powszechnie wykorzystywanych w statystyce, finansach, naukach społecznych i na wielu innych polach. Biblioteka dostarcza zintegrowane, intuicyjne narzędzia do wykonywania powszechnych manipulacji danych i ich analizy. Służy ona jako silny dodatek do istniejących narzędzi w języku python, jednocześnie implementując i rozwijając narzędzia manipulacji danymi obecne w innych językach zorientowanych na programowanie statystyczne, takich jak R. \cite{PANDAS1:2011:X}\cite{PANDAS2:2020:X}
+
+\emph{numpy} to również stosowana w języku python biblioteka, która jest zestawem rozszerzeń do niego, pozwalającym na efektywne manipulowanie dużymi zbiorami danych zorganizowanymi w krato-podobny sposób oraz przeprowadzanie obliczeń numerycznych. \cite{NUMPY1:2020:X}\cite{NUMPY2:1999:X}
 \medskip\\
 
 W rzeczywistym zastosowaniu komórki będą zawierały dane podlegające odpowiednim procesom (obliczeniom).
@@ -319,7 +319,6 @@ W przypadku, gdy podane są funkcje grupowania wierszy lub kolumn, algorytm twor
 
 Tak przygotowane dane gotowe są do przetwarzania w kolejnych etapach działania algorytmu.
 
-\newpage
 \subsubsection{Przykład}
 \medskip\\
 
@@ -438,7 +437,7 @@ $$t = f(b * s^a + c)$$
 Gdzie $t$ to czas wykonywania, a $s$ to rozmiar danych.
 \medskip\\
 
-Funkcja \emph{curve\_fit} działa wykorzystując metodą najmniejszych kwadratów korzystając z zadanego algorytmu, np Levenberga-Marquardta.
+Funkcja \emph{curve\_fit} działa wykorzystując metodą najmniejszych kwadratów korzystając z zadanego algorytmu, np Levenberga-Marquardta.\cite{LAVMAR:2005:X}
 \medskip\\
 
 Problem niepokrycia wszystkich możliwych funkcji czasów przetwarzania poruszony został w rozdziale \ref{chap:extend}.
@@ -523,43 +522,66 @@ to czas 0, gdzie egzekutor odczytał pierwszy wiersz (z indeksem czasu 0) i rozd
 
 Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywistością. Sytuacja została szerzej opisana w rozdziale \ref{chap:extend}
 
+Na diagramach \ref{diag:sched_20j420} i \ref{diag:sched_100j4m} przedstawione zostały wykresy Gantta dla przykładowych problemów.
+
+\begin{figure}[!tbh]
+\centering
+\includegraphics[width=.8\hsize]{fig/newplot_trim100j4m.png}
+\caption{Przykładowe zaszeregowanie dla 100 zadań i 4 maszyn\label{diag:sched_100j4m}}
+\source{Opracowanie własne}
+\end{figure}
+\medskip\\
+
+\begin{figure}[!tbh]
+\centering
+\includegraphics[width=.8\hsize]{fig/newplot_trim20j20m.png}
+\caption{Przykładowe zaszeregowanie dla 20 zadań i 20 maszyn\label{diag:sched_20j420}}
+\source{Opracowanie własne}
+\end{figure}
+\medskip\\
+
 \chapter{Analiza sprawności dyspozytora}
 
 W celu analizy sprawności dyspozytora przeprowadzono serie testów.
 Testy różniły się między sobą
 \begin{enumerate}
-    \item algorytmem szeregowania
     \item ilością kolumn
     \item ilością wierszy
     \item czasem wykonywania poszczególnych operacji
-    \item wielkością danych podanych w komórkach
+    \item grafem konfliktu
 \end{enumerate}
+
+Wyniki testów dla algorytmu \emph{INSERTION WITH BEAM SEARCH} określają potencjalne jego zastosowania. Są to albo zbiory danych, gdzie ilości wierszy i kolumn po zgrupowaniu są bardzo małe (na przykład kilkadziesiąt wierszy i kilka kolumn), albo operacje, których naiwne zrównoleglanie trwa bardzo długo (wiele godzin). Naturalnie istnieje wiele takich przypadków, gdzie pożądanym jest sprowadzenie poprzez grupowanie dużych ilości wierszy do niewielu grup, lub operacji których czas wykonania jest liczony w dniach.
 
 \chapter{Analiza sprawności algorytmów dla podproblemu}
 
-W celu analizy sprawności algorytmów porównano sumę czasów działania dyspozytora oraz wykonywania zaszeregowania z sekwencyjnym czasem wykonywania operacji dla tych samych danych.
+W celu analizy sprawności algorytmu \emph{INSERTION WITH BEAM SEARCH} porównano sumę czasów działania dyspozytora oraz wykonywania zaszeregowania z sekwencyjnym czasem wykonywania operacji dla tych samych danych.
 
 \chapter{Potencjalne kierunki rozwoju pracy} \label{chap:extend}
 
 Praca otwiera kilka tematów o które może być rozszerzona oraz kilka potencjalnych tematów nowych prac.
 \medskip\\
 
-W celu pełnego wprowadzenia systemu do użycia, należy rozwiązać problem potencjalnych różnic założonym czasem operacji a czasem rzeczywistym. System obecnie stosuje margines bezpieczeństwa (niewielką wartość dodaną do szacowanego czasu operacji).
+W celu pełnego wprowadzenia systemu do użycia, należy rozwiązać problem potencjalnych różnic pomiędzy założonym czasem operacji a czasem rzeczywistym. System obecnie stosuje margines bezpieczeństwa (niewielką wartość dodaną do szacowanego czasu operacji).
 W pełni rozwinięty system powinien mieć tolerancję na takie błędy i wprowadzać korekty do rozkładu w trakcie jego wykonywania.
 \medskip\\
 
 Jako całkiem nowy temat, wartościowym byłoby poddanie analizie prawdopodobnie częściej spotykanego przypadku pominięcia grafu konfliktu, czyli zaimplementowania systemu dla modelu \emph{Multiprocessor Open Shop Schedule}.
 \medskip\\
 
-Kolejnym tematem który został zauważony w trakcie analizy zagadnienia są szczególne przypadki \emph{PCOSS} gdy graf konfliktu sprowadza się do grafu konfliktu dla wyłącznie dla kolumn, tj. z pominięciem krawędzi "pionowych" (między wierszami).
+Kolejnym tematem który został zauważony w trakcie analizy zagadnienia są szczególne (a zarazem najczęstsze) przypadki \emph{PCOSS} gdy graf konfliktu sprowadza się do grafu konfliktu wyłącznie dla kolumn, tj. z pominięciem krawędzi "pionowych" (między wierszami). Daje to potencjał do znalezienia i zastosowania bardziej optymalnych algorytmów.
 \medskip\\
 
-Zaproponowany system można zaimplementować jako tzw. \emph{scheduler}, na przykład w module \emph{Dask} języka \emph{Python}, który jest powszechnie stosowany przy zrównolegnianiu operacji na \emph{DataFrame}.
+Zaproponowany system można zaimplementować jako tzw. \emph{scheduler}, na przykład w module \emph{Dask} języka \emph{Python}, który jest powszechnie stosowany przy zrównolegnianiu operacji na \emph{DataFrame-ach}.
 
 % zakończenie
 \summary
 
-Wszystko poszło pięknie.
+W pracy zaproponowano model systemu pozwalającego na redukcję czasu wykonywania serii operacji na danych tabelarycznych. System taki, prawdopodobnie z uwagi na specyficzną grupę odbiorców, nie został zaimplementowany w żadnym ze znanych modułów dostępnych w powszechnych językach programowania.
+\medskip\\
+Wybór problemu \emph{Partially Concurrent Open Shop Schedule} został podyktowany jego największą generalizacją spośród problemów typu \emph{Open Shop Schedule}. Jego ograniczanie do innych form \emph{OSS} nie powinno przynosić dużych wyzwań.
+\medskip\\
+Praca otwiera drogę do jej rozszerzenia, implementacji w komercyjnych produktach oraz optymalizacji.
 
 % załączniki (opcjonalnie):
 \appendix
