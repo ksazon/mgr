@@ -36,7 +36,7 @@
 % streszczenie
 \begin{abstract}
 W pracy przedstawiono propozycję systemu szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym, opartą o model nazwany w literaturze Partially Concurrent Open Shop Schedule (PCOSS). \\
-Przeanalizowano również jak wydajne pod kątem czasu przygotowania szeregowania są heurystyki opisane w pracach innych autorów. \\
+Przeanalizowano również jak wydajne pod kątem czasu przygotowania szeregowania są heurystyki opisane w pracach innych autorów.\\
 \end{abstract}
 
 % słowa kluczowe
@@ -53,14 +53,14 @@ sql}
 % wstęp
 \introduction
 
-W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych powstałych od początku ludzkości do maja 2018 \cite{Forbes:2018:FBS}.) \\
+W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych powstałych od początku ludzkości do maja 2018 \cite{Forbes:2018:FBS}.)\\
 Nie istnieją też żadne przesłanki stanowiące o tym, że tempo wzrostu opadnie.
 Dane te pozwalają na nowe podejścia do wglądu w zjawiska, które do tej pory były niemożliwe.
-Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Jeszcze do niedawna trend wzrostu wydajności dostatecznie dobrze pokrywało tak zwane prawo Moore-a: ilość tranzystorów w układach zespolonych podwaja się co dwa lata.\cite{MOORE:1965:X}. Poprzez miniaturyzacje układów scalonych, procesy produkcyjne stają się coraz bardziej skomplikowane i wiele osób widzi perspektywę spowolnienia tego przyrostu.\cite{NOTMOORE:2020:X}  Pozostawia to deficyt technologiczny, do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
-\medskip\\
+Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Jeszcze do niedawna trend wzrostu wydajności dostatecznie dobrze pokrywało tak zwane prawo Moore-a: ilość tranzystorów w układach zespolonych podwaja się co dwa lata \cite{MOORE:1965:X}. Poprzez miniaturyzacje układów scalonych, procesy produkcyjne stają się coraz bardziej skomplikowane i wiele osób widzi perspektywę spowolnienia tego przyrostu \cite{NOTMOORE:2020:X}. Pozostawia to deficyt technologiczny, do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
+\medskip
 
 W pracy zaproponowano rozwiązanie mogące przyspieszyć bardzo powszechne operacje na danych w postaci tabel.
-\medskip\\
+\medskip
 
 Przykładami danych tego typu są table w programie \emph{Microsoft Excel} i jemu podobnych, pliki z wartościami rozdzielanymi przecinkiem (Comma Separated Values - \emph{CSV}), tabele i widoki w relacyjnych bazach danych, pliki \emph{Parquet} czy struktury tworzone przez biblioteki do manipulowania i analizy danych jak \emph{pandas}.
 
@@ -69,11 +69,11 @@ Można za ich pomocą reprezentować informacje z szerokiego spektrum dziedzin; 
 \section{Oznaczenia przyjęte w pracy}
 
 Hasła \emph{tabela} i \emph{tablica} stosowane będą zamiennie i będą oznaczały strukturę danych składającą się z listy krotek. 
-\medskip\\
+\medskip
 
 W celu uniknięcia dwuznaczności słowa \emph{procesor} w pracy tratującej zarówno o modelu matematycznym jak i o systemach komputerowych przyjęto używanie go w rozumieniu pochodzącym z modelu matematycznego (inaczej \emph{maszyna}).
 \emph{Procesor} w rozumieniu układu scalonego w systemie komputerowym będzie oznaczany anglojęzycznym skrótem, takim jak \emph{CPU} (\emph{Central Processing Unit}) czy \emph{GPU} (\emph{Graphics Processing Unit}).
-\medskip\\
+\medskip
 
 Hasłem \emph{komórka} oznaczony zostanie konkretny, identyfikowalny za pomocą indeksu wiersza i kolumny element tabeli.
 
@@ -81,11 +81,14 @@ Hasłem \emph{komórka} oznaczony zostanie konkretny, identyfikowalny za pomocą
 
 \section{Początki szeregowania}
 Szeregowanie towarzyszyło ludzkości od bardzo dawna, jednak początków współczesnego szeregowania można szukać we wprowadzeniu produkcji taśmowej w fabrykach Forda, natomiast w matematycznym sensie za punkt otwierający ten rozdział można uznać algorytm Jacksona powstały w latach pięćdziesiątych dwudziestego wieku.
-\medskip\\
+\medskip
+
 Szeregowanie w szerokim sensie można opisać jako alokacje zasobów do zadań na w pewnej przestrzeni czasu tak, aby alokacja możliwie najlepiej spełniała kryterium optymalizacyjne. Powstało wiele prac na ten temat, z których cześć została ujęta w publikacjach \cite{GRAVES:1970:X}, \cite{SEQSCHE:1973:X} oraz \cite{CURTRE:1997:X}.
-\medskip\\
+\medskip
+
 Jedną z najważniejszych grup modeli szeregowania są \emph{Shop Schedule}. Modelują one zjawiska takie jak działanie fabryk, warsztatów czy sieci komputerowych. Opierają się na założeniu, że zadanie składa się z operacji, a każda operacja ma swój czas procesowania i maszynę na której powinna być wykonywana.
-\medskip\\
+\medskip
+
 Modele \emph{Shop Schedule} dzielą się na
 \begin{itemize}
     \item \emph{Job Shop Schedule} w którym operacje wykonywane są liniowo, zgodnie z zadaną kolejnością
@@ -94,16 +97,18 @@ Modele \emph{Shop Schedule} dzielą się na
 \end{itemize}
 
 \section{Model Open Shop Schedule}
-\medskip\\
+\medskip
+
 Powstały w latach siedemdziesiątych model \emph{OSS} to sposób szeregowania zadań, gdzie kolejność wykonywania operacji nie wpływa na wynik całego rozkładu. Jego klasyczna definicja to:
-\medskip\\
+\medskip
+
 {Istnieje zbiór $N={1,...,n}$ zadań, z których każde posiada zbiór operacji, które muszą być procesowane na zbiorze różnych maszyn $M={1,...,m}$. Operacja $j$ na maszynie $i$ jest oznaczona jako $O_{ij}$ a czas jej trwania (procesowania) to $p_{ij}$. Jeżeli zadanie $j$ posiada czas zwolnienia oraz termin ukończenia, oznaczamy je odpowiednio przez $r_j$ i $d_j$. Kolejność procesowania zadań jest niematerialna, czyli nie ma wpływu na wynik rozkładu. Każda maszyna może wykonywać co najwyżej jedną operację na raz. Celem jest ustalenie rozkładu, czyli czasów ukończeń na maszynach, w taki sposób, że kryterium optymalizacyjne jest osiągnięte.}\cite{FourDecades:2020:X}
-\medskip\\
+\medskip
 
 \section{Model Partially Concurrent Open Shop Schedule}
 Model \emph{Partially Concurrent Open Shop Schedule} (\emph{OSS}), na którym skupia się niniejsza praca, został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \cite{PCOSS:2014:P} jako generalizacja modelu \emph{Open Shop Schedule} (\emph{OSS}). \\
+\medskip
 
-\medskip\\
 Model \emph{PCOSS} względem \emph{OSS} wprowadza możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie.
 
 \section{Inne modele skojarzone z Open Shop Schedule}
@@ -112,26 +117,28 @@ Jako przykład generalizacji można podać \emph{Multiprocessor Open Shop Schedu
 Łączeniem \emph{OSS} z innymi modelami jest \emph{Mixed Shop Schedule} w którym zadania mogą przechodzić przez \emph{Job Shop}, \emph{Flow Shop} oraz \emph{Open Shop}, oraz różne ich kombinacje.
 
 \section{Dotychczasowa literatura odnośnie Partially Concurrent Open Shop Schedule}
-W dziedzinie badań związanych z \emph{Partially Concurrent Open Shop Schedule} przewijają się głównie nazwiska badaczy z \emph{Ariel University} w Izraelu: Tal Grinshpoun, Hagai Ilani i Elad Shufan. Pierwszą pracę \cite{1PCOSS:2014:P} zaprezentowali oni na \emph{10th International Conference on the Practice And Theory of Automated Timetabling (PATAT 2014)}. Motywacją dla tej pracy był problem przydzielania techników do obsługi floty samolotów (sprawdzenia ich przed lotem). Problem jest podobny do standardowego \emph{Open Shop Schedule} pod kątem braku wpływu kolejności wykonywania badań na efekt końcowy (decyzje czy samolot ma wszystkie podzespoły sprawne). W celu skrócenia czasu cześć operacji można wykonywać jednocześnie, co w pewnym stopniu upodabnia sytuację do tej modelowanej przez \emph{Multiprocessor Open Shop Schedule}, opisywanej między innymi w pracy \cite{MPOSS:2020:X}. Problemem w tym modelu są jednakże operacje na jednym samolocie które wzajemnie się wykluczają, na przykład poprzez zakłócanie odczytów narzędzi pomiarowych przez inne procesy. Operacje te są reprezentowane przez graf konfliktu, będący jedną z danych wejściowych dla modelu. W rzeczy samej, \emph{Open Shop Schedule} oraz \emph{Multiprocessor Open Shop Schedule} są skrajnymi przypadkami \emph{Partially Concurrent Open Shop Schedule} - odpowiednio z grafem konfliktu który ma wszystkie krawędzie poza tymi między różnymi maszynami a zadaniami oraz z grafem konfliktu który ma krawędzie wyłącznie pomiędzy różnymi zadaniami w obrębie jednej maszyny. \\
+W dziedzinie badań związanych z \emph{Partially Concurrent Open Shop Schedule} przewijają się głównie nazwiska badaczy z \emph{Ariel University} w Izraelu: Tal Grinshpoun, Hagai Ilani i Elad Shufan. Pierwszą pracę \cite{PCOSS:2014:P} zaprezentowali oni na \emph{10th International Conference on the Practice And Theory of Automated Timetabling (PATAT 2014)}. Motywacją dla tej pracy był problem przydzielania techników do obsługi floty samolotów (sprawdzenia ich przed lotem). Problem jest podobny do standardowego \emph{Open Shop Schedule} pod kątem braku wpływu kolejności wykonywania badań na efekt końcowy (decyzje czy samolot ma wszystkie podzespoły sprawne). W celu skrócenia czasu cześć operacji można wykonywać jednocześnie, co w pewnym stopniu upodabnia sytuację do tej modelowanej przez \emph{Multiprocessor Open Shop Schedule}, opisywanej między innymi w pracy \cite{MPOSS:2020:X}. Problemem w tym modelu są jednakże operacje na jednym samolocie które wzajemnie się wykluczają, na przykład poprzez zakłócanie odczytów narzędzi pomiarowych przez inne procesy. Operacje te są reprezentowane przez graf konfliktu, będący jedną z danych wejściowych dla modelu. W rzeczy samej, \emph{Open Shop Schedule} oraz \emph{Multiprocessor Open Shop Schedule} są skrajnymi przypadkami \emph{Partially Concurrent Open Shop Schedule} - odpowiednio z grafem konfliktu który ma wszystkie krawędzie poza tymi między różnymi maszynami a zadaniami oraz z grafem konfliktu który ma krawędzie wyłącznie pomiędzy różnymi zadaniami w obrębie jednej maszyny.\\
 Autorzy proponują przestawienie rozkładu jako \emph{Rank Matrix}, które ma przełożenie 1:1 na znajomość czasów rozpoczęcia każdej z operacji (lub równoważnie jej zakończenia). Zaproponowano użycie następującej notacji Grahama dla \emph{PCOSS}: $O|pconc|f_n$, gdzie $f_n$ jest kryterium optymalizacyjnym. Autorzy wskazują na to, że problem sprowadza się do orientowaniem grafu konfliktu tak, żeby był acykliczny i najdłuższa ścieżka w nim była możliwie najkrótsza. Problem jest NP-trudny już dla pojedynczego zadania i jednostkowych czasów, co zostaje wykazane przez redukcję z orientowania grafu nieskierowanego do kolorowania grafu. Jako heurystykę konstrukcyjną autorzy podają adaptację algorytmu \emph{Insertion} z zastosowaniem \emph{beam search}, prezentowanego między innymi w pracy \cite{CHOSS:1993:X}.
-\medskip\\
+\medskip
+
 W pracy \cite{GRACOL:2016:X} ci sami autorzy opisują relację między szczególnymi przypadkami \emph{PCOSS} a technikami stosowanymi przy kolorowaniu grafów. Praca zawiera interesujące sposoby podejścia do zagadnienia które jednakowoż nie mają oczywistych zastosowań w tematyce niniejszej pracy, gdyż skupiają się na preempcji, wersjach \emph{uniform} (wszystkie zadania mają jednakowe czasy procesowania na poszczególnych maszynach) oraz takich z czasami jednostkowymi (wszystkie operacja trwają jedną jednostkę czasu) problemu \emph{PCOSS}. W szczególności warto zauważyć wskazanie algorytmów które przygotowują rozkład w czasie wielomianowym względem rozmiaru wejścia dla niektórych przypadków grafu konfliktu.
-\medskip\\
-Praca \cite{RESRES:2018:X}, znów autorstwa Tal Grinshpoun, Hagai Ilani i Elad Shufan wprowadza kolejne zagadnienie do tematyki \emph{PCOSS}: ograniczenie zasobów. Ograniczone zasoby, w rozumieniu tej pracy, to zasoby z których mogą korzystać maszyny wspólnie, i których ilość ogranicza ilość operacji które mogą być wykonywanie jednocześnie. Po raz kolejny twórcy pracy sięgają do wykorzystania kolorowania grafów, jako środka metody projekcji problemu. W pracy wykorzystane są badania problemu znanego w literaturze pod nazwą \emph{Bounded Vertex Colouring}.
+\medskip
+
+Praca \cite{RESTR:2018:X}, znów autorstwa Tal Grinshpoun, Hagai Ilani i Elad Shufan wprowadza kolejne zagadnienie do tematyki \emph{PCOSS}: ograniczenie zasobów. Ograniczone zasoby, w rozumieniu tej pracy, to zasoby z których mogą korzystać maszyny wspólnie, i których ilość ogranicza ilość operacji które mogą być wykonywanie jednocześnie. Po raz kolejny twórcy pracy sięgają do wykorzystania kolorowania grafów, jako środka metody projekcji problemu. W pracy wykorzystane są badania problemu znanego w literaturze pod nazwą \emph{Bounded Vertex Colouring}.
 
 \chapter{Dane tabelaryczne}
 
 Dane tabelarycznie w postaci elektronicznej są w dzisiejszych czasach codziennym elementem pracy wielu osób, zarówno w środowiskach naukowych jak i w świecie konsumenckim i przemysłowym. Jest to jeden z najbardziej powszechnych sposobów reprezentacji zbiorów danych. Przykładami dziedzin, gdzie są one szczególnie istotne mogą być: analiza statystyczna, handel, magazynowanie, prognozowanie trendów czy systemy które na bazie bodźców ze środowiska modyfikują swoje działanie.
-\medskip\\
+\medskip
 
 Słownik \emph{Merriam-Webster} definiuje "tabelaryczny" jako "osadzony w wierszach i kolumnach" \cite{MW:TAB}
-\medskip\\
+\medskip
 
 Moduł języka \emph{Python} - \emph{pandas} definiuje "DataFrame" jako "dwuwymiarowe, potencjalnie heterogeniczne dane tabelaryczne" \cite{P:DF}.
-\medskip\\
+\medskip
 
 Baza danych \emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających wspólną strukturę danych (ta sama ilość atrybutów, w tej samej kolejności mających tę samą nazwę i typ per pozycja)" \cite{PSQL:TAB}.
-\medskip\\
+\medskip
 
 System opisany w tej pracy może być zastosowany do danych które mogą być opisane przez każdą z tych definicji z osobna.
 
@@ -139,7 +146,7 @@ System opisany w tej pracy może być zastosowany do danych które mogą być op
 
 Praca skupia się na takich sytuacjach, gdy sekwencyjne lub naiwnie zrównolegnione wykonywanie operacji zajmuje zbyt wiele czasu lub jest niemożliwe z uwagi na ograniczenia narzucone na wykonywanie operacji na tabeli.
 Ograniczenia te odpowiadają grafowi konfliktu w \emph{PCOSS}.
-\medskip\\
+\medskip
 
 Źródła tych ograniczeń można podzielić na trzy kategorie:
 \begin{enumerate}
@@ -147,7 +154,7 @@ Ograniczenia te odpowiadają grafowi konfliktu w \emph{PCOSS}.
     \item takie gdzie zrównolegnianie prowadzi do pogorszenia wartości funkcji optymalizacji (pogorszenie wydajności),
     \item takie, gdzie wykonywanie par operacji na jednym wierszu może prowadzić do nieprawidłowych wyników.
 \end{enumerate}
-\medskip\\
+\medskip
 
 Przykłady
 \begin{enumerate}
@@ -155,30 +162,30 @@ Przykłady
     \item zapisując wyniki do różnych baz SQLite per różne wiersze, jednoczesny zapis wartości obliczanej na dwu kolumnach do jednej bazy spowoduje zablokowanie zapisu drugiego wyniku, do czasu skończenia zapisu pierwszego,
     \item zależności między danymi w różnych kolumnach tego samego wiersza; mając wiersze z kolumnami wskazującymi na siebie, nie powinniśmy jednocześnie zmieniać wartości obydwu tych kolumn, gdyż może to prowadzić to niespójności danych.
 \end{enumerate}
-\medskip\\
+\medskip
 
 Podobne rozumowanie, w szczególności w odniesieniu do nawiązywania połączeń między różnymi serwerami można przeprowadzić dla grafu konfliktu między różnymi wierszami tej samej kolumny oraz dowolnymi parami komórek.
-\medskip\\
+\medskip
 
 Warto zauważyć, że powyższe problemy mają względnie nieduże znaczenie w większości przypadków, gdy cały rozkład wykonywany jest na jednej maszynie lub przy niedużych ilościach danych. Można je wtedy rozwiązać między innymi za pomocą odpowiednich mechanizmów blokowania dostępu do zasobów (\emph{locking}).
 Sytuacja zmienia się gdy musimy przetworzyć duże ilości danych na systemach rozproszonych.
-\medskip\\
+\medskip
 
 Zastosowanie proponowanego frameworku w macierzach FPGA, sieciach procesorów oraz w przypadku korzystania z sieciowych interfejsów do przetwarzania danych wydaje się być bardziej racjonalne i pożądane niż zastosowanie go dla pojedynczej maszyny.
 
 \chapter{Relacja między modelem matematycznym a architekturą systemu}
 
 Przy przyjętych w poprzednim rozdziale założeniach rolę \emph{procesorów} z modelu matematycznego przejmują urządzenia (lub ich systemy), takie jak \emph{API} serwerów sieciowych, \emph{CPU}, \emph{GPU} czy dyski twarde.
-\medskip\\
+\medskip
 
 \emph{Zadania} interpretowane są jako kolejne wiersze lub ich agregaty.
-\medskip\\
+\medskip
 
 Z powyższego wynika bezpośrednio, że \emph{operacją} staje się praca pewnej instancji pewnego systemu (\emph{procesora} w rozumieniu wynikającym z modelu matematycznego) na konkretnym zbiorze wierszy.
-\medskip\\
+\medskip
 
 W szczególnym (a zarazem najczęstszym przypadku) zestaw wierszy zawiera jeden wiersz, a zestaw kolumn zawiera jedną kolumnę, co implikuje traktowanie komórki jako operacji.
-\medskip\\
+\medskip
 
 Po ewentualnej agregacji kolumn i wierszy powstała tabela przestawiać będzie zestaw zadań (danych) w wierszach, maszyn (urządzeń) w kolumnach i operacje (przetwarzanie danych przez maszynę) w komórkach.
 
@@ -186,13 +193,13 @@ Po ewentualnej agregacji kolumn i wierszy powstała tabela przestawiać będzie 
 
 Sposób działania systemu jest w dużej mierze niezależny od danych wejściowych - warunkiem jest reprezentowane ich w postaci tabeli z zadaniami w wierszach i maszynami w kolumnach.
 Mogą więc być to na przykład dane tekstowe, liczbowe, obiekty, adresy serwisów internetowych, obrazy, pliki czy też referencje do innych tabel.
-\medskip\\
+\medskip
 
 W pracy pominięto aspekt zbierania danych jako niezwiązany bezpośrednio z szeregowaniem operacji na nich.
-\medskip\\
+\medskip
 
 W celu uzyskania oczekiwanych informacji z zestawu danych należy je odpowiednio spreparować a następnie uruchomić narzędzia analityczne na nich.
-\medskip\\
+\medskip
 
 Wprowadzimy abstrakcję, gdzie w wypadku operacji agregowania określone na wejściu zestawy agregowanych kolumn traktowane będą jako pojedyncze kolumny, a określone na wejściu zestawy agregowanych wierszy - jako pojedyncze wiersze.
 
@@ -202,20 +209,20 @@ Dzięki tej abstrakcji możemy uprościć rozważania, nie tracąc zarazem popra
 
 Danymi testowymi będzie lista $n$ krotek o rozmiarze $m$ elementów każda.
 Każda kolejna krotka będzie traktowana jako nowy wiersz, natomiast wszystkie indeksy krotek będą odpowiadały kolumnom. 
-\medskip\\
+\medskip
 
 Taki zestaw danych przekłada się na wiele modeli wykorzystywanych w komputerowej analizie danych, jak na przykład tabele czy widoki w relacyjnych bazach danych, \emph{DataFrame} w pythonowym pakiecie \emph{pandas} czy dwuwymiarowa macierz w \emph{numpy}.
-\medskip\\
+\medskip
 Relacyjne bazy danych to sposoby reprezentacji i przechowywania zbiorów danych oparte o idee zaproponowane przez Edgara Codda, około roku 1970. Relacyjne bazy dane organizują dane w tabelach, które składają się z wierszy (rekordów, krotek) i kolumn (pól, atrybutów). Table posiadają relacje (związki) między sobą, pozwalające na efektywne wykorzystanie zasobów. Językiem programowania najczęściej stosowanym do operacji na bazach danych są różne wariacje \emph{Structured Query Language} - \emph{SQL}. \cite{RDB1:2020:X}\cite{RDB2:2020:X}\cite{RDB3:2010:X}
 
 \emph{pandas} to stosowana w języku python biblioteka złożonych struktur i narzędzi do pracy ze zbiorami danymi strukturalnymi powszechnie wykorzystywanych w statystyce, finansach, naukach społecznych i na wielu innych polach. Biblioteka dostarcza zintegrowane, intuicyjne narzędzia do wykonywania powszechnych manipulacji danych i ich analizy. Służy ona jako silny dodatek do istniejących narzędzi w języku python, jednocześnie implementując i rozwijając narzędzia manipulacji danymi obecne w innych językach zorientowanych na programowanie statystyczne, takich jak R. \cite{PANDAS1:2011:X}\cite{PANDAS2:2020:X}
 
 \emph{numpy} to również stosowana w języku python biblioteka, która jest zestawem rozszerzeń do niego, pozwalającym na efektywne manipulowanie dużymi zbiorami danych zorganizowanymi w krato-podobny sposób oraz przeprowadzanie obliczeń numerycznych. \cite{NUMPY1:2020:X}\cite{NUMPY2:1999:X}
-\medskip\\
+\medskip
 
 W rzeczywistym zastosowaniu komórki będą zawierały dane podlegające odpowiednim procesom (obliczeniom).
 W danych testowych będą liczbami losowymi, reprezentującymi rozmiar wejścia do funkcji, która ma wykonać obliczenia na nich.
-\medskip\\
+\medskip
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|l|l|} \hline
@@ -235,7 +242,7 @@ $r_{n}$     & $4561$   & $4214$     & ...   & $9753$    & $4125$    \\ \hline
 \section{Wstęp}
 
 W rozumieniu tej pracy \emph{dyspozytor} to system mający na celu poprawne (wykonalne i zgodne z ograniczeniami) zaszeregowanie i rozdzielanie zadań pomiędzy pomiędzy dostępne procesory.
-\medskip\\
+\medskip
 
 Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następujące kroki
 
@@ -270,7 +277,7 @@ Na wejściu algorytm otrzymuje następujące dane wejściowe
 % \todo[inline]{dać przykład prawidłowego formatu każdego argumentu}
 
 Tabela \ref{tab:args-default} zawiera domyślne wartości argumentów opcjonalnych
-\medskip\\
+\medskip
 
 % \todo{tak często się te nazwy przewijają, że być może warto nadać im symbole}
 
@@ -288,48 +295,48 @@ Idx. arg. & Wartość domyślna & Interpretacja wartości domyślnej \\ \hline
 \caption{Domyślne wartości wejściowe algorytmu i ich interpretacja\label{tab:args-default}}
 \source{Własne}
 \end{table}
-\medskip\\
+\medskip
 
 Zagadnienie postępowania algorytmu w zależności od tego, które parametry zostały podane szerzej omówione zostanie w kolejnych podrozdziałach.
 
 \section{Grupowanie danych}
 
 W tej pracy agregacja rozumiana będzie jako proces łączenia kilku wartości w jedną reprezentatywną wartość.
-\medskip\\
+\medskip
 
 Logika działania agregacji na wierszach podąża za logiką przyjęta między innymi przez język \emph{SQL}, technologię \emph{LINQ} na platformie \emph{.Net} czy różne moduły języka \emph{Python}, w szczególności \emph{pandas}.
-\medskip\\
+\medskip
 
 Agregacja w zastosowaniach praktycznych jest jedną z podstawowych operacji przy przetwarzaniu danych, np. w celu ich analizy.
 Pozwala ona łączyć duże ilości danych w logiczne grupy, które reprezentują analizowane właściwości tych danych.
-\medskip\\
+\medskip
 
 Agregację w takim rozumieniu można podzielić na dwa etapy:
 \begin{itemize}
     \item grupowanie danych wg. funkcji grupującej
     \item wykonanie funkcji docelowej na zgrupowanych wartościach
 \end{itemize}
-\medskip\\
+\medskip
 
 Przykład grupowania znajduje się poniżej.
-\medskip\\
+\medskip
 
 W przypadku, gdy podane są funkcje grupowania wierszy lub kolumn, algorytm tworzy zgrupowania zawierające indeksy zakresów zawieranych w tych zgrupowaniach, czyli łączy zestawy komórek w pojedyncze komórki na podstawie zadanego klucza (funkcji).
-\medskip\\
+\medskip
 
 Tak przygotowane dane gotowe są do przetwarzania w kolejnych etapach działania algorytmu.
 
 \subsubsection{Przykład}
-\medskip\\
+\medskip
 
 Przygotowano tabelę wejściową \ref{tab:example-input} w której znajdują się fikcyjne dane na temat sprzedaży produktów \emph{M1} i \emph{M2} na terenie trzech krajów w dwudniowym okienku czasowym.
-\medskip\\
+\medskip
 
 Dla tej tabeli przygotowane zostało takie zgrupowanie wierszy, że kluczem grupowania są jednakowe wartości w kolumnie \emph{Kraj} (funkcja \ref{eq:example-row-agg}).
-\medskip\\
+\medskip
 
 Dla kolumn przygotowane zostało takie zgrupowanie, że z kolumn \emph{Sprzedaż$\_$M1} i \emph{Sprzedaż$\_$M2} powstaje jedna kolumna \emph{Sprzedaż$\_$M1$\_$Sprzedaż$\_$M2} (funkcja \ref{eq:example-col-agg}).
-\medskip\\
+\medskip
 
 Po zastosowaniu funkcji sumy na zgrupowanych komórkach wynikowej kolumny należy to interpretować jako sumaryczną sprzedaż wszystkich produktów w całym okresie w danych krajach.
 
@@ -346,10 +353,10 @@ Indeks & Kraj & Data & Sprzedaż$\_$M1 & Sprzedaż$\_$M2 \\ \hline
 \caption{Przykładowa tabela do zagregowania \label{tab:example-input}}
 \source{Własne}
 \end{table}
-\medskip\\
+\medskip
 
 Dla przejrzystości funkcji zastosowane zostały skróty
-\medskip\\
+\medskip
 
 \begin{itemize}
     \item Indeks - $i$
@@ -358,22 +365,22 @@ Dla przejrzystości funkcji zastosowane zostały skróty
     \item Sprzedaż$\_$M1 - $s_{m1}$
     \item Sprzedaż$\_$M2 - $s_{m2}$
 \end{itemize}
-\medskip\\
+\medskip
 
 Funkcja grupowania kolumn
 \begin{equation} \label{eq:example-col-agg}
 \lambda (i, k, d, s_{m1}, s_{m2}) \\ \Rightarrow (i, k, d, (s_{m1}, s_{m2}))
 \end{equation}
-\medskip\\
+\medskip
 
 Funkcja grupowania wierszy
 \begin{equation} \label{eq:example-row-agg}
 \lambda (w_1, w_2, ..., w_{n-1}, w_n) \\ \Rightarrow (w_{g1}, w_{g2}, ..., w_{gm-1}, w_{gm}) 
 \end{equation}
-\medskip\\
+\medskip
 
 gdzie $w_{gx}$ po prawej stronie transformacji, to grupa takich $w_y$ (po lewej stronie), dla których $k$ (kraj) to $x$
-\medskip\\
+\medskip
 
 Otrzymujemy tabelę wyjściową \ref{tab:example-output}, gotową do obróbki w następnym etapie.
 Dla przejrzystości w komórkach nie znajdują się indeksy z tabeli wejściowej, tylko wartości kryjące się pod tymi indeksami.
@@ -393,11 +400,9 @@ Indeks & Kraj & Dzień & Sprzedaż$\_$M1$\_$Sprzedaż$\_$M2 \\ \hline
 
 \section{Przydzielenie szacunkowych czasów wykonania poszczególnych operacji}
 
-W celu przygotowania poprawnego rozkładu należy znać lub oszacować wartości czasów wykonywania poszczególnych operacji.
-\medskip\\
+W celu przygotowania poprawnego rozkładu należy znać lub oszacować wartości czasów wykonywania poszczególnych operacji.\medskip
 
-Z założeń podanie jednocześnie czasów w postaci argumentów "tabela złożoności obliczeniowej (zgrupowanych) kolumn" oraz "tabela czasów przetwarzania (zgrupowanych) kolumn" jest prawdopodobnie błędem ze strony użytkownika. W takim wypadku zostanie zgłoszony błąd i algorytm przerwie działanie.
-\medskip\\
+Z założeń podanie jednocześnie czasów w postaci argumentów "tabela złożoności obliczeniowej (zgrupowanych) kolumn" oraz "tabela czasów przetwarzania (zgrupowanych) kolumn" jest prawdopodobnie błędem ze strony użytkownika. W takim wypadku zostanie zgłoszony błąd i algorytm przerwie działanie.\medskip
 
 Schemat działania przydzielania czasu został przedstawiony na diagramie \ref{diag:time-assign}.
 
@@ -407,7 +412,7 @@ Schemat działania przydzielania czasu został przedstawiony na diagramie \ref{d
 \caption{Schemat postępowania przy przydzielaniu czasu\label{diag:time-assign}}
 \source{Opracowanie własne}
 \end{figure}
-\medskip\\
+\medskip
 
 \subsubsection{Zachowanie algorytmu w zależności od podanych danych na temat czasu}
 
@@ -419,13 +424,13 @@ W szczególnym przypadku zadane mogą zostać jednakowe czasy wykonywania operac
 \myparagraph{Podano argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn"}
 
 Ważnym aspektem tego argumentu, jest fakt, że w dziedzinie praktycznej podanie złożoności obliczeniowej nie może ograniczać się do podania samego asymptotycznego tempa wzrostu - $O(n)$; konieczne jest precyzyjniejsze oszacowanie, wraz ze współczynnikiem oraz czynnikiem dodanym (opóźnieniem, latencją).
-\medskip\\
+\medskip
 
 Jeżeli na wejściu do algorytmu znajduje się argument "tabela złożoności obliczeniowej (zgrupowanych) kolumn", jedyną operacją która musi zostać wykonana jest podstawienie rozmiarów danych z poszczególnych komórek pod funkcje podane na wejściu.
-\medskip\\
+\medskip
 
 W szczególnym wypadku użytkownik może podać czasy niezależne od rozmiaru wejścia - na przykład czasy jednostkowe.
-\medskip\\
+\medskip
 
 \myparagraph{Nie podano żadnego z argumentów odnoszących się do czasów przetwarzania}
 
@@ -435,10 +440,10 @@ W tym celu zostanie porównany rozmiar wejścia z czasem w którym jest wykonywa
 $$t = f(b * s^a + c)$$
 
 Gdzie $t$ to czas wykonywania, a $s$ to rozmiar danych.
-\medskip\\
+\medskip
 
 Funkcja \emph{curve\_fit} działa wykorzystując metodą najmniejszych kwadratów korzystając z zadanego algorytmu, np Levenberga-Marquardta.\cite{LAVMAR:2005:X}
-\medskip\\
+\medskip
 
 Problem niepokrycia wszystkich możliwych funkcji czasów przetwarzania poruszony został w rozdziale \ref{chap:extend}.
 
@@ -452,19 +457,18 @@ Problem niepokrycia wszystkich możliwych funkcji czasów przetwarzania poruszon
 
 Jeżeli użytkownik poda obsługiwany przez program algorytm szeregowania, program wykorzysta swoją implementację tego algorytmu.
 W przypadku niezaimplementowania wymaganego przez użytkownika algorytmu szeregowania program zgłosi błąd.
-\medskip\\
+\medskip
 
 Jeżeli algorytm szeregowania nie zostanie podany, to przy zadanym kryterium optymalizacyjnym program dobierze odpowiedni algorytm szeregowania służący do przygotowania optymalnego rozkładu.
-\medskip\\
+\medskip
 
 Dobór algorytmu polegał będzie na poruszaniu się po drzewie decyzji (bez ingerencji użytkownika).
 Wybór podjęty przez rozwiązanie funkcji zwracającej \emph{prawda/fałsz} na każdym poziomu prowadził będzie do kolejnej funkcji w drzewie lub na poziomie liścia - do konkretnego algorytmu.
 
 \section{Przygotowanie uszeregowania}
-% \todo[inline]{zastosowano uproszczenie: jeden procesor wykonuje tylko jedną funkcję}
 
 Po rozważeniu dwu metod możliwości rozdysponowania operacji pomiędzy procesory: z egzekutorem (koordynatorem) oraz w bez (w sposób nieskoordynowany) wybrana została metoda uwzględniająca egzekutora.
-\medskip\\
+\medskip
 
 Mimo większej prostoty mechanizmu gdzie każdemu procesorowi zadana jest seria operacji do wykonania w określonych czasach, mechanizm z koordynatorem jest bardziej odporny na błędy i oferuje możliwość łatwiejszej rozbudowy.
 
@@ -478,17 +482,17 @@ Gdy przygotowane zostaną
 \end{itemize}
 
 można przystąpić do konstrukcji uszeregowania.
-\medskip\\
+\medskip
 
 Konstrukcja uszeregowania polega na wykonaniu danego algorytmu szeregowania z danymi wejściowymi.
-\medskip\\
+\medskip
 
 Finalny rozkład zostanie przedstawiony w formie tabeli, której indeksy wierszy ($t_i$) będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny ($p_j$) przedstawiają procesory natomiast w komórce (koleje małe litery alfabetu) znajduje indeks wiersz i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki) w postaci dwójki [indeks wiersza, indeks kolumny].
 % \todo{matematycznie zapisać}
-\medskip\\
+\medskip
 
 Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-sched-out}.
-\medskip\\
+\medskip
 
 Należy zauważyć, że taki rozkład jest transponowanym klasycznym wykresem Gantta z dyskretnymi czasami rozpoczynania zadań.
 
@@ -506,11 +510,11 @@ $t_3$       & $[e,f]$   & $[g,h]$   & ...   & -         & $[i,j]$\\ \hline
 \section{Czuwanie nad prawidłowym wykonaniem rozkładu}
 
 Egzekutor sekwencyjnie czytając wiersze rozkładu zajmował będzie się dysponowaniem operacji w momentach wynikających z indeksu wiersza na odpowiednie procesory.
-\medskip\\
+\medskip
 
 Idea działania egzekutora została przedstawiona na diagramie \ref{diag:executor}. Moment uchwycenia diagramu 
 to czas 0, gdzie egzekutor odczytał pierwszy wiersz (z indeksem czasu 0) i rozdysponował procesowanie komórki $[1,2]$ na procesorze $p_1$ oraz komórki $[2,1]$ na procesorze $p_4$.
-\medskip\\
+\medskip
 
 \begin{figure}[!tbh]
 \centering
@@ -518,7 +522,7 @@ to czas 0, gdzie egzekutor odczytał pierwszy wiersz (z indeksem czasu 0) i rozd
 \caption{Schemat działania egzekutora\label{diag:executor}}
 \source{Opracowanie własne}
 \end{figure}
-\medskip\\
+\medskip
 
 Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywistością. Sytuacja została szerzej opisana w rozdziale \ref{chap:extend}
 
@@ -530,7 +534,7 @@ Na diagramach \ref{diag:sched_20j420} i \ref{diag:sched_100j4m} przedstawione zo
 \caption{Przykładowe zaszeregowanie dla 100 zadań i 4 maszyn\label{diag:sched_100j4m}}
 \source{Opracowanie własne}
 \end{figure}
-\medskip\\
+\medskip
 
 \begin{figure}[!tbh]
 \centering
@@ -538,7 +542,7 @@ Na diagramach \ref{diag:sched_20j420} i \ref{diag:sched_100j4m} przedstawione zo
 \caption{Przykładowe zaszeregowanie dla 20 zadań i 20 maszyn\label{diag:sched_20j420}}
 \source{Opracowanie własne}
 \end{figure}
-\medskip\\
+\medskip
 
 \chapter{Analiza sprawności dyspozytora}
 
@@ -551,7 +555,21 @@ Testy różniły się między sobą
     \item grafem konfliktu
 \end{enumerate}
 
-Wyniki testów dla algorytmu \emph{INSERTION WITH BEAM SEARCH} określają potencjalne jego zastosowania. Są to albo zbiory danych, gdzie ilości wierszy i kolumn po zgrupowaniu są bardzo małe (na przykład kilkadziesiąt wierszy i kilka kolumn), albo operacje, których naiwne zrównoleglanie trwa bardzo długo (wiele godzin). Naturalnie istnieje wiele takich przypadków, gdzie pożądanym jest sprowadzenie poprzez grupowanie dużych ilości wierszy do niewielu grup, lub operacji których czas wykonania jest liczony w dniach.
+Wyniki testów dla algorytmu \emph{INSERTION WITH BEAM SEARCH} określają potencjalne jego zastosowania. Są to albo zbiory danych, gdzie ilości wierszy i kolumn po zgrupowaniu są bardzo małe (na przykład kilkadziesiąt wierszy i kilka kolumn), albo operacje, których naiwne zrównoleglanie trwa bardzo długo (wiele godzin). Naturalnie istnieje wiele takich przypadków, gdzie pożądanym jest sprowadzenie poprzez grupowanie dużych ilości wierszy do niewielu grup, lub operacji których czas wykonania jest liczony w dniach. Na wykresach \ref{diag:relplot_128j} i \ref{diag:relplot_16m} znajdują się wykresy czasów wykonania operacji w zależności od, odpowiednio, ilości maszyn i ilości zadań.
+
+\begin{figure}[!tbh]
+\centering
+\includegraphics[width=.8\hsize]{fig/relplot_128j.png}
+\caption{Porównanie czasu przygotowania operacji dla 128 operacji w zależności od ilości maszyn\label{diag:relplot_128j}}
+\source{Opracowanie własne}
+\end{figure}\medskip
+
+\begin{figure}[!tbh]
+\centering
+\includegraphics[width=.8\hsize]{fig/relplot_16m.png}
+\caption{Porównanie czasu przygotowania operacji dla 16 maszyn w zależności od ilości zadań\label{diag:relplot_16m}}
+\source{Opracowanie własne}
+\end{figure}\medskip
 
 \chapter{Analiza sprawności algorytmów dla podproblemu}
 
@@ -559,18 +577,14 @@ W celu analizy sprawności algorytmu \emph{INSERTION WITH BEAM SEARCH} porównan
 
 \chapter{Potencjalne kierunki rozwoju pracy} \label{chap:extend}
 
-Praca otwiera kilka tematów o które może być rozszerzona oraz kilka potencjalnych tematów nowych prac.
-\medskip\\
+Praca otwiera kilka tematów o które może być rozszerzona oraz kilka potencjalnych tematów nowych prac.\medskip
 
 W celu pełnego wprowadzenia systemu do użycia, należy rozwiązać problem potencjalnych różnic pomiędzy założonym czasem operacji a czasem rzeczywistym. System obecnie stosuje margines bezpieczeństwa (niewielką wartość dodaną do szacowanego czasu operacji).
-W pełni rozwinięty system powinien mieć tolerancję na takie błędy i wprowadzać korekty do rozkładu w trakcie jego wykonywania.
-\medskip\\
+W pełni rozwinięty system powinien mieć tolerancję na takie błędy i wprowadzać korekty do rozkładu w trakcie jego wykonywania.\medskip
 
-Jako całkiem nowy temat, wartościowym byłoby poddanie analizie prawdopodobnie częściej spotykanego przypadku pominięcia grafu konfliktu, czyli zaimplementowania systemu dla modelu \emph{Multiprocessor Open Shop Schedule}.
-\medskip\\
+Jako całkiem nowy temat, wartościowym byłoby poddanie analizie prawdopodobnie częściej spotykanego przypadku pominięcia grafu konfliktu, czyli zaimplementowania systemu dla modelu \emph{Multiprocessor Open Shop Schedule}.\medskip
 
-Kolejnym tematem który został zauważony w trakcie analizy zagadnienia są szczególne (a zarazem najczęstsze) przypadki \emph{PCOSS} gdy graf konfliktu sprowadza się do grafu konfliktu wyłącznie dla kolumn, tj. z pominięciem krawędzi "pionowych" (między wierszami). Daje to potencjał do znalezienia i zastosowania bardziej optymalnych algorytmów.
-\medskip\\
+Kolejnym tematem który został zauważony w trakcie analizy zagadnienia są szczególne (a zarazem najczęstsze) przypadki \emph{PCOSS} gdy graf konfliktu sprowadza się do grafu konfliktu wyłącznie dla kolumn, tj. z pominięciem krawędzi "pionowych" (między wierszami). Daje to potencjał do znalezienia i zastosowania bardziej optymalnych algorytmów.\medskip
 
 Zaproponowany system można zaimplementować jako tzw. \emph{scheduler}, na przykład w module \emph{Dask} języka \emph{Python}, który jest powszechnie stosowany przy zrównolegnianiu operacji na \emph{DataFrame-ach}.
 
@@ -578,11 +592,13 @@ Zaproponowany system można zaimplementować jako tzw. \emph{scheduler}, na przy
 \summary
 
 W pracy zaproponowano model systemu pozwalającego na redukcję czasu wykonywania serii operacji na danych tabelarycznych. System taki, prawdopodobnie z uwagi na specyficzną grupę odbiorców, nie został zaimplementowany w żadnym ze znanych modułów dostępnych w powszechnych językach programowania.
-\medskip\\
+\medskip
 Wybór problemu \emph{Partially Concurrent Open Shop Schedule} został podyktowany jego największą generalizacją spośród problemów typu \emph{Open Shop Schedule}. Jego ograniczanie do innych form \emph{OSS} nie powinno przynosić dużych wyzwań.
-\medskip\\
+\medskip
 Praca otwiera drogę do jej rozszerzenia, implementacji w komercyjnych produktach oraz optymalizacji.
 
+\cite{Senn:2009}
+\cite{ahmadian2020four}
 % załączniki (opcjonalnie):
 \appendix
 \chapter{Tytuł załącznika jeden}
