@@ -66,32 +66,35 @@ Przykładami danych tego typu są table w programie \emph{Microsoft Excel} i jem
 Można za ich pomocą reprezentować informacje z szerokiego spektrum dziedzin. Należą do nich między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy dzienniki połączeń sieciowych do danego serwera (tzw. \emph{logi}).
 
 \chapter{Pochodzenie modelu szeregowania zadań częściowo zależnych w systemie otwartym i dotychczasowa literatura}
+\chaptermark{Pochodzenie i dotychczasowa literatura}
 
 \section{Początki szeregowania}
-Szeregowanie towarzyszyło ludzkości od bardzo dawna, jednak początków współczesnego szeregowania można szukać we wprowadzeniu produkcji taśmowej w fabrykach Forda. Natomiast w matematycznym sensie za punkt otwierający ten rozdział można uznać algorytm Jacksona powstały na potrzeby przemysłu w latach pięćdziesiątych dwudziestego wieku (rozwiązanie problemu szeregowania w systemie ogólnym, w środowisku dwu maszynowym, z maksymalnie dwiema operacjami na zadanie w czasie wielomianowym) \cite{jackson1956extension}.
+Szeregowanie towarzyszyło ludzkości od bardzo dawna, jednak początków współczesnego szeregowania można szukać we wprowadzeniu produkcji taśmowej w fabrykach Forda. Natomiast w matematycznym sensie za punkt otwierający ten rozdział można uznać algorytm Jacksona powstały na potrzeby przemysłu w latach pięćdziesiątych dwudziestego wieku (rozwiązanie w czasie wielomianowym problemu szeregowania w systemie ogólnym, w środowisku dwu maszynowym, z maksymalnie dwiema operacjami na zadanie) \cite{jackson1956extension}.
 \medskip
 
 \section{Szeregowanie}
-Szeregowanie w szerokim sensie można opisać jako alokację zasobów do zadań na w pewnej przestrzeni czasu tak, aby alokacja możliwie najlepiej spełniała zadane kryterium optymalizacyjne. Powstało wiele prac na ten temat, z których cześć została ujęta w publikacjach \cite{graves1981review}, \cite{lawler1993sequencing} oraz \cite{lee1997current}.
+Szeregowanie w szerokim sensie można opisać jako alokację zasobów do zadań na w pewnej przestrzeni czasu tak, aby alokacja możliwie najlepiej spełniała zadane kryterium optymalizacyjne, czyli zminimalizowany zostały koszt uszeregowania (lista kilka najbardziej powszechnych kryteriów optymalizacyjnych znajduje się w tym rozdziale). Powstało wiele prac na ten temat, z których cześć została zebrana w publikacjach \cite{graves1981review}, \cite{lawler1993sequencing} oraz \cite{lee1997current}.
 \medskip
 
 Formalne ujęcie problemu to:\\
-Posiadając zbiór maszyn $M=\{1,...,m\}$, które mają wykonywać operacje na zbiorze zadań $J=\{1,...,n\}$, szeregowaniem dla każdego zadania nazywamy alokacje jednego lub więcej interwałów czasu do jednej lub więcej maszyn \cite{brucker1999scheduling}.
+% Posiadając zbiór maszyn $M=\{1,...,m\}$, które mają wykonywać operacje na zbiorze zadań $J=\{1,...,n\}$, szeregowaniem dla każdego zadania nazywamy alokacje jednego lub więcej interwałów czasu do jednej lub więcej maszyn \cite{brucker1999scheduling}.
+% \medskip
+
+Mamy zbiór $n$ zadań $\{i = 1,...,n\}$ i zbiór $m$ maszyn $\{M_1,...,M_m\}$. Każde zadanie $i$ składa się ze zbioru operacji $O_{ij} (j=1,...,n_i)$ z czasami przetwarzania $p_{ij}$. Każda operacja $O_{ij}$ musi być wykonana na maszynie $\mu_{ij} \in \{M_1,...,M_m\}$. Mogą istnieć relacje poprzedzania pomiędzy operacjami wszystkich zadań. Każde zadania może być wykonywane przez wyłącznie jedną maszynę naraz i każda maszyna może wykonywać co najwyżej jedną operację w danym momencie czasu. Celem jest znalezienie wykonalnego szeregowania które minimalizuje zadaną funkcję celu \cite{brucker1999scheduling}. Problem nazywamy deterministycznym, jeżeli wszystkie dane znane są stałe i z góry znane.
 \medskip
 
-Jedną z najważniejszych grup modeli szeregowania są szeregowania na maszynach dedykowanych - \emph{Shop Schedule}.
-Modelują one zjawiska takie jak działanie fabryk, warsztatów czy sieci komputerowych.
-Opierają się na założeniu, że zadanie składa się z operacji, a każda operacja ma swój czas wykonywania i maszynę, na której powinna być wykonywana (w odróżnieniu od maszyn równoległych, gdzie każda maszyna może obsłużyć każdą operację).
+Spośród dwu najważniejszych grup modeli szeregowania - szeregowanie na maszynach dedykowanych (\emph{Shop Scheduling}) oraz szeregowanie na maszynach równoległych (\emph{Parallel Processing Scheduling}) - opis którego znajdziemy między innymi w pracy \cite{drozdowski2009scheduling}, problem przedstawiony w tej pracy jest podproblemem tej pierwszej grupy. Grupa ta jest często wykorzystywana przy modelowaniu zjawisk takich jak działanie fabryk, warsztatów czy sieci komputerowych.
+Opiera się na założeniu, że zadanie składa się z operacji, a każda operacja ma swój czas wykonywania i maszynę, na której powinna być wykonywana (w odróżnieniu od maszyn równoległych, gdzie każda maszyna może obsłużyć każdą operację).
 \medskip
 
-Szeregowanie na maszynach dedykowanych to problem, dla którego wejściem jest zbiór zadań, środowisko maszynowe, czasy wykonywania operacji na poszczególnych maszynach oraz zbiór ograniczeń.
-Rozwiązaniem jego jest uszeregowanie operacji, czyli przypisanie każdej z nich czasu rozpoczęcia (równoważnie - czasu jej zakończenia).\\
+Wejściem dla tego problemu jest zbiór zadań, środowisko maszynowe, czasy wykonywania operacji na poszczególnych maszynach oraz zbiór ograniczeń.
+Natomiast rozwiązaniem jest uszeregowanie operacji, czyli przypisanie każdej z nich czasu rozpoczęcia (równoważnie - czasu jej zakończenia).\\
 
-Do opisu problemu szeregowania na maszynach dedykowanych wprowadzona została notacja trójpolowa ($\alpha|\beta|\gamma$)\cite{graham1979optimization}, która opisuje środowisko maszynowe (pole $\alpha$), opis zbioru zadań (pole $\beta$) oraz funkcję kryterium optymalizacyjnego - funkcji, której wartość należy zoptymalizować (pole $\gamma$).\\
+Do opisu problemu szeregowania na maszynach dedykowanych w pracy \cite{graham1979optimization} wprowadzona została notacja trójpolowa ($\alpha|\beta|\gamma$), która opisuje środowisko maszynowe (pole $\alpha$), opis zbioru zadań (pole $\beta$) oraz funkcję kryterium optymalizacyjnego - funkcji, której wartość należy zoptymalizować (pole $\gamma$).\\
 
 Najczęstsze wartości występujące w polach notacji dla procesorów dedykowanych:\\
 
-Dla pola$\alpha$:
+Dla pola $\alpha$:
 \begin{itemize}
     % \item $P$ - procesory identyczne
     % \item $Q$ - procesory jednorodne
@@ -107,7 +110,7 @@ Dla pola $\beta$:
     \item $pmtn$ - zadania podzielne
     \item $prec$ - zadania zależne
     \item $r_j$ - różne wartości momentów przybycia
-    \item $p_j=1$ lub $UET$ - operacje jednostkowe
+    % \item $p_j=1$ lub $UET$ - operacje jednostkowe
     \item $p_{ij}\in\{0,1\}$ - operacje jednostkowe lub puste
     \item $C_j\leq d_j$ - istnieją wymagane i nieprzekraczalne terminy zakończenia zadań
     \item $no\-idle$ - procesory muszą pracować w sposób ciągły, bez okienek
@@ -120,7 +123,7 @@ Oraz dla pola $\gamma$:
     \item $C_{max}$ - długość uszeregowania
     \item $\sum{C_k}$ - całkowity (łączny) czas zakończenia zadań
     \item $\bar{F}$ - średni czas przepływu
-\end{itemize}\cite{furmanczyk2020wyklad1}
+\end{itemize}
 % job shop to szeregowanie w systemie ogólnym lub gniazdowym
 % flow shop - to szeregowanie w systemie przepływowym
 % open shop - system otwarty.
@@ -131,9 +134,9 @@ Oraz dla pola $\gamma$:
 
 Do głównych modeli szeregowania na maszynach dedykowanych należą:
 \begin{itemize}
-    \item szeregowanie w systemie ogólnym (gniazdowym), w którym operacje wykonywane są liniowo, zgodnie z zadaną kolejnością, niekoniecznie tą samą dla wszystkich zadań
-    \item szeregowanie w systemie przepływowym, w którym operacje wykonywane są liniowo, zgodnie z zadaną kolejnością a każde zadanie ma tę samą kolejność
-    \item system otwarty, w którym operacje na danym zadaniu mogą być wykonywane w dowolnej kolejności
+    \item szeregowanie w systemie ogólnym (gniazdowym, \emph{Job Shop Scheduling}), w którym operacje wykonywane są liniowo, zgodnie z zadaną kolejnością, niekoniecznie tą samą dla wszystkich zadań
+    \item szeregowanie w systemie przepływowym (\emph{Flow Shop Scheduling}), w którym operacje wykonywane są liniowo, zgodnie z zadaną kolejnością a każde zadanie ma tę samą kolejność
+    \item system otwarty (\emph{Open Shop Scheduling}), w którym operacje na danym zadaniu mogą być wykonywane w dowolnej kolejności
 \end{itemize}
 
 \section{Model szeregowania w systemie otwartym}
@@ -148,7 +151,7 @@ Kolejność wykonywania zadań jest niematerialna, czyli nie ma wpływu na wynik
 \medskip
 
 \section{Model szeregowania zadań częściowo zależnych w systemie otwartym}
-Model szeregowania zadań częściowo zależnych w systemie otwartym - \emph{Partially Concurrent Open Shop Schedule} (\emph{PCOSS}), na którym skupia się niniejsza praca, został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \cite{grinshpoun2014partially} jako generalizacja modelu szeregowania w systemie otwartym(\emph{OSS}).\\
+Model szeregowania zadań częściowo zależnych w systemie otwartym (\emph{Partially Concurrent Open Shop Schedule - PCOSS}), na którym skupia się niniejsza praca, został wprowadzony w 2014 roku przez Tal Grinshpoun, Hagai Ilani i Elad Shufan w pracy \emph{Partially-Concurrent Open Shop Scheduling} \cite{grinshpoun2014partially} jako generalizacja modelu szeregowania w systemie otwartym (\emph{OSS}).\\
 \medskip
 
 Model \emph{PCOSS} względem \emph{OSS} wprowadza możliwość równoczesnego wykonywania niektórych operacji. Motywacją dla pracy był problem stworzenia rozkładu pracy dla techników sprawdzających samoloty w hangarze, gdzie część czynności może być wykonywana równolegle, a inne nie mogą odbywać się jednocześnie.
@@ -160,13 +163,13 @@ Jako przykład generalizacji można podać \emph{Multiprocessor Open Shop Schedu
 
 \section{Dotychczasowa literatura o szeregowaniu zadań częściowo zależnych w systemie otwartym}
 W dziedzinie badań związanych z szeregowania zadań częściowo zależnych w systemie otwartym przewijają się głównie nazwiska badaczy z \emph{Ariel University} w Izraelu: Tal Grinshpoun, Hagai Ilani i Elad Shufan. Pracę \cite{grinshpoun2014partially} zaprezentowali oni na \emph{10th International Conference on the Practice And Theory of Automated Timetabling (PATAT 2014)}. Motywacją dla tej pracy był problem przydzielania techników do obsługi floty samolotów (sprawdzenia ich przed lotem). Problem jest podobny do standardowego systemu otwartego pod kątem braku wpływu kolejności wykonywania badań na efekt końcowy (decyzje czy samolot ma wszystkie podzespoły sprawne). W celu skrócenia czasu cześć operacji można wykonywać jednocześnie, co w pewnym stopniu upodabnia sytuację do tej modelowanej przez \emph{Multiprocessor Open Shop Schedule}, opisywanej między innymi w pracy \cite{adakmultiprocessor}. Problemem w tym modelu są jednakże operacje na jednym samolocie, które wzajemnie się wykluczają, na przykład poprzez zakłócanie odczytów narzędzi pomiarowych przez inne procesy. Operacje te są reprezentowane przez graf konfliktu, będący jedną z danych wejściowych dla modelu. W rzeczy samej, system otwarty oraz \emph{Multiprocessor Open Shop Schedule} są skrajnymi przypadkami szeregowania zadań częściowo zależnych w systemie otwartym - odpowiednio z grafem konfliktu, który ma wszystkie krawędzie poza tymi między różnymi maszynami a zadaniami oraz z grafem konfliktu, który ma krawędzie wyłącznie pomiędzy różnymi zadaniami w obrębie jednej maszyny.\\
-Autorzy proponują przestawienie rozkładu jako \emph{Rank Matrix}, które ma przełożenie 1:1 na znajomość czasów rozpoczęcia każdej z operacji (lub równoważnie jej zakończenia). Zaproponowano użycie następującej notacji trójpolowej dla \emph{PCOSS}: $O|pconc|f_n$, gdzie $f_n$ jest kryterium optymalizacyjnym. Autorzy wskazują na to, że problem sprowadza się do orientowaniem grafu konfliktu tak, żeby był acykliczny i najdłuższa ścieżka w nim była możliwie najkrótsza. Problem jest NP-trudny już dla pojedynczego zadania i jednostkowych czasów, co zostaje wykazane przez redukcję z orientowania grafu nieskierowanego do kolorowania grafu. Jako heurystykę konstrukcyjną autorzy podają adaptację algorytmu \emph{Insertion} z zastosowaniem \emph{beam search}, prezentowanego między innymi w pracy \cite{brasel1993constructive}.
+Autorzy proponują przestawienie rozkładu jako macierz rang (\emph{Rank Matrix}) $A = (a_{ij})$, gdzie wartość komórki $a_{ij} = k$ oznacza, że ścieżka prowadząca do operacji $(i, j)$ z maksymalną ilością operacji ma $k$ operacji \cite{brasel2008heuristic}. Macierz ta ma przełożenie 1:1 na znajomość czasów rozpoczęcia każdej z operacji (lub równoważnie jej zakończenia) - sposób konstrukcji oraz obliczania uszeregowania znajduje się w tejże pracy. Zaproponowano użycie następującej notacji trójpolowej dla \emph{PCOSS}: $O|pconc|f_n$, gdzie $f_n$ jest kryterium optymalizacyjnym. Autorzy wskazują na to, że problem sprowadza się do orientowaniem grafu konfliktu tak, żeby był acykliczny i najdłuższa ścieżka w nim była możliwie najkrótsza. Pokazane zostaje, że problem jest NP-trudny już dla pojedynczego zadania i jednostkowych czasów, z czego wynika, że ogólny przypadek jest również NP-trudny. Jako heurystykę konstrukcyjną autorzy podają adaptację algorytmu wstawiania z zastosowaniem szukania wiązkowego (\emph{insertion with beam search}), prezentowanego między innymi w pracy \cite{brasel1993constructive}.
 \medskip
 
-W pracy \cite{ilani2016partially} ci sami autorzy opisują relację między szczególnymi przypadkami \emph{PCOSS} a technikami stosowanymi przy kolorowaniu grafów. Praca zawiera interesujące sposoby podejścia do zagadnienia, które jednakowoż nie mają oczywistych zastosowań w tematyce niniejszej pracy, gdyż skupiają się na modelach z wywłaszczaniem, wersjach \emph{uniform} (wszystkie zadania mają jednakowe czasy wykonywania na poszczególnych maszynach) oraz takich z czasami jednostkowymi (wszystkie operacja trwają jedną jednostkę czasu) problemu \emph{PCOSS}. W szczególności warto zauważyć wskazanie algorytmów które przygotowują rozkład w czasie wielomianowym względem rozmiaru wejścia dla niektórych przypadków grafu konfliktu.
+W pracy \cite{ilani2016partially} ci sami autorzy opisują relację między szczególnymi przypadkami \emph{PCOSS} a technikami stosowanymi przy kolorowaniu grafów. Prfaca zawiera interesujące sposoby podejścia do zagadnienia, które jednakowoż nie mają oczywistych zastosowań w tematyce niniejszej pracy, gdyż skupiają się na modelach z wywłaszczaniem, wersjach \emph{uniform} (wszystkie zadania mają jednakowe czasy wykonywania na poszczególnych maszynach) oraz takich z czasami jednostkowymi (wszystkie operacja trwają jedną jednostkę czasu) problemu \emph{PCOSS}. Autorzy wskazują między innymi na możliwość przygotowania uszeregowania dla wersji \emph{PCOSS} z wywłaszczeniami w czasach całkowitych (\emph{integral-preemption PCOSS} w czasie wielomianowym względem rozmiaru wejścia dla niektórych przypadków grafu konfliktu - gdy jest on grafem doskonałym. Graf doskonały to graf, którego liczba chromatyczna każdego podgrafu indukowanego wierzchołkowo równa jest rozmiarowi największej kliki tego podgrafu \cite{diestel2010graph}. Bazują przy tym na wynikach pracy \cite{grotschel1984polynomial}, gdzie wykazane zostaje, że każdy graf doskonały może zostać polokorowany w czasie wielomianowym.
 \medskip
 
-Praca \cite{ilani2018partially} autorstwa Tal Grinshpoun, Hagai Ilani i Elad Shufan wprowadza kolejne zagadnienie do tematyki \emph{PCOSS}: ograniczenie zasobów. Ograniczone zasoby, w rozumieniu tej pracy, to zasoby, z których mogą korzystać maszyny wspólnie, i których ilość ogranicza ilość operacji, które mogą być wykonywanie jednocześnie. Po raz kolejny twórcy pracy sięgają do wykorzystania kolorowania grafów, jako środka metody projekcji problemu. W pracy wykorzystane są badania problemu znanego w literaturze pod nazwą \emph{Bounded Vertex Colouring}.
+Praca \cite{ilani2018partially} autorstwa Tal Grinshpoun, Hagai Ilani i Elad Shufan wprowadza kolejne zagadnienie do tematyki \emph{PCOSS}: ograniczenie zasobów. Ograniczone zasoby, w rozumieniu tej pracy, to zasoby, z których mogą korzystać maszyny wspólnie, i których liczbę ogranicza ilość operacji, które mogą być wykonywanie jednocześnie. Po raz kolejny twórcy pracy sięgają do wykorzystania kolorowania grafów, jako środka metody projekcji problemu. W pracy wykorzystane są badania problemu znanego w literaturze pod nazwą ograniczonego kolorowania wierzchołkowego (\emph{Bounded Vertex Colouring}) - kolorowania, w którym każdy kolor wykorzystywany jest maksymalnie pewną ustaloną liczę razy \cite{hansen1993bounded}.
 
 \section{Oznaczenia przyjęte w pracy}
 
@@ -196,6 +199,7 @@ Baza danych \emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających
 System opisany w tej pracy może być zastosowany do danych, które mogą być opisane przez każdą z tych definicji z osobna.
 
 \chapter{Zastosowanie modelu PCOSS do danych tabelarycznych}
+\chaptermark{Zastosowanie do danych tabelarycznych}
 
 Praca skupia się na takich sytuacjach, gdy sekwencyjne lub naiwnie zrównolegnione wykonywanie operacji zajmuje zbyt wiele czasu lub jest niemożliwe z uwagi na ograniczenia narzucone na wykonywanie operacji na tabeli.
 Ograniczenia te odpowiadają grafowi konfliktu w \emph{PCOSS}.

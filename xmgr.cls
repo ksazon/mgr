@@ -5,7 +5,9 @@
 \PassOptionsToClass{a4paper,twoside,12pt}{report}
 % opcje klasy xmgr
 \DeclareOption{xodstep}{\AtEndOfClass{\linespread{2}}}
-\DeclareOption{brudnopis}{\AtEndOfClass{\setboolean{@brudnopis}{true}}}
+
+% \DeclareOption{brudnopis}{\AtEndOfClass{\setboolean{@brudnopis}{true}}}
+\DeclareOption{brudnopis}{\AtEndOfClass{\setboolean{@brudnopis}{false}}}
 %
 \AtEndOfClass{\linespread{1.25}}
 \ProcessOptions
