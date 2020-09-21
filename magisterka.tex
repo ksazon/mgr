@@ -642,11 +642,11 @@ Wyniki testów dla algorytmu wstawianie z wiązką szukającą (\emph{insertion 
 
 W celu analizy sprawności algorytmu wstawiania z wiązką szukającą (\emph{insertion with beam search}) porównano sumę czasów działania dyspozytora oraz wykonywania sekwencyjnego wszystkich operacji.
 
-Stosunki czasów $C_{max}$ (heurystyka do naiwnego) w zależności od ilości zadanych komórek znajdują się na wykresie diagnostycznym \ref{diag:time_ratio_2}.
+Stosunki czasów $C_{max}$ (heurystyka do naiwnego) w zależności od ilości zadanych komórek znajdują się na wykresie diagnostycznym \ref{diag:time_ratio_2}. Wartości które można odczytać z wykresu wskazują na bardzo duże oszczędności czasu, w szczególności wraz ze wzrostem ilości wykonywanych zadań.
 
 \begin{figure}[!tbh]
 \centering
-\includegraphics[width=.8\hsize]{fig/time_ratio_2.png}
+\includegraphics[width=.7\hsize]{fig/time_ratio_2.png}
 \caption{Stosunki czasu wykonywania operacji zgodnie z heurystyką do naiwnego wykonania \label{diag:time_ratio_2}}
 \source{Opracowanie własne}
 \end{figure}\medskip
@@ -660,13 +660,13 @@ W celu pełnego wprowadzenia systemu do użycia, należy rozwiązać problem pot
 W pełni rozwinięty system powinien mieć tolerancję na takie błędy i wprowadzać korekty do rozkładu w trakcie jego wykonywania.
 \medskip
 
-Jako całkiem nowy temat, wartościowym byłoby poddanie analizie prawdopodobnie częściej spotykanego przypadku pominięcia grafu konfliktu, czyli zaimplementowania systemu dla modelu wieloprocesorowego systemu otwartego ( \emph{Multiprocessor Open Shop Schedule}).
+Jako całkiem nowy temat, wartościowym byłoby poddanie analizie prawdopodobnie częściej spotykanego przypadku pominięcia grafu konfliktu, czyli zaimplementowania systemu dla modelu wieloprocesorowego systemu otwartego (\emph{Multiprocessor Open Shop Schedule}).
 \medskip
 
 Kolejnym tematem, który został zauważony w trakcie analizy zagadnienia są szczególne (a zarazem najczęstsze) przypadki \emph{PCOSS} gdy graf konfliktu sprowadza się do grafu konfliktu wyłącznie dla kolumn, tj. z pominięciem krawędzi "pionowych" (między wierszami). Daje to potencjał do znalezienia i zastosowania bardziej optymalnych algorytmów.
 \medskip
 
-Zaproponowany system można zaimplementować jako tzw. \emph{scheduler}, na przykład w module \emph{Dask} języka \emph{Python}, który jest powszechnie stosowany przy zrównolegnianiu operacji na \emph{DataFrame-ach}.
+Zaproponowany system można zaimplementować jako tzw. \emph{scheduler}, na przykład w module \emph{Dask} \cite{dask} języka \emph{Python}, który jest powszechnie stosowany przy zrównolegnianiu operacji na \emph{DataFrame-ach}.
 
 % zakończenie
 \summary
