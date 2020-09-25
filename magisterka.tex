@@ -90,8 +90,7 @@ Szeregowanie towarzyszyło ludzkości od bardzo dawna, jednak początków wspó�
 Szeregowanie w szerokim sensie można opisać jako alokację zasobów do zadań na pewnej przestrzeni czasu, tak aby alokacja możliwie najlepiej spełniała zadane kryterium optymalizacyjne - czyli żeby zminimalizowany zostały koszt uszeregowania (lista kilku najbardziej powszechnych kryteriów optymalizacyjnych znajduje się w dalszej części tego rozdziału). Powstało wiele prac na ten temat, z których cześć została zebrana w publikacjach \cite{graves1981review}, \cite{lawler1993sequencing} oraz \cite{lee1997current}.
 \medskip
 
-Formalne ujęcie problemu jest następujące:\\
-Posiadając zbiór maszyn $M=\{1,...,m\}$, które mają wykonywać zadania ze zbioru $J=\{1,...,n\}$, szeregowaniem dla każdego zadania nazywamy alokacje jednego lub więcej interwałów czasu do jednej lub więcej maszyn z zachowaniem warunktów poprawności (opisanych dla niektórych problemów w dalszej części pracy) \cite{brucker2007scheduling}.
+Formalne ujęcie problemu jest następujące. Posiadając zbiór maszyn $M=\{1,...,m\}$, które mają wykonywać zadania ze zbioru $J=\{1,...,n\}$, szeregowaniem dla każdego zadania nazywamy alokacje jednego lub więcej interwałów czasu do jednej lub więcej maszyn z zachowaniem warunków poprawności (opisanych dla niektórych problemów w dalszej części pracy) \cite{brucker2007scheduling}.
 \medskip
 
 % Mamy zbiór $n$ zadań $\{i = 1,...,n\}$ i zbiór $m$ maszyn $\{M_1,...,M_m\}$. Każde zadanie $i$ składa się ze zbioru operacji $O_{ij} (j=1,...,n_i)$ z czasami przetwarzania $p_{ij}$. Każda operacja $O_{ij}$ musi być wykonana na maszynie $\mu_{ij} \in \{M_1,...,M_m\}$. Mogą istnieć relacje poprzedzania pomiędzy operacjami wszystkich zadań. Każde zadania może być wykonywane przez wyłącznie jedną maszynę na raz i każda maszyna może wykonywać co najwyżej jedną operację w danym momencie. Celem jest znalezienie wykonalnego szeregowania które minimalizuje zadaną funkcję celu \cite{brucker1999scheduling}. Problem nazywamy deterministycznym, jeżeli wszystkie dane znane są stałe i z góry znane.
@@ -101,8 +100,7 @@ Spośród dwóch najważniejszych grup modeli szeregowania zadań - szeregowanie
 Opiera się na założeniu, że zadanie składa się z operacji, a każda operacja ma swój czas wykonywania i maszynę, na której powinna być wykonywana (w odróżnieniu od maszyn równoległych, gdzie każda maszyna może obsłużyć każdą operację).
 \medskip
 
-Model szeregowania na maszynach dedykowanych formalnie można zdefiniować następująco:
-dany jest zbiór $n$ zadań $J={1, ..., n}$ oraz zbiór $m$ maszyn $M={1, ..., m}$.
+Model szeregowania na maszynach dedykowanych formalnie można zdefiniować następująco. Dany jest zbiór $n$ zadań $J={1, ..., n}$ oraz zbiór $m$ maszyn $M={1, ..., m}$.
 Każde zadanie $J_i$ składa się ze zbioru operacji $Oij (j=1, ..., m)$ z czasami przetwarzania $p_{ij}$.
 % Każda operacja $O_{ij}$ musi być wykonana na maszynie $\mu_{ij} \in \{M_1,...,M_m\}$.
 Mogą istnieć relacje poprzedzania pomiędzy operacjami wszystkich zadań.
@@ -651,8 +649,8 @@ Na diagramach \ref{diag:sched_20j420} i \ref{diag:sched_100j4m} przedstawione zo
 \chapter{Algorytm wstawiania z wiązką szukającą}
 
 W prototypie programu zaimplementowano heurystykę tworzenia uszeregowania zaproponowaną w pracy \cite{grinshpoun2014partially} - wstawianie z wiązką szukającą (\emph{insertion with beam search}).
-Jest ona adaptacją heurystyki zaproponowaną w pracy \cite{brasel1993constructive}, która została w niej zastosowana do modelu szeregowania w systemie otwartym.
-Opiera się ona wstawianiu kolejnych operacji (zgodnie z ustaloną uprzednio kolejnością) do częściowego uszeregowania (\emph{partial schedule}), aż do momentu, gdy wszystkie operacje zostaną wstawione - co jest równoważne przygotowaniu pełnego uszeregowania.
+Jest ona adaptacją heurystyki zaproponowanej w pracy \cite{brasel1993constructive}, która została w niej zastosowana do modelu szeregowania w systemie otwartym.
+Opiera się ona wstawianiu kolejnych operacji (zgodnie z ustaloną uprzednio kolejnością) do częściowego uszeregowania (\emph{partial schedule}), aż do momentu, gdy wszystkie operacje zostaną wstawione - co jest równoważne przygotowaniu pełnego uszeregowania. Częściowe uszeregowanie to uszeregowanie posiadające właściwość, że jeżeli operacja $(i,j)$ poprzedza operację $(k,l)$, to moment ukończenia operacji $(i,j)$ jest wcześniejszy lub równy momentowi rozpoczęcia operacji $(k,l)$. Takie uszeregowanie jest unikalne, zakładając częściową aktywność (\emph{semi-activeness}, operacje są wykonywane tak szybko jak to jest możliwe, gdy ich kolejność jest znana) \cite{grinshpoun2014partially}.\\
 
 Kolejność wstawiania operacji budowana jest następującym algorytmem:
 \begin{enumerate}
@@ -661,19 +659,36 @@ Kolejność wstawiania operacji budowana jest następującym algorytmem:
     \item rozpoczynając w pierwszym wierszu, aż do $h-tego$ wiersza
     \begin{enumerate}
         \item znajdź najdłuższy czas wykonywania spośród kolumn w tym wierszu
-        \item dodaj komórkę z nim do $IO$
-        \item usuń tę kolumnę z tabeli
+        \item wstaw komórkę z nim do $IO$
+        \item usuń kolumnę z tą komórką z tabeli
         \item przejdź do następnego wiersza
     \end{enumerate}
-    \item kolejne operacje wstawiaj do $IO$ w niemalejącym porządku
+    \item kolejne operacje wstawiaj do $IO$ w porządku niemalejącym
 \end{enumerate}
 
-Posiadając ustaloną kolejność wstawiania operacji można przystąpić do wstawiania ich do kolejnych częściowych uszeregowań. Przy każdym wstawieniu operacji $r_{ij}$ rozważamy następujące możliwości:
+Posiadając ustaloną kolejność wstawiania operacji można przystąpić do dokładania ich do kolejnych częściowych uszeregowań. Przy każdym wstawieniu operacji $r_{ij}$ rozważamy następujące możliwości nadania jej rangi:
 \begin{itemize}
     \item $r_{ij} = 1$, co jest interpretowane jako $i$ jest pierwszą operacją którą wykonuje maszyna $j$ i pierwszą (lub jedną z pierwszych) operacji wykonywanych na zadaniu $i$
     \item $r_{ij} = r_{kj} + 1$, gdzie $r_{kj}$ jest którąkolwiek wartością pojawiającą się w kolumnie $j$ częściowego uszeregowania, co oznacza, że operacja $(i,j)$ jest bezpośrednim następcą jednej z operacji na maszynie $j$
-    \item $r_{ij} = r_{il}$, gdzie $r_il$ jest którąkolwiek z wartości pojawiających się w wierszu $i$ częściowego uszeregowania, która jest w konflikcie ze wstawianą operacją, co oznacza, że operacja $(i,j)$ staje się bezpośrednim następcą jednej z operacji zadania $i$ która jest z nią w konflikcie
+    \item $r_{ij} = r_{il}$, gdzie $r_{il}$ jest którąkolwiek z wartości pojawiających się w wierszu $i$ częściowego uszeregowania, która jest w konflikcie ze wstawianą operacją, co oznacza, że operacja $(i,j)$ staje się bezpośrednim następcą jednej z operacji zadania $i$, która jest z nią w konflikcie
 \end{itemize}
+
+Wstawienie operacji może spowodować, że częściowe uszeregowanie będzie niepoprawne. Dzieje się to gdy tę samą rangę otrzymują operacja wstawiana oraz którakolwiek z operacji będących z nią w konflikcie:
+\begin{enumerate}
+    \item albo poprzez spowodowanie sytuacji, która przekłada się na wykonywanie dwóch lub więcej operacji na raz na jednej maszynie:
+    $$\exists k \neq i, [r_{ij}=r_{kj}]$$
+    \item albo wykonywanie dwóch lub więcej operacji połączonych krawędzią w grafie konfliktu na raz:
+    $$\exists l \neq j, [r_{ij}=r{lj} \textrm{ oraz } (i,j) \textrm{ jest w konflikcie z } (i,l)]$$
+\end{enumerate}
+ 
+ Powyższe sytuacje rozwiązywane są poprzez inkrementację wartości rangi dla operacji wcześniej wstawionych operacji. Należy zauważyć, że ten krok może spowodować wystąpienie nowych konfliktów, co wymaga powtarzania inkrementacji, aż do momentu, gdy częściowy rozkład będzie poprawny.\\
+ 
+ Po wstawieniu operacji do częściowego rozkładu następuje krok zastosowania wiązki szukającej.
+ Wiązka szukająca to zachłanna heurystyka przeszukiwania grafów wszerz, w której tylko ograniczona ilość najbardziej obiecujących ścieżek (dobranych według pewnego algorytmu) po każdym kroku zachowywana jest jako kandydaci - ich ilość nazywana jest szerokością wiązki.
+ W przypadku opisywanego programu stosowana jest metodyka wyboru najkrótszych najdłuższych ważonych ścieżek (wagami są czasy przetwarzania), przechodzących przez wstawianą operację w grafie konfliktu.
+ 
+ Po wstawieniu ostatniej operacji z listy $IO$ wybrany zostaje jeden najlepszy kandydat i staje się on uszeregowaniem wynikowym w formie macierzy rang.
+ Uszeregowanie to jest następnie przekształcane w listę krotek zawierających czas rozpoczęcia operacji oraz maszynę i zadanie, które zostało zaszeregowane na ten moment. Taka lista konsumowania jest następnie przez dyspozytor.
 
 
 \chapter{Analiza sprawności dyspozytora}
