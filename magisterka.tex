@@ -36,17 +36,17 @@
 
 
 \begin{abstract}
-W pracy przedstawiono propozycję systemu szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym, opartą o model nazwany w literaturze szeregowanie zadań częściowo zależnych w systemie otwartym \emph{(Partially Concurrent Open Shop Schedule PCOSS)}.
+W pracy przedstawiono propozycję systemu szeregowania zadań na tabelarycznych zestawach danych w systemie komputerowym, opartą o model nazwany w literaturze szeregowanie zadań częściowo zależnych w systemie otwartym \emph{(Partially Concurrent Open Shop Schedule - PCOSS)}.
 Praca ma na celu stworzenie zarysu środowiska, w którym użytkownik ma możliwość wykorzystania algorytmów i narzędzi zaimplementowanych przez programistę w celu zmniejszenia całkowitego czasu wykonywania obliczeń, które chce przeprowadzić.
 Po przeprowadzeniu przeglądu dostępnych na rynku narzędzi stwierdzono brak takich, które wypełniają niszę szeregowania bardzo długich operacji za pomocą metod udostępnianych przez matematyczne modele szeregowania zadań w systemie otwartym.
-Wybór problemu szeregowania zadań częściowo zależnych w systemie otwartym podyktowany został tym, że generalizuje on co najmniej dwa inne modele (system otwarty oraz wieloprocesorowy system otwarty). W wyniku takiego doboru, przystosowanie systemu opisywanego w pracy do obsługi bardziej specyficznych modeli sprowadza się do ograniczenia jego funkcjonalności.
+Wybór problemu szeregowania zadań częściowo zależnych w systemie otwartym podyktowany został tym, że generalizuje on co najmniej dwa inne modele (system otwarty oraz wieloprocesorowy system otwarty). W wyniku takiego doboru, przystosowanie systemu opisywanego w pracy do obsługi bardziej specyficznych modeli sprowadza się do niekorzystania ze wszystkich jego funkcjonalności.
 W pracy przygotowano ideowy model działania systemu wraz z wytycznymi do jego implementacji.
 Zaimplementowany został również prototyp programu pokazujący zasadność koncepcji dla pewnej grupy problemów.
 % udowadniający możliwość stworzenia systemu który może zostać wykorzystany między innymi przy szeregowaniu operacji analitycznych z szerokiej gamy dziedzin.
 Zaimplementowano algorytm pozwalający na wykonanie uszeregowania oraz przygotowano szablon pod wdrażanie kolejnych.
 Został wykonany przegląd literatury w tym temacie, ze szczególnym naciskiem na prace wykorzystane przy pisaniu programu.
 Przeanalizowano jak wydajne pod kątem czasu przygotowania szeregowania są heurystyki opisane w literaturze.
-Wskazane zostały potencjalne problemy mogące wystąpić przy działaniu systemu, a także wymienione zostały kierunki, w których praca ta może być rozwijana.
+Wskazane zostały potencjalne problemy mogące wystąpić w trakcie działaniu systemu, a także wymienione zostały kierunki, w których praca ta może być rozwijana.
 \end{abstract}
 
 
@@ -66,7 +66,7 @@ scheduling
 W obecnych czasach wytwarzane są niespotykane do tej pory ilości danych (w latach 2017-2018 powstało 90\% danych powstałych od początku ludzkości do maja 2018 \cite{Forbes:2018:FBS}).
 Nie istnieją też żadne przesłanki stanowiące o tym, że tempo wzrostu opadnie.
 Dane te pozwalają na nowe podejścia do wglądu w zjawiska, które do tej pory były niemożliwe.
-Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Jeszcze do niedawna trend wzrostu wydajności dostatecznie dobrze był pokrywany przez tak zwane prawo Moore-a: ilość tranzystorów w układach zespolonych podwaja się co dwa lata \cite{MOORE:1965:X}. Poprzez miniaturyzację układów scalonych, procesy produkcyjne stają się coraz bardziej skomplikowane i wiele osób widzi perspektywę spowolnienia tego przyrostu \cite{NOTMOORE:2020:X}. Pozostawia to deficyt technologiczny, do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
+Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do ilości tych danych. Jeszcze do niedawna trend wzrostu wydajności dostatecznie dobrze był pokrywany przez tak zwane prawo Moore-a: liczba tranzystorów w układach zespolonych podwaja się co dwa lata \cite{MOORE:1965:X}. Poprzez miniaturyzację układów scalonych, procesy produkcyjne stają się coraz bardziej skomplikowane i wiele osób widzi perspektywę spowolnienia tego przyrostu \cite{NOTMOORE:2020:X}. Pozostawia to deficyt technologiczny, do pokrycia którego potrzebne są rozwiązania związane z oprogramowaniem, w szczególności rozwiązania algorytmiczne.
 \medskip
 
 W pracy zaproponowano rozwiązanie mogące przyspieszyć bardzo powszechne operacje na danych w postaci tabel.
@@ -100,12 +100,12 @@ Spośród dwóch najważniejszych grup modeli szeregowania zadań - szeregowanie
 Opiera się na założeniu, że zadanie składa się z operacji, a każda operacja ma swój czas wykonywania i maszynę, na której powinna być wykonywana (w odróżnieniu od maszyn równoległych, gdzie każda maszyna może obsłużyć każdą operację).
 \medskip
 
-Model szeregowania na maszynach dedykowanych formalnie można zdefiniować następująco. Dany jest zbiór $n$ zadań $J={1, ..., n}$ oraz zbiór $m$ maszyn $M={1, ..., m}$.
+Model szeregowania na maszynach dedykowanych formalnie można zdefiniować następująco. Dany jest zbiór $n$ zadań $J=\{1, ..., n\}$ oraz zbiór $m$ maszyn $M=\{1, ..., m\}$.
 Każde zadanie $J_i$ składa się ze zbioru operacji $Oij (j=1, ..., m)$ z czasami przetwarzania $p_{ij}$.
 % Każda operacja $O_{ij}$ musi być wykonana na maszynie $\mu_{ij} \in \{M_1,...,M_m\}$.
 Mogą istnieć relacje poprzedzania pomiędzy operacjami wszystkich zadań.
 W danej chwili czasu, każde zadanie może być wykonywane przez maksymalnie jedną maszynę i każda maszyna może obsługiwać maksymalnie jedno zadanie.
-Celem jest znalezienie uszeregowania które minimalizuje zadaną funkcję celu \cite{brucker2007scheduling}. Problem nazywamy deterministycznym, jeżeli wszystkie dane znane są stałe i z góry znane.
+Celem jest znalezienie uszeregowania, które minimalizuje zadaną funkcję celu \cite{brucker2007scheduling}. Problem nazywamy deterministycznym, jeżeli wszystkie dane znane są stałe i z góry znane.
 
 % Wejściem dla tego problemu jest zbiór zadań, środowisko maszynowe, czasy wykonywania operacji na poszczególnych maszynach oraz zbiór ograniczeń.
 % Natomiast rozwiązaniem jest uszeregowanie operacji, czyli przypisanie każdej z nich czasu rozpoczęcia (równoważnie - czasu jej zakończenia).\\
@@ -133,8 +133,8 @@ Dla pola $\beta$:
     % \item $p_j=1$ lub $UET$ - operacje jednostkowe
     \item $p_{ij}\in\{0,1\}$ - operacje jednostkowe lub puste
     \item $C_j\leq d_j$ - istnieją wymagane i nieprzekraczalne terminy zakończenia zadań
-    \item $no\-idle$ - procesory muszą pracować w sposób ciągły, bez okienek
-    \item $no\-wait$ - okienka między operacjami w zadaniach są zabronione
+    \item $no-idle$ - procesory muszą pracować w sposób ciągły, bez okienek
+    \item $no-wait$ - okienka między operacjami w zadaniach są zabronione
     \item pole puste - zadania są niepodzielne, niezależne, z $r_j=0$, czasy wykonania i ewentualne terminy zakończenia $d_j$ dowolne
 \end{itemize}
 
@@ -142,7 +142,7 @@ Oraz dla pola $\gamma$:
 \begin{itemize}
     \item $C_{max}$ - długość uszeregowania
     \item $\sum{C_j}$ - całkowity (łączny) czas zakończenia zadań
-    \item $\bar{F}$ - średni czas przepływu, definiowany jako suma wszystkich czasów ukończeń zadań, podzielona przez ilość zadań
+    \item $\bar{F}$ - średni czas przepływu, definiowany jako suma wszystkich czasów ukończeń zadań, podzielona przez liczbę zadań
 \end{itemize}
 % job shop to szeregowanie w systemie ogólnym lub gniazdowym
 % flow shop - to szeregowanie w systemie przepływowym
@@ -185,13 +185,13 @@ Jako przykład generalizacji można podać wieloprocesorowy system otwarty (\emp
 \section{Dotychczasowa literatura o szeregowaniu zadań częściowo zależnych w systemie otwartym}
 
 W dziedzinie badań związanych z szeregowania zadań częściowo zależnych w systemie otwartym przewijają się głównie nazwiska badaczy z \emph{Ariel University} w Izraelu: Tal Grinshpoun, Hagai Ilani i Elad Shufan. Pracę \cite{grinshpoun2014partially} zaprezentowali oni na \emph{10th International Conference on the Practice And Theory of Automated Timetabling (PATAT 2014)}. Motywacją dla tej pracy był problem przydzielania techników do obsługi floty samolotów (sprawdzenia ich przed lotem). Problem jest podobny do standardowego systemu otwartego pod kątem braku wpływu kolejności wykonywania badań na efekt końcowy (decyzje czy samolot ma wszystkie podzespoły sprawne). W celu skrócenia czasu cześć operacji można wykonywać jednocześnie, co w pewnym stopniu upodabnia sytuację do tej modelowanej przez wieloprocesorowy system otwarty, opisywanej między innymi w pracy \cite{adakmultiprocessor}. Problemem w tym modelu są jednakże operacje na jednym samolocie, które wzajemnie się wykluczają, na przykład poprzez zakłócanie odczytów narzędzi pomiarowych przez inne procesy. Operacje te są reprezentowane przez graf konfliktu (graf z krawędziami pomiędzy operacjami, które nie mogą być wykonywane jednocześnie), będący jedną z danych wejściowych dla modelu. W rzeczy samej, system otwarty oraz wieloprocesorowy system otwarty są skrajnymi przypadkami szeregowania zadań częściowo zależnych w systemie otwartym - odpowiednio z grafem konfliktu, który ma wszystkie krawędzie poza tymi między operacjami z różnymi maszynami i zadaniami oraz z grafem konfliktu, który ma krawędzie wyłącznie pomiędzy różnymi operacjami w obrębie jednej maszyny.\\
-Autorzy, podążając za pojęciami wprowadzonymi w \cite{brasel2006matrices}, proponują przestawienie rozkładu jako graf sekwencji (\emph{Sequence Graph}) i wynikającą z niego macierz rang (\emph{Rank Matrix}). Graf sekwencji to acykliczny graf skierowany, w którym każda operacja jest reprezentowana przez wierzchołek $(i, j)$, a każda para następujących po sobie operacji połączona jest łukiem. Macierz rang $A = (a_{ij})$ to macierz gdzie wartość komórki $a_{ij} = k$ oznacza, że ścieżka prowadząca do operacji $(i, j)$ z maksymalną ilością operacji ma $k$ operacji \cite{brasel2008heuristic}. Macierz ta ma przełożenie 1:1 na znajomość czasów rozpoczęcia każdej z operacji (lub równoważnie jej zakończenia) - sposób konstrukcji oraz obliczania uszeregowania znajdują się w tejże pracy. Zaproponowano użycie następującej notacji trójpolowej dla \emph{PCOSS}: $O|pconc|f_n$, gdzie $f_n$ jest kryterium optymalizacyjnym. Autorzy wskazują na to, że problem sprowadza się do zorientowania grafu konfliktu tak, żeby był acykliczny i najdłuższa ścieżka w nim była możliwie najkrótsza. Pokazane zostaje, że problem jest NP-trudny już dla pojedynczego zadania i jednostkowych czasów wszystkich operacji, z czego wynika, że ogólny przypadek jest również NP-trudny. Jako heurystykę konstrukcyjną autorzy podają adaptację algorytmu wstawiania z zastosowaniem wiązki szukającej (\emph{insertion with beam search}), prezentowanego wcześniej między innymi w pracy \cite{brasel1993constructive}.
+Autorzy, podążając za pojęciami wprowadzonymi w \cite{brasel2006matrices}, proponują przestawienie rozkładu jako graf sekwencji (\emph{Sequence Graph}) i wynikającą z niego macierz rang (\emph{Rank Matrix}). Graf sekwencji to acykliczny graf skierowany, w którym każda operacja jest reprezentowana przez wierzchołek $(i, j)$, a każda para następujących po sobie operacji połączona jest łukiem. Macierz rang $A = (a_{ij})$ to macierz gdzie wartość komórki $a_{ij} = k$ oznacza, że ścieżka prowadząca do operacji $(i, j)$ z maksymalną liczbą operacji ma $k$ operacji \cite{brasel2008heuristic}. Macierz ta ma przełożenie 1:1 na znajomość czasów rozpoczęcia każdej z operacji (lub równoważnie jej zakończenia) - sposób konstrukcji oraz obliczania uszeregowania znajdują się w tejże pracy. Zaproponowano użycie następującej notacji trójpolowej dla \emph{PCOSS}: $O|pconc|f_n$, gdzie $f_n$ jest kryterium optymalizacyjnym. Autorzy wskazują na to, że problem sprowadza się do zorientowania grafu konfliktu tak, żeby był acykliczny i najdłuższa ścieżka w nim była możliwie najkrótsza. Pokazane zostaje, że problem jest NP-trudny już dla pojedynczego zadania i jednostkowych czasów wszystkich operacji, z czego wynika, że ogólny przypadek jest również NP-trudny. Jako heurystykę konstrukcyjną autorzy podają adaptację algorytmu wstawiania z zastosowaniem wiązki szukającej (\emph{insertion with beam search}), prezentowanego wcześniej między innymi w pracy \cite{brasel1993constructive}.
 \medskip
 
 W pracy \cite{ilani2016partially} ci sami autorzy opisują relację między szczególnymi przypadkami \emph{PCOSS} a technikami stosowanymi przy kolorowaniu grafów. Praca zawiera interesujące sposoby podejścia do zagadnienia, które jednakowoż nie mają oczywistych zastosowań w tematyce niniejszej pracy, gdyż skupiają się na modelach z wywłaszczaniem, na wersjach jednorodnych (\emph{uniform} - wszystkie zadania mają jednakowe czasy wykonywania na poszczególnych maszynach) oraz takich z czasami jednostkowymi (wszystkie operacja trwają jedną jednostkę czasu) problemu \emph{PCOSS}. Autorzy wskazują między innymi na możliwość przygotowania uszeregowania dla wersji \emph{PCOSS} z wywłaszczeniami w czasach całkowitych (\emph{integral-preemption PCOSS}) i kryterium $C_{max}$ w czasie wielomianowym względem rozmiaru wejścia dla niektórych przypadków grafu konfliktu - gdy jest on grafem doskonałym (\emph{perfect graph}). Graf doskonały to graf, którego liczba chromatyczna każdego podgrafu indukowanego wierzchołkowo równa jest rozmiarowi największej kliki tego podgrafu \cite{diestel2010graph}. Bazują przy tym na wynikach pracy \cite{grotschel1984polynomial}, gdzie wykazane zostaje, że każdy graf doskonały może zostać pokolorowany w czasie wielomianowym.
 \medskip
 
-Praca \cite{ilani2018partially} autorstwa Tal Grinshpoun, Hagai Ilani i Elad Shufan wprowadza kolejne zagadnienie do tematyki \emph{PCOSS}: ograniczenie zasobów. Ograniczone zasoby, w rozumieniu tej pracy, to zasoby, z których maszyny mogą korzystać wspólnie, i których liczbę ogranicza ilość operacji, które mogą być wykonywanie jednocześnie. Po raz kolejny twórcy pracy sięgają do wykorzystania kolorowania grafów, jako metody projekcji problemu. W pracy wykorzystane są badania problemu znanego w literaturze pod nazwą ograniczonego kolorowania wierzchołkowego (\emph{Bounded Vertex Colouring}) - kolorowania, w którym każdy kolor wykorzystywany jest maksymalnie pewną ustaloną liczę razy \cite{hansen1993bounded}.
+Praca \cite{ilani2018partially} autorstwa Tal Grinshpoun, Hagai Ilani i Elad Shufan wprowadza kolejne zagadnienie do tematyki \emph{PCOSS}: ograniczenie zasobów. Ograniczone zasoby, w rozumieniu tej pracy, to zasoby, z których maszyny mogą korzystać wspólnie, i których liczba ogranicza liczbę operacji, które mogą być wykonywanie jednocześnie. Po raz kolejny twórcy pracy sięgają do wykorzystania kolorowania grafów, jako metody projekcji problemu. W pracy wykorzystane są badania problemu znanego w literaturze pod nazwą ograniczonego kolorowania wierzchołkowego (\emph{Bounded Vertex Colouring}) - kolorowania, w którym każdy kolor wykorzystywany jest maksymalnie pewną ustaloną liczę razy \cite{hansen1993bounded}.
 
 % Słownik \emph{Merriam-Webster} definiuje "tabelaryczny" jako "osadzony w wierszach i kolumnach" \cite{MW:TAB}
 % \medskip
@@ -213,7 +213,7 @@ Poniżej przytoczono kilka definicji związanych z rodzajem danych, które mogą
 \begin{itemize}
     \item Słownik \emph{Merriam-Webster} definiuje "tabelaryczny" jako "osadzony w wierszach i kolumnach" \cite{MW:TAB}
     \item Moduł języka \emph{Python} - \emph{pandas} definiuje "DataFrame" jako "dwuwymiarowe, potencjalnie heterogeniczne dane tabelaryczne" \cite{P:DF}
-    \item Baza danych \emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających wspólną strukturę danych (ta sama ilość atrybutów, w tej samej kolejności mających tę samą nazwę i typ per pozycja)" \cite{PSQL:TAB}.
+    \item Baza danych \emph{Postgres} definiuje "tabelę" jako "kolekcję krotek mających wspólną strukturę danych (ta sama liczba atrybutów, w tej samej kolejności mających tę samą nazwę i typ per pozycja)" \cite{PSQL:TAB}.
 \end{itemize}
 \medskip
 
@@ -246,7 +246,7 @@ Warto zauważyć, że powyższe problemy mają względnie nieduże znaczenie w w
 Sytuacja zmienia się gdy musimy przetworzyć duże ilości danych na systemach rozproszonych.
 \medskip
 
-Zastosowanie proponowanego systemu w klastrach bezpośrednio programowalnych macierzy bramek (\emph{field-programmable gate array, FPGA}) \cite{sadrozinski2016applications}, sieciach procesorów oraz w przypadku korzystania z sieciowych interfejsów do przetwarzania danych wydaje się być bardziej racjonalne i pożądane niż zastosowanie go dla pojedynczej maszyny.
+Zastosowanie proponowanego systemu w klastrach bezpośrednio programowalnych macierzy bramek (\emph{field-programmable gate array - FPGA}) \cite{sadrozinski2016applications}, sieciach procesorów oraz w przypadku korzystania z sieciowych interfejsów do przetwarzania danych wydaje się być bardziej racjonalne i pożądane niż zastosowanie go dla pojedynczej maszyny.
 
 
 
@@ -312,7 +312,7 @@ Relacyjne bazy danych to sposoby reprezentacji i przechowywania zbiorów danych 
 
 W rzeczywistym zastosowaniu komórki będą zawierały dane podlegające odpowiednim procesom (obliczeniom).
 W danych testowych będą liczbami pseudo-losowymi, reprezentującymi rozmiar wejścia do funkcji, która ma wykonać obliczenia na nich.
-Przykład formatu danych testowych znajduje się w tabeli \ref{tab:example-test_data}, natomiast tabeli czasów wykonania w \ref{tab:example-test_times}. W obydwu przypadkach w wierszach znajdują się kolejne zadania, natomiast w kolumnach kolejne maszyny. Dane testowe będą przesyłane do serwera który będzie wykonywał na nich operacje przez czas określony w odpowiadających komórkach czasów wykonania.
+Przykład formatu danych testowych znajduje się w tabeli \ref{tab:example-test_data}, natomiast tabeli czasów wykonania w \ref{tab:example-test_times}. W obydwu przypadkach w wierszach znajdują się kolejne zadania, natomiast w kolumnach kolejne maszyny. Dane testowe będą przesyłane do serwera, który będzie wykonywał na nich operacje przez czas określony w odpowiadających komórkach czasów wykonania.
 \medskip
 
 \begin{table}[!tbh]
@@ -624,7 +624,7 @@ to czas 0, gdzie egzekutor odczytał pierwszy wiersz (z indeksem czasu 0) i rozd
 \end{figure}
 \medskip
 
-Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywistością. Sytuacja została szerzej opisana w rozdziale \ref{chap:extend}
+Istnieje możliwość, w której oszacowanie czasu nie pokryło się z rzeczywistością. Sytuacja została szerzej opisana w rozdziale \ref{chap:extend}.\\
 
 Na diagramach \ref{diag:sched_20j420} i \ref{diag:sched_100j4m} przedstawione zostały wykresy Gantta dla przykładowych problemów, z losowymi czasami operacji (zakres od 0 do 100 jednostek czasu). Na osi $x$ reprezentowany jest czas, oś $y$ - kolejne maszyny, natomiast zadania oznaczone są różnymi odcieniami szarości.
 
@@ -668,9 +668,9 @@ Kolejność wstawiania operacji budowana jest następującym algorytmem:
 
 Posiadając ustaloną kolejność wstawiania operacji można przystąpić do dokładania ich do kolejnych częściowych uszeregowań. Przy każdym wstawieniu operacji $r_{ij}$ rozważamy następujące możliwości nadania jej rangi:
 \begin{itemize}
-    \item $r_{ij} = 1$, co jest interpretowane jako $i$ jest pierwszą operacją którą wykonuje maszyna $j$ i pierwszą (lub jedną z pierwszych) operacji wykonywanych na zadaniu $i$
+    \item $r_{ij} = 1$, co jest interpretowane jako $i$ jest pierwszą operacją, którą wykonuje maszyna $j$ i pierwszą (lub jedną z pierwszych) operacji wykonywanych na zadaniu $i$
     \item $r_{ij} = r_{kj} + 1$, gdzie $r_{kj}$ jest którąkolwiek wartością pojawiającą się w kolumnie $j$ częściowego uszeregowania, co oznacza, że operacja $(i,j)$ jest bezpośrednim następcą jednej z operacji na maszynie $j$
-    \item $r_{ij} = r_{il}$, gdzie $r_{il}$ jest którąkolwiek z wartości pojawiających się w wierszu $i$ częściowego uszeregowania, która jest w konflikcie ze wstawianą operacją, co oznacza, że operacja $(i,j)$ staje się bezpośrednim następcą jednej z operacji zadania $i$, która jest z nią w konflikcie
+    \item $r_{ij} = r_{il} + 1$, gdzie $r_{il}$ jest którąkolwiek z wartości pojawiających się w wierszu $i$ częściowego uszeregowania, która jest w konflikcie ze wstawianą operacją, co oznacza, że operacja $(i,j)$ staje się bezpośrednim następcą jednej z operacji zadania $i$, która jest z nią w konflikcie
 \end{itemize}
 
 Wstawienie operacji może spowodować, że częściowe uszeregowanie będzie niepoprawne. Dzieje się to gdy tę samą rangę otrzymują operacja wstawiana oraz którakolwiek z operacji będących z nią w konflikcie:
@@ -678,14 +678,14 @@ Wstawienie operacji może spowodować, że częściowe uszeregowanie będzie nie
     \item albo poprzez spowodowanie sytuacji, która przekłada się na wykonywanie dwóch lub więcej operacji na raz na jednej maszynie:
     $$\exists k \neq i, [r_{ij}=r_{kj}]$$
     \item albo wykonywanie dwóch lub więcej operacji połączonych krawędzią w grafie konfliktu na raz:
-    $$\exists l \neq j, [r_{ij}=r{lj} \textrm{ oraz } (i,j) \textrm{ jest w konflikcie z } (i,l)]$$
+    $$\exists l \neq j, [r_{ij}=r_{lj} \textrm{ oraz } (i,j) \textrm{ jest w konflikcie z } (i,l)]$$
 \end{enumerate}
  
  Powyższe sytuacje rozwiązywane są poprzez inkrementację wartości rangi dla operacji wcześniej wstawionych operacji. Należy zauważyć, że ten krok może spowodować wystąpienie nowych konfliktów, co wymaga powtarzania inkrementacji, aż do momentu, gdy częściowy rozkład będzie poprawny.\\
  
  Po wstawieniu operacji do częściowego rozkładu następuje krok zastosowania wiązki szukającej.
- Wiązka szukająca to zachłanna heurystyka przeszukiwania grafów wszerz, w której tylko ograniczona ilość najbardziej obiecujących ścieżek (dobranych według pewnego algorytmu) po każdym kroku zachowywana jest jako kandydaci - ich ilość nazywana jest szerokością wiązki.
- W przypadku opisywanego programu stosowana jest metodyka wyboru najkrótszych najdłuższych ważonych ścieżek (wagami są czasy przetwarzania), przechodzących przez wstawianą operację w grafie konfliktu.
+ Wiązka szukająca to zachłanna heurystyka przeszukiwania grafów wszerz, w której tylko ograniczona liczba najbardziej obiecujących ścieżek (dobranych według pewnego algorytmu) po każdym kroku zachowywana jest jako kandydaci - ich liczba nazywana jest szerokością wiązki.
+ W przypadku opisywanego programu stosowana jest metodyka wyboru najkrótszych najdłuższych ważonych ścieżek (wagami są czasy przetwarzania), przechodzących przez wstawianą operację.
  
  Po wstawieniu ostatniej operacji z listy $IO$ wybrany zostaje jeden najlepszy kandydat i staje się on uszeregowaniem wynikowym w formie macierzy rang.
  Uszeregowanie to jest następnie przekształcane w listę krotek zawierających czas rozpoczęcia operacji oraz maszynę i zadanie, które zostało zaszeregowane na ten moment. Taka lista konsumowania jest następnie przez dyspozytor.
@@ -702,7 +702,7 @@ Testy różniły się między sobą
     \item grafem konfliktu
 \end{enumerate}
 
-Wyniki testów dla algorytmu wstawianie z wiązką szukającą (\emph{insertion with beam search}) określają potencjalne jego zastosowania. Są to albo zbiory danych, gdzie ilości wierszy i kolumn po zgrupowaniu są bardzo małe (na przykład kilkadziesiąt wierszy i kilka kolumn), albo operacje, których naiwne zrównoleglanie trwa bardzo długo (wiele godzin). Naturalnie istnieje wiele takich przypadków, gdzie pożądanym jest sprowadzenie poprzez grupowanie dużych ilości wierszy do niewielu grup, lub operacji, których czas wykonania jest liczony w dniach. Na wykresach \ref{diag:relplot_128j} i \ref{diag:relplot_16m} znajdują się wykresy czasów wykonania operacji w zależności od, odpowiednio, liczby maszyn i liczby zadań.
+Wyniki testów dla algorytmu wstawianie z wiązką szukającą (\emph{insertion with beam search}) określają potencjalne jego zastosowania. Są to albo zbiory danych, gdzie liczby wierszy i kolumn po zgrupowaniu są bardzo małe (na przykład kilkadziesiąt wierszy i kilka kolumn), albo operacje, których naiwne zrównoleglanie trwa bardzo długo (wiele godzin). Naturalnie istnieje wiele takich przypadków, gdzie pożądanym jest sprowadzenie poprzez grupowanie dużych liczb wierszy do niewielu grup, lub operacji, których czas wykonania jest liczony w dniach. Na wykresach \ref{diag:relplot_128j} i \ref{diag:relplot_16m} znajdują się wykresy czasów wykonania operacji w zależności od, odpowiednio, liczby maszyn i liczby zadań.
 
 \begin{figure}[!tbh]
 \centering
@@ -724,7 +724,7 @@ Wyniki testów dla algorytmu wstawianie z wiązką szukającą (\emph{insertion 
 
 W celu analizy sprawności algorytmu wstawiania z wiązką szukającą (\emph{insertion with beam search}) porównano sumę czasów działania dyspozytora oraz wykonywania sekwencyjnego wszystkich operacji.
 
-Stosunki czasów $C_{max}$ (heurystyka do naiwnego) w zależności od ilości zadanych komórek znajdują się na wykresie diagnostycznym \ref{diag:time_ratio_2}. Wartości które można odczytać z wykresu wskazują na bardzo duże oszczędności czasu, w szczególności wraz ze wzrostem ilości wykonywanych zadań.
+Stosunki czasów $C_{max}$ (heurystyka do naiwnego) w zależności od liczby zadanych komórek znajdują się na wykresie diagnostycznym \ref{diag:time_ratio_2}. Wartości, które można odczytać z wykresu wskazują na bardzo duże oszczędności czasu, w szczególności wraz ze wzrostem liczby wykonywanych zadań.
 
 \begin{figure}[!tbh]
 \centering
