@@ -355,6 +355,9 @@ i~materialnych innych osób.\endgraf }
 \usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
 \usepackage{titlesec}
 \setcounter{secnumdepth}{4}
+% \usepackage{biblatex}
+% \usepackage[style=numeric]{biblatex}
+% \addbibresource{xml.bib}
 % 
 
 %
