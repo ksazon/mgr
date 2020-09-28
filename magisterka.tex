@@ -51,11 +51,11 @@ Wskazane zostały potencjalne problemy mogące wystąpić w trakcie działaniu s
 
 
 \keywords{
-partially concurrent open shop schedule,
-tabular data,
-csv,
-pandas,
-scheduling
+\emph{partially concurrent open shop schedule},
+\emph{tabular data},
+\emph{csv}.
+\emph{pandas},
+\emph{scheduling}
 }
 
 
@@ -72,7 +72,7 @@ Jednocześnie prędkości przetwarzania komputerów nie rosną współmiernie do
 W pracy zaproponowano rozwiązanie mogące przyspieszyć bardzo powszechne operacje na danych w postaci tabel.
 \medskip
 
-Przykładami danych tego typu są table w programie \emph{Microsoft Excel} i jemu podobnych, pliki z wartościami rozdzielanymi przecinkiem (\emph{Comma Separated Values} - \emph{CSV}), tabele i widoki w relacyjnych bazach danych, pliki \emph{Parquet} \cite{parquet} czy struktury tworzone przez biblioteki do manipulowania i analizy danych jak \emph{pandas}.
+Przykładami danych tego typu są tabele w programie \emph{Microsoft Excel} i jemu podobnych, pliki z wartościami rozdzielanymi przecinkiem (\emph{Comma Separated Values} - \emph{CSV}), tabele i widoki w relacyjnych bazach danych, pliki \emph{Parquet} \cite{parquet} czy struktury tworzone przez biblioteki do manipulowania i analizy danych jak \emph{pandas}.
 Można za ich pomocą reprezentować informacje z szerokiego spektrum dziedzin. Należą do nich między innymi dane pogodowe, wyniki giełdy, opisy przypadków osób z chorobami serca czy dzienniki połączeń sieciowych do danego serwera (\emph{log}).
 
 
@@ -101,7 +101,7 @@ Opiera się na założeniu, że zadanie składa się z operacji, a każda operac
 \medskip
 
 Model szeregowania na maszynach dedykowanych formalnie można zdefiniować następująco. Dany jest zbiór $n$ zadań $J=\{1, ..., n\}$ oraz zbiór $m$ maszyn $M=\{1, ..., m\}$.
-Każde zadanie $J_i$ składa się ze zbioru operacji $Oij (j=1, ..., m)$ z czasami przetwarzania $p_{ij}$.
+Każde zadanie $J_i$ składa się ze zbioru operacji $O_{ij} (j=1, ..., m)$ z czasami przetwarzania $p_{ij}$.
 % Każda operacja $O_{ij}$ musi być wykonana na maszynie $\mu_{ij} \in \{M_1,...,M_m\}$.
 Mogą istnieć relacje poprzedzania pomiędzy operacjami wszystkich zadań.
 W danej chwili czasu, każde zadanie może być wykonywane przez maksymalnie jedną maszynę i każda maszyna może obsługiwać maksymalnie jedno zadanie.
@@ -129,19 +129,19 @@ Dla pola $\beta$:
     \item $pmtn$ - zadania podzielne
     \item $prec$ - zadania zależne
     \item $in-tree, out-tree, chains$ - różne szczególne postaci relacji zależności kolejnościowych
-    \item $r_j$ - różne wartości momentów przybycia
+    \item $r_i$ - różne wartości momentów przybycia
     % \item $p_j=1$ lub $UET$ - operacje jednostkowe
     \item $p_{ij}\in\{0,1\}$ - operacje jednostkowe lub puste
-    \item $C_j\leq d_j$ - istnieją wymagane i nieprzekraczalne terminy zakończenia zadań
+    \item $C_i\leq d_i$ - istnieją wymagane i nieprzekraczalne terminy zakończenia zadań
     \item $no-idle$ - procesory muszą pracować w sposób ciągły, bez okienek
     \item $no-wait$ - okienka między operacjami w zadaniach są zabronione
-    \item pole puste - zadania są niepodzielne, niezależne, z $r_j=0$, czasy wykonania i ewentualne terminy zakończenia $d_j$ dowolne
+    \item pole puste - zadania są niepodzielne, niezależne, z $r_i=0$, czasy wykonania i ewentualne terminy zakończenia $d_i$ dowolne
 \end{itemize}
 
 Oraz dla pola $\gamma$:
 \begin{itemize}
     \item $C_{max}$ - długość uszeregowania
-    \item $\sum{C_j}$ - całkowity (łączny) czas zakończenia zadań
+    \item $\sum{C_i}$ - całkowity (łączny) czas zakończenia zadań
     \item $\bar{F}$ - średni czas przepływu, definiowany jako suma wszystkich czasów ukończeń zadań, podzielona przez liczbę zadań
 \end{itemize}
 % job shop to szeregowanie w systemie ogólnym lub gniazdowym
@@ -155,7 +155,7 @@ Oraz dla pola $\gamma$:
 Do głównych modeli szeregowania na maszynach dedykowanych należą:
 \begin{itemize}
     \item szeregowanie w systemie ogólnym (gniazdowym, \emph{Job Shop Scheduling}), w którym operacje wykonywane są liniowo, zgodnie z zadaną kolejnością, niekoniecznie tą samą dla wszystkich zadań
-    \item szeregowanie w systemie przepływowym (\emph{Flow Shop Scheduling}), w którym operacje każdego zadania wykonywane są liniowo, zgodnie numeracją maszyn
+    \item szeregowanie w systemie przepływowym (\emph{Flow Shop Scheduling}), w którym operacje każdego zadania wykonywane są liniowo, zgodnie z numeracją maszyn
     \item system otwarty (\emph{Open Shop Scheduling}), w którym operacje na danym zadaniu mogą być wykonywane w dowolnej kolejności
 \end{itemize}
 
@@ -163,7 +163,7 @@ Do głównych modeli szeregowania na maszynach dedykowanych należą:
 \section{Model szeregowania w systemie otwartym}
 \medskip
 
-Powstały w latach siedemdziesiątych model szeregowania w systemie otwartym (\emph{Open Shop Schedule} - \emph{OSS}) to sposób szeregowania zadań, gdzie kolejność wykonywania operacji nie wpływa na wynik całego rozkładu. Jego klasyczna definicja to: istnieje zbiór $J=\{1, ..., n\}$ zadań, z których każde posiada zbiór operacji, które muszą być wykonywane na zbiorze różnych maszyn $M=\{1, ..., m\}$. Operacja wykonania zadnia $j$ na maszynie $i$ jest oznaczona jako $O_{ij}$, a czas jej wykonywania jako $p_{ij}$.
+Powstały w latach siedemdziesiątych model szeregowania w systemie otwartym (\emph{Open Shop Schedule} - \emph{OSS}) to sposób szeregowania zadań, gdzie kolejność wykonywania operacji nie wpływa na wynik całego rozkładu. Jego klasyczna definicja to: istnieje zbiór $J=\{1, ..., n\}$ zadań, z których każde posiada zbiór operacji, które muszą być wykonywane na zbiorze różnych maszyn $M=\{1, ..., m\}$. Operacja wykonania zadania $i$ na maszynie $j$ jest oznaczona jako $O_{ij}$, a czas jej wykonywania jako $p_{ij}$.
 % Jeżeli zadanie $j$ posiada czas dostępu (czyli termin od którego może zostać podjęte) oraz termin ukończenia, oznaczamy je odpowiednio przez $r_j$ i $d_j$.
 Kolejność wykonywania zadań jest niematerialna, czyli nie ma wpływu na wynik rozkładu. Każda maszyna może wykonywać co najwyżej jedną operację na raz. Celem jest ustalenie rozkładu (czyli przypisanie każdej operacji czasu jej rozpoczęcia lub zakończenia), w taki sposób, że zadane kryterium optymalizacyjne jest osiągnięte \cite{ahmadian2020four}.
 % \medskip
@@ -183,9 +183,10 @@ Jako przykład generalizacji można podać wieloprocesorowy system otwarty (\emp
 
 
 \section{Dotychczasowa literatura o szeregowaniu zadań częściowo zależnych w systemie otwartym}
+\sectionmark{Dotychczasowa literatura o \emph{PCOSS}}
 
-W dziedzinie badań związanych z szeregowania zadań częściowo zależnych w systemie otwartym przewijają się głównie nazwiska badaczy z \emph{Ariel University} w Izraelu: Tal Grinshpoun, Hagai Ilani i Elad Shufan. Pracę \cite{grinshpoun2014partially} zaprezentowali oni na \emph{10th International Conference on the Practice And Theory of Automated Timetabling (PATAT 2014)}. Motywacją dla tej pracy był problem przydzielania techników do obsługi floty samolotów (sprawdzenia ich przed lotem). Problem jest podobny do standardowego systemu otwartego pod kątem braku wpływu kolejności wykonywania badań na efekt końcowy (decyzje czy samolot ma wszystkie podzespoły sprawne). W celu skrócenia czasu cześć operacji można wykonywać jednocześnie, co w pewnym stopniu upodabnia sytuację do tej modelowanej przez wieloprocesorowy system otwarty, opisywanej między innymi w pracy \cite{adakmultiprocessor}. Problemem w tym modelu są jednakże operacje na jednym samolocie, które wzajemnie się wykluczają, na przykład poprzez zakłócanie odczytów narzędzi pomiarowych przez inne procesy. Operacje te są reprezentowane przez graf konfliktu (graf z krawędziami pomiędzy operacjami, które nie mogą być wykonywane jednocześnie), będący jedną z danych wejściowych dla modelu. W rzeczy samej, system otwarty oraz wieloprocesorowy system otwarty są skrajnymi przypadkami szeregowania zadań częściowo zależnych w systemie otwartym - odpowiednio z grafem konfliktu, który ma wszystkie krawędzie poza tymi między operacjami z różnymi maszynami i zadaniami oraz z grafem konfliktu, który ma krawędzie wyłącznie pomiędzy różnymi operacjami w obrębie jednej maszyny.\\
-Autorzy, podążając za pojęciami wprowadzonymi w \cite{brasel2006matrices}, proponują przestawienie rozkładu jako graf sekwencji (\emph{Sequence Graph}) i wynikającą z niego macierz rang (\emph{Rank Matrix}). Graf sekwencji to acykliczny graf skierowany, w którym każda operacja jest reprezentowana przez wierzchołek $(i, j)$, a każda para następujących po sobie operacji połączona jest łukiem. Macierz rang $A = (a_{ij})$ to macierz gdzie wartość komórki $a_{ij} = k$ oznacza, że ścieżka prowadząca do operacji $(i, j)$ z maksymalną liczbą operacji ma $k$ operacji \cite{brasel2008heuristic}. Macierz ta ma przełożenie 1:1 na znajomość czasów rozpoczęcia każdej z operacji (lub równoważnie jej zakończenia) - sposób konstrukcji oraz obliczania uszeregowania znajdują się w tejże pracy. Zaproponowano użycie następującej notacji trójpolowej dla \emph{PCOSS}: $O|pconc|f_n$, gdzie $f_n$ jest kryterium optymalizacyjnym. Autorzy wskazują na to, że problem sprowadza się do zorientowania grafu konfliktu tak, żeby był acykliczny i najdłuższa ścieżka w nim była możliwie najkrótsza. Pokazane zostaje, że problem jest NP-trudny już dla pojedynczego zadania i jednostkowych czasów wszystkich operacji, z czego wynika, że ogólny przypadek jest również NP-trudny. Jako heurystykę konstrukcyjną autorzy podają adaptację algorytmu wstawiania z zastosowaniem wiązki szukającej (\emph{insertion with beam search}), prezentowanego wcześniej między innymi w pracy \cite{brasel1993constructive}.
+W dziedzinie badań związanych z szeregowania zadań częściowo zależnych w systemie otwartym przewijają się głównie nazwiska badaczy z \emph{Ariel University} w Izraelu: Tal Grinshpoun, Hagai Ilani i Elad Shufan. Pracę \cite{grinshpoun2014partially} zaprezentowali oni na \emph{10th International Conference on the Practice And Theory of Automated Timetabling (PATAT 2014)}. Motywacją dla tej pracy był problem przydzielania techników do obsługi floty samolotów (sprawdzenia ich przed lotem). Problem jest podobny do standardowego systemu otwartego pod kątem braku wpływu kolejności wykonywania badań na efekt końcowy (decyzje czy samolot ma wszystkie podzespoły sprawne). W celu skrócenia procedur cześć operacji można wykonywać jednocześnie, co w pewnym stopniu upodabnia sytuację do tej modelowanej przez wieloprocesorowy system otwarty, opisywanej między innymi w pracy \cite{adakmultiprocessor}. Problemem w tym modelu są jednakże operacje na jednym samolocie, które wzajemnie się wykluczają, na przykład poprzez zakłócanie odczytów narzędzi pomiarowych przez inne procesy. Operacje te są reprezentowane przez graf konfliktu (graf z krawędziami pomiędzy operacjami, które nie mogą być wykonywane jednocześnie), będący jedną z danych wejściowych dla modelu. W rzeczy samej, system otwarty oraz wieloprocesorowy system otwarty są skrajnymi przypadkami szeregowania zadań częściowo zależnych w systemie otwartym - odpowiednio z grafem konfliktu, który ma wszystkie krawędzie poza tymi między operacjami z różnymi maszynami i zadaniami oraz z grafem konfliktu, który ma krawędzie wyłącznie pomiędzy różnymi operacjami w obrębie jednej maszyny.\\
+Autorzy, podążając za pojęciami wprowadzonymi w \cite{brasel2006matrices}, proponują przestawienie rozkładu jako graf sekwencji (\emph{Sequence Graph}) i wynikającą z niego macierz rang (\emph{Rank Matrix}). Graf sekwencji to acykliczny graf skierowany, w którym każda operacja jest reprezentowana przez wierzchołek $(i, j)$, a każda para następujących po sobie operacji połączona jest łukiem. Macierz rang $A = (a_{ij})$ to macierz, gdzie wartość komórki $a_{ij} = k$ oznacza, że ścieżka prowadząca do operacji $(i, j)$ z maksymalną liczbą operacji ma długość $k$ \cite{brasel2008heuristic}. Macierz ta ma przełożenie 1:1 na znajomość czasów rozpoczęcia każdej z operacji (lub równoważnie jej zakończenia) - sposób konstrukcji oraz obliczania uszeregowania znajdują się w tejże pracy. Zaproponowano użycie następującej notacji trójpolowej dla \emph{PCOSS}: $O|pconc|f_n$, gdzie $f_n$ jest kryterium optymalizacyjnym. Autorzy wskazują na to, że problem sprowadza się do zorientowania grafu konfliktu tak, żeby był acykliczny i najdłuższa ścieżka w nim była możliwie najkrótsza. Pokazane zostaje, że problem jest NP-trudny już dla pojedynczego zadania i jednostkowych czasów wszystkich operacji, z czego wynika, że ogólny przypadek jest również NP-trudny. Jako heurystykę konstrukcyjną autorzy podają adaptację algorytmu wstawiania z zastosowaniem wiązki szukającej (\emph{insertion with beam search}), prezentowanego wcześniej między innymi w pracy \cite{brasel1993constructive}.
 \medskip
 
 W pracy \cite{ilani2016partially} ci sami autorzy opisują relację między szczególnymi przypadkami \emph{PCOSS} a technikami stosowanymi przy kolorowaniu grafów. Praca zawiera interesujące sposoby podejścia do zagadnienia, które jednakowoż nie mają oczywistych zastosowań w tematyce niniejszej pracy, gdyż skupiają się na modelach z wywłaszczaniem, na wersjach jednorodnych (\emph{uniform} - wszystkie zadania mają jednakowe czasy wykonywania na poszczególnych maszynach) oraz takich z czasami jednostkowymi (wszystkie operacja trwają jedną jednostkę czasu) problemu \emph{PCOSS}. Autorzy wskazują między innymi na możliwość przygotowania uszeregowania dla wersji \emph{PCOSS} z wywłaszczeniami w czasach całkowitych (\emph{integral-preemption PCOSS}) i kryterium $C_{max}$ w czasie wielomianowym względem rozmiaru wejścia dla niektórych przypadków grafu konfliktu - gdy jest on grafem doskonałym (\emph{perfect graph}). Graf doskonały to graf, którego liczba chromatyczna każdego podgrafu indukowanego wierzchołkowo równa jest rozmiarowi największej kliki tego podgrafu \cite{diestel2010graph}. Bazują przy tym na wynikach pracy \cite{grotschel1984polynomial}, gdzie wykazane zostaje, że każdy graf doskonały może zostać pokolorowany w czasie wielomianowym.
@@ -243,7 +244,7 @@ Podobne rozumowanie, w szczególności w odniesieniu do nawiązywania połącze�
 \medskip
 
 Warto zauważyć, że powyższe problemy mają względnie nieduże znaczenie w większości przypadków, gdy cały rozkład wykonywany jest na jednej maszynie lub przy niedużych ilościach danych. Można je wtedy rozwiązać między innymi za pomocą odpowiednich mechanizmów blokowania dostępu do zasobów (\emph{locking}).
-Sytuacja zmienia się gdy musimy przetworzyć duże ilości danych na systemach rozproszonych.
+Sytuacja zmienia się, gdy musimy przetworzyć duże ilości danych na systemach rozproszonych.
 \medskip
 
 Zastosowanie proponowanego systemu w klastrach bezpośrednio programowalnych macierzy bramek (\emph{field-programmable gate array - FPGA}) \cite{sadrozinski2016applications}, sieciach procesorów oraz w przypadku korzystania z sieciowych interfejsów do przetwarzania danych wydaje się być bardziej racjonalne i pożądane niż zastosowanie go dla pojedynczej maszyny.
@@ -347,18 +348,18 @@ $J_{n}$     & $9$       & $8$       & ...   & $84$      & $52$      \\ \hline
 
 \section{Wstęp}
 
-W rozumieniu tej pracy \emph{dyspozytor} to system mający na celu poprawne (wykonalne i zgodne z ograniczeniami) zaszeregowanie i rozdzielanie zadań pomiędzy dostępne procesory.
+W rozumieniu tej pracy \emph{dyspozytor} to system mający na celu poprawne (wykonalne i zgodne z ograniczeniami) uszeregowanie i rozdzielenie zadań pomiędzy dostępne procesory.
 \medskip
 
-Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następujące kroki
+Wysokopoziomowo algorytm działania dyspozytora opierał będzie się o następujące kroki:
 
 \begin{enumerate}
-    \item pobranie danych, ustawienie wartości domyślnych
-    \item grupowanie danych
-    \item odczytanie lub przydzielenie szacunkowych czasów wykonania poszczególnych operacji
-    \item odczytanie lub dobór algorytmu szeregowania 
-    \item przygotowanie uszeregowania
-    \item czuwanie nad prawidłowym wykonaniem uszeregowania
+    \item pobranie danych, ustawienie wartości domyślnych,
+    \item grupowanie danych,
+    \item odczytanie lub przydzielenie szacunkowych czasów wykonania poszczególnych operacji,
+    \item odczytanie lub dobór algorytmu szeregowania,
+    \item przygotowanie uszeregowania,
+    \item czuwanie nad prawidłowym wykonaniem uszeregowania.
 \end{enumerate}
 
 Każdy z powyższych kroków szczegółowo opisany jest w tym rozdziale.
@@ -367,18 +368,18 @@ Każdy z powyższych kroków szczegółowo opisany jest w tym rozdziale.
 
 \section{Pobranie danych, ustawienie wartości domyślnych}
 
-Na wejściu algorytm otrzymuje następujące dane wejściowe
+Na wejściu algorytm otrzymuje następujące dane wejściowe:
 
 \begin{enumerate}
-    \item tabelę w wybranej reprezentacji
-    \item funkcję grupowania wierszy (argument opcjonalny)
-    \item funkcję grupowania kolumn (argument opcjonalny)
-    \item listę operacji do wykonania na tabeli
-    \item graf konfliktu (argument opcjonalny)
-    \item tabelę złożoności obliczeniowej (zgrupowanych) kolumn (argument opcjonalny)
-    \item tabelę czasów przetwarzania (zgrupowanych) kolumn (argument opcjonalny)
-    \item algorytm szeregowania (argument opcjonalny)
-    \item kryterium optymalizacyjne (argument opcjonalny)
+    \item tabelę w wybranej reprezentacji,
+    \item funkcję grupowania wierszy (argument opcjonalny),
+    \item funkcję grupowania kolumn (argument opcjonalny),
+    \item listę operacji do wykonania na tabeli,
+    \item graf konfliktu (argument opcjonalny),
+    \item tabelę złożoności obliczeniowej (zgrupowanych) kolumn (argument opcjonalny),
+    \item tabelę czasów przetwarzania (zgrupowanych) kolumn (argument opcjonalny),
+    \item algorytm szeregowania (argument opcjonalny),
+    \item kryterium optymalizacyjne (argument opcjonalny).
 \end{enumerate}
 
 Tabela \ref{tab:args-default} zawiera domyślne wartości argumentów opcjonalnych. Dane te dostarczane są poprzez plik konfiguracyjny dla problemu, który jest zarazem argumentem linii poleceń wymaganym do uruchomienia programu.
@@ -407,7 +408,7 @@ Zagadnienie postępowania algorytmu w zależności od tego, które parametry zos
 W tej pracy agregacja rozumiana będzie jako proces łączenia kilku wartości w jedną reprezentatywną wartość.
 \medskip
 
-Logika działania agregacji na wierszach podąża za logiką przyjęta między innymi przez język \emph{SQL}, technologię \emph{LINQ} \cite{linq} na platformie \emph{.Net} czy różne moduły języka \emph{Python}, w szczególności \emph{pandas}.
+Logika działania agregacji na wierszach podąża za logiką przyjętą między innymi przez język \emph{SQL}, technologię \emph{LINQ} \cite{linq} na platformie \emph{.Net} czy różne moduły języka \emph{Python}, w szczególności \emph{pandas}.
 \medskip
 
 Agregacja w zastosowaniach praktycznych jest jedną z podstawowych operacji przy przetwarzaniu danych, na przykład w celu ich analizy.
@@ -432,7 +433,7 @@ Tak przygotowane dane gotowe są do przetwarzania w kolejnych etapach działania
 \subsubsection{Przykład}
 \medskip
 
-Przygotowano tabelę wejściową \ref{tab:example-input}, w której znajdują się fikcyjne dane na temat sprzedaży produktów \emph{M1} i \emph{M2} na terenie trzech krajów w dwudniowym okienku czasowym.
+Przygotowano tabelę wejściową \ref{tab:example-input}, w której znajdują się fikcyjne dane na temat sprzedaży produktów \emph{P1} i \emph{P2} na terenie trzech krajów w dwudniowym okienku czasowym.
 \medskip
 
 Dla tej tabeli przygotowane zostało takie zgrupowanie wierszy, że kluczem grupowania są jednakowe wartości w kolumnie \emph{Kraj} (funkcja \ref{eq:example-row-agg}).
@@ -462,7 +463,7 @@ Dla przejrzystości funkcji zastosowane zostały skróty
 \medskip
 
 \begin{itemize}
-    \item Indeks - $i$
+    \item Indeks - $idx$
     \item Kraj - $k$
     \item Data - $d$
     \item Sprzedaż$\_$P1 - $s_{p1}$
@@ -472,7 +473,7 @@ Dla przejrzystości funkcji zastosowane zostały skróty
 
 Funkcja grupowania kolumn
 \begin{equation} \label{eq:example-col-agg}
-\lambda (i, k, d, s_{p1}, s_{p2}) \\ \Rightarrow (i, k, d, (s_{p1}, s_{p2}))
+\lambda (idx, k, d, s_{p1}, s_{p2}) \\ \Rightarrow (idx, k, d, (s_{p1}, s_{p2}))
 \end{equation}
 \medskip
 
@@ -562,7 +563,7 @@ Jeżeli algorytm szeregowania nie zostanie podany, to przy zadanym kryterium opt
 \medskip
 
 Dobór algorytmu polegał będzie na poruszaniu się po drzewie decyzji (bez ingerencji użytkownika).
-Wybór podjęty przez rozwiązanie funkcji zwracającej \emph{prawda/fałsz} na każdym poziomu prowadził będzie do kolejnej funkcji w drzewie lub na poziomie liścia - do konkretnego algorytmu.
+Wybór podjęty przez rozwiązanie funkcji zwracającej \emph{prawda/fałsz} na każdym poziomie prowadził będzie do kolejnej funkcji w drzewie lub na poziomie liścia - do konkretnego algorytmu.
 
 
 \section{Przygotowanie uszeregowania}
@@ -587,7 +588,7 @@ można przystąpić do konstrukcji uszeregowania.
 Konstrukcja uszeregowania polega na wykonaniu danego algorytmu szeregowania z danymi wejściowymi.
 \medskip
 
-Finalny rozkład zostanie zapisany w formie tabeli, której indeksy wierszy $t_t$ będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny $M_i$ przedstawiają procesory natomiast w komórce (kolejne małe litery alfabetu) znajduje indeks wiersza i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki) w postaci dwójki [indeks wiersza, indeks kolumny].
+Finalny rozkład zostanie zapisany w formie tabeli, której indeksy wierszy $t_t$ będą zawierały informacje o planowanym czasie rozpoczęcia wykonania operacji, kolumny $M_j$ przedstawiają procesory natomiast w komórce (kolejne małe litery alfabetu) znajduje indeks wiersza i kolumny zagregowanej tabeli wejściowej (lokalizacja komórki) w postaci dwójki [indeks wiersza, indeks kolumny].
 \medskip
 
 Przykładowy rozkład wynikowy został przedstawiony w tabeli \ref{tab:example-sched-out}.
@@ -600,7 +601,7 @@ Należy zauważyć, że taki rozkład jest transponowanym klasycznym wykresem Ga
 Czas / proc & $M_1$     & $M_2$     & ...   & $M_{m-1}$ & $M_{m}$ \\ \hline
 $t_1$       & $[a,b]$   & -         & ...   & $[c,d]$   & - \\ \hline
 $t_2$       & -         & $[e,f]$   & ...   & -         & - \\ \hline
-$t_3$       & $[e,f]$   & $[g,h]$   & ...   & -         & $[i,j]$\\ \hline
+$t_3$       & $[e,f]$   & $[g,h]$   & ...   & -         & $[k,l]$\\ \hline
 \end{tabular}
 \caption{Przykładowe uszeregowanie wynikowe\label{tab:example-sched-out}}
 \source{Opracowanie własne}
@@ -650,7 +651,7 @@ Na diagramach \ref{diag:sched_20j420} i \ref{diag:sched_100j4m} przedstawione zo
 
 W prototypie programu zaimplementowano heurystykę tworzenia uszeregowania zaproponowaną w pracy \cite{grinshpoun2014partially} - wstawianie z wiązką szukającą (\emph{insertion with beam search}).
 Jest ona adaptacją heurystyki zaproponowanej w pracy \cite{brasel1993constructive}, która została w niej zastosowana do modelu szeregowania w systemie otwartym.
-Opiera się ona wstawianiu kolejnych operacji (zgodnie z ustaloną uprzednio kolejnością) do częściowego uszeregowania (\emph{partial schedule}), aż do momentu, gdy wszystkie operacje zostaną wstawione - co jest równoważne przygotowaniu pełnego uszeregowania. Częściowe uszeregowanie to uszeregowanie posiadające właściwość, że jeżeli operacja $(i,j)$ poprzedza operację $(k,l)$, to moment ukończenia operacji $(i,j)$ jest wcześniejszy lub równy momentowi rozpoczęcia operacji $(k,l)$. Takie uszeregowanie jest unikalne, zakładając częściową aktywność (\emph{semi-activeness}, operacje są wykonywane tak szybko jak to jest możliwe, gdy ich kolejność jest znana) \cite{grinshpoun2014partially}.\\
+Opiera się ona na wstawianiu kolejnych operacji (zgodnie z ustaloną uprzednio kolejnością) do częściowego uszeregowania (\emph{partial schedule}), aż do momentu, gdy wszystkie operacje zostaną wstawione - co jest równoważne przygotowaniu pełnego uszeregowania. Częściowe uszeregowanie to uszeregowanie posiadające właściwość, że jeżeli operacja $(i,j)$ poprzedza operację $(k,l)$, to moment ukończenia operacji $(i,j)$ jest wcześniejszy lub równy momentowi rozpoczęcia operacji $(k,l)$. Takie uszeregowanie jest unikalne, zakładając częściową aktywność (\emph{semi-activeness}, operacje są wykonywane tak szybko jak to jest możliwe, gdy ich kolejność jest znana) \cite{grinshpoun2014partially}.\\
 
 Kolejność wstawiania operacji budowana jest następującym algorytmem:
 \begin{enumerate}
@@ -668,12 +669,12 @@ Kolejność wstawiania operacji budowana jest następującym algorytmem:
 
 Posiadając ustaloną kolejność wstawiania operacji można przystąpić do dokładania ich do kolejnych częściowych uszeregowań. Przy każdym wstawieniu operacji $r_{ij}$ rozważamy następujące możliwości nadania jej rangi:
 \begin{itemize}
-    \item $r_{ij} = 1$, co jest interpretowane jako $i$ jest pierwszą operacją, którą wykonuje maszyna $j$ i pierwszą (lub jedną z pierwszych) operacji wykonywanych na zadaniu $i$
+    \item $r_{ij} = 1$, co jest interpretowane jako $(i,j)$ jest pierwszą operacją, którą wykonuje maszyna $j$ i pierwszą (lub jedną z pierwszych) operacji wykonywanych na zadaniu $i$
     \item $r_{ij} = r_{kj} + 1$, gdzie $r_{kj}$ jest którąkolwiek wartością pojawiającą się w kolumnie $j$ częściowego uszeregowania, co oznacza, że operacja $(i,j)$ jest bezpośrednim następcą jednej z operacji na maszynie $j$
     \item $r_{ij} = r_{il} + 1$, gdzie $r_{il}$ jest którąkolwiek z wartości pojawiających się w wierszu $i$ częściowego uszeregowania, która jest w konflikcie ze wstawianą operacją, co oznacza, że operacja $(i,j)$ staje się bezpośrednim następcą jednej z operacji zadania $i$, która jest z nią w konflikcie
 \end{itemize}
 
-Wstawienie operacji może spowodować, że częściowe uszeregowanie będzie niepoprawne. Dzieje się to gdy tę samą rangę otrzymują operacja wstawiana oraz którakolwiek z operacji będących z nią w konflikcie:
+Wstawienie operacji może spowodować, że częściowe uszeregowanie będzie niepoprawne. Dzieje się to, gdy tę samą rangę otrzymują operacja wstawiana oraz którakolwiek z operacji będących z nią w konflikcie:
 \begin{enumerate}
     \item albo poprzez spowodowanie sytuacji, która przekłada się na wykonywanie dwóch lub więcej operacji na raz na jednej maszynie:
     $$\exists k \neq i, [r_{ij}=r_{kj}]$$

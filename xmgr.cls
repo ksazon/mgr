@@ -216,7 +216,7 @@ i~materialnych innych osób.\endgraf }
   \cleardoublepage
   \thispagestyle{empty}
   \InsertAbstractHere
-  \section*{Słowa kluczowe}
+  \section*{Słowa kluczowe (w języku angielskim)}
   \@keywords
   \clearpage
   \tableofcontents
