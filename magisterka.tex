@@ -697,8 +697,13 @@ Uszeregowanie to jest następnie przekształcane w listę krotek zawierających 
 
 Poniżej podany został przykład wstawiania operacji do częściowego uszeregowania.
 Załóżmy, że dany jest problem z czterema maszynami\\
-$\{M1, M2, M3, M4\}$ i czterema zadaniami $\{J1, J2, J3, J4\}$, oraz zadanymi czasami przetwarzania $PT$, jak w tabeli \ref{tab:example_pt}.
+$\{M1, M2, M3, M4\}$, czterema zadaniami $\{J1, J2, J3, J4\}$ oraz zadanymi czasami przetwarzania $PT$, jak w tabeli \ref{tab:example_pt}.
 Niech ponadto wykonywanie tego samego zadania na maszynach $M1$ i $M4$ jednocześnie będzie niedozwolone.
+Algorytm zatrzymano w momencie, gdy do jednego z częściowych uszeregowań - kandydatów, wstawione zostały operacje widocznie na diagramie \ref{diag:state0}, a kolejną operacją do wstawienia jest $(J2, M4)$.\\
+Na poprawnych uszeregowaniach w poniższych diagramach zaznaczono częściowy graf sekwencji.\\
+Analogiczne kroki wykonywane są na każdym z częściowych uszeregowań - kandydatów.
+Po zebraniu długości najdłuższych ścieżek przechodzących przez wstawianą operację w każdym z nich, na podstawie tych długości wybrane zostaje nowe grono najbardziej obiecujących częściowych uszeregowań - kandydatów, ograniczone szerokością wiązki.
+Wstawianie kolejnej operacji w kolejności rozpoczyna ten cykl na nowo.
 
 \begin{table}[!tbh]
 \begin{tabular}{|l|l|l|l|l|} \hline
@@ -711,9 +716,6 @@ $J4$ & 3 & 2 & 3 & 4 \\ \hline
 \caption{Czasy przetwarzania $PT$ dla przykładu działania algorytmu wstawiania\label{tab:example_pt}}
 \source{Opracowanie własne}
 \end{table}\medskip
-
-Algorytm zatrzymano w momencie, gdy do jednego z częściowych uszeregowań - kandydatów, wstawione zostały operacje widocznie na diagramie \ref{diag:state0}, a kolejną operacją do wstawienia jest $(J2, M4)$.\\
-Na poprawnych uszeregowaniach w poniższych diagramach zaznaczono częściowy graf sekwencji.
 
 \begin{figure}[!tbh]
 \centering
@@ -784,10 +786,6 @@ Na poprawnych uszeregowaniach w poniższych diagramach zaznaczono częściowy gr
 \caption{Wariant 3. nadania rangi: nadanie rangi o $1$ większej niż~$(J2, M1)$ - uszeregowanie jest poprawne, a najdłuższa ścieżka przechodząca przez~wstawianą operację ma długość $10 + 7 + 4 + 6 = 27$\label{diag:state4}}
 \source{Opracowanie własne}
 \end{figure}\medskip
-
-Analogiczne kroki wykonywane są na każdym z częściowych uszeregowań - kandydatów.
-Po zebraniu długości najdłuższych ścieżek przechodzących przez wstawianą operację w każdym z nich, na podstawie tych długości wybrane zostaje nowe grono najbardziej obiecujących częściowych uszeregowań - kandydatów, ograniczone szerokością wiązki.
-Wstawianie kolejnej operacji w kolejności rozpoczyna ten cykl na nowo.
 
 
 
@@ -892,6 +890,6 @@ Na stronie znajduje się plik README.md, w którym znajdują się informacje na 
 % spis rysunków (jeżeli jest potrzebny):
 \listoffigures
 
-\oswiadczenie
+% \oswiadczenie
 
 \end{document}
