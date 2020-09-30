@@ -654,7 +654,7 @@ Na diagramach \ref{diag:sched_20j420} i \ref{diag:sched_100j4m} przedstawione zo
 
 W prototypie programu zaimplementowano heurystykę tworzenia uszeregowania zaproponowaną w~pracy \cite{grinshpoun2014partially} - wstawianie z wiązką szukającą (\emph{insertion with beam search}).
 Jest ona adaptacją heurystyki zaproponowanej w~pracy \cite{brasel1993constructive}, która została w niej zastosowana do modelu szeregowania w~systemie otwartym.
-Opiera się ona na wstawianiu kolejnych operacji (zgodnie z~ustaloną uprzednio kolejnością) do częściowego uszeregowania (\emph{partial schedule}), aż~do~momentu, gdy wszystkie operacje zostaną wstawione - co~jest~równoważne przygotowaniu pełnego uszeregowania. Częściowe uszeregowanie to~uszeregowanie posiadające właściwość, że jeżeli operacja $(i,j)$ poprzedza operację $(k,l)$, to moment ukończenia operacji $(i,j)$ jest wcześniejszy lub równy momentowi rozpoczęcia operacji $(k,l)$. Takie uszeregowanie jest~unikalne, zakładając częściową aktywność (\emph{semi-activeness}, operacje są wykonywane tak~szybko jak to jest możliwe, gdy ich kolejność jest znana) \cite{grinshpoun2014partially}.\\
+Opiera się ona na wstawianiu kolejnych operacji (zgodnie z~ustaloną uprzednio kolejnością) do częściowego uszeregowania (\emph{partial schedule}), aż~do~momentu, gdy wszystkie operacje zostaną wstawione - co~jest~równoważne przygotowaniu pełnego uszeregowania. Częściowe uszeregowanie to~uszeregowanie posiadające właściwość, że jeżeli operacja $O_{ij}$ poprzedza operację $O_{kl}$, to moment ukończenia operacji $O_{ij}$ jest wcześniejszy lub równy momentowi rozpoczęcia operacji $O_{kl}$. Takie uszeregowanie jest~unikalne, zakładając częściową aktywność (\emph{semi-activeness}, operacje są wykonywane tak~szybko jak to jest możliwe, gdy ich kolejność jest znana) \cite{grinshpoun2014partially}.\\
 
 Kolejność wstawiania operacji budowana jest następującym algorytmem:
 \begin{enumerate}
@@ -670,11 +670,11 @@ Kolejność wstawiania operacji budowana jest następującym algorytmem:
     \item kolejne operacje wstawiaj do $IO$ w porządku niemalejącym,
 \end{enumerate}
 
-Posiadając ustaloną kolejność wstawiania operacji można przystąpić do~dokładania ich do kolejnych częściowych uszeregowań. Przy każdym wstawieniu operacji $r_{ij}$ rozważamy następujące możliwości nadania jej rangi:
+Posiadając ustaloną kolejność wstawiania operacji można przystąpić do~dokładania ich do kolejnych częściowych uszeregowań. Przy każdym wstawieniu operacji $O_{ij}$ rozważamy następujące możliwości nadania jej rangi $r_{ij}$:
 \begin{enumerate}
-    \item $r_{ij} = 1$, co jest interpretowane jako: $i$ jest pierwszym zadaniem, które wykonuje maszyna $j$, oraz maszyna $j$ jest pierwszą (lub jedną z pierwszych) maszyn które pracują na zadaniu $i$,
-    \item $r_{ij} = r_{kj} + 1$, gdzie $r_{kj}$ jest wartością w kolumnie $j$ częściowego uszeregowania, co interpretowane jest jako: operacja $(i, j)$ jest bezpośrednim następcą operacji $(k, j)$ na maszynie $j$,
-    \item $r_{ij} = r_{il} + 1$, gdzie $r_{il}$ jest wartością w wierszu $i$ częściowego uszeregowania, a maszyny $j$ i $l$ są ze sobą w konflikcie, co jest interpretowane jako: operacja $(i, j)$ staje się bezpośrednim następcą operacji $(i, l)$ na~zadaniu $i$.
+    \item $r_{ij} = 1$, co jest interpretowane jako: $i$ jest pierwszym zadaniem, które wykonuje maszyna $j$, oraz maszyna $j$ jest pierwszą (lub jedną z pierwszych) maszyn, które pracują na zadaniu $i$,
+    \item $r_{ij} = r_{kj} + 1$, gdzie $r_{kj}$ jest wartością w kolumnie $j$ częściowego uszeregowania, co interpretowane jest jako: operacja $O_{ij}$ jest bezpośrednim następcą operacji $O_{kj}$ na maszynie~$j$,
+    \item $r_{ij} = r_{il} + 1$, gdzie $r_{il}$ jest wartością w wierszu $i$ częściowego uszeregowania, a maszyny $j$ i $l$ są ze sobą w konflikcie, co jest interpretowane jako: operacja $O_{ij}$ staje się bezpośrednim następcą operacji $O_{il}$ na~zadaniu~$i$.
 \end{enumerate}
 
 Wstawienie operacji może spowodować, że częściowe uszeregowanie będzie niepoprawne. Dzieje się to, gdy tę samą rangę otrzymują operacja wstawiana oraz którakolwiek z operacji będących z nią w konflikcie:
@@ -682,7 +682,7 @@ Wstawienie operacji może spowodować, że częściowe uszeregowanie będzie nie
     \item albo poprzez spowodowanie sytuacji, która przekłada się na wykonywanie dwóch lub więcej operacji na raz na jednej maszynie:
     $$\exists k \neq i, [r_{ij}=r_{kj}]$$
     \item albo wykonywanie dwóch lub więcej operacji połączonych krawędzią w~grafie konfliktu na raz:
-    $$\exists l \neq j, [r_{ij}=r_{lj} \textrm{ oraz } (i,j) \textrm{ jest w konflikcie z } (i,l)]$$
+    $$\exists l \neq j, [r_{ij}=r_{lj} \textrm{ oraz } O_{ij} \textrm{ jest w konflikcie z } O_{il}]$$
 \end{enumerate}
  
 Powyższe sytuacje rozwiązywane są poprzez inkrementację wartości rangi dla operacji wcześniej wstawionych operacji. Należy zauważyć, że ten krok może spowodować wystąpienie nowych konfliktów, co wymaga powtarzania inkrementacji, aż do momentu, gdy częściowy rozkład będzie poprawny.\\
@@ -697,9 +697,9 @@ Uszeregowanie to jest następnie przekształcane w listę krotek zawierających 
 
 Poniżej podany został przykład wstawiania operacji do częściowego uszeregowania.
 Załóżmy, że dany jest problem z czterema maszynami\\
-$\{M1, M2, M3, M4\}$, czterema zadaniami $\{J1, J2, J3, J4\}$ oraz zadanymi czasami przetwarzania $PT$, jak w tabeli \ref{tab:example_pt}.
+$\{M1, M2, M3, M4\}$, czterema zadaniami $\{J1, J2, J3, J4\}$ oraz zadanymi czasami przetwarzania, jak w tabeli \ref{tab:example_pt}.
 Niech ponadto wykonywanie tego samego zadania na maszynach $M1$ i $M4$ jednocześnie będzie niedozwolone.
-Algorytm zatrzymano w momencie, gdy do jednego z częściowych uszeregowań - kandydatów, wstawione zostały operacje widocznie na diagramie \ref{diag:state0}, a kolejną operacją do wstawienia jest $(J2, M4)$.\\
+Algorytm zatrzymano w momencie, gdy do jednego z częściowych uszeregowań - kandydatów, wstawione zostały operacje widocznie na diagramie \ref{diag:state0}, a kolejną operacją do wstawienia jest $O_{J2M4}$.\\
 Na poprawnych uszeregowaniach w poniższych diagramach zaznaczono częściowy graf sekwencji.\\
 Analogiczne kroki wykonywane są na każdym z częściowych uszeregowań - kandydatów.
 Po zebraniu długości najdłuższych ścieżek przechodzących przez wstawianą operację w każdym z nich, na podstawie tych długości wybrane zostaje nowe grono najbardziej obiecujących częściowych uszeregowań - kandydatów, ograniczone szerokością wiązki.
@@ -713,77 +713,77 @@ $J2$ & 4 & 2 & 9 & 6 \\ \hline
 $J3$ & 7 & 3 & 4 & 2 \\ \hline
 $J4$ & 3 & 2 & 3 & 4 \\ \hline
 \end{tabular}
-\caption{Czasy przetwarzania $PT$ dla przykładu działania algorytmu wstawiania\label{tab:example_pt}}
+\caption{Czasy przetwarzania dla przykładu działania algorytmu wstawiania\label{tab:example_pt}}
 \source{Opracowanie własne}
 \end{table}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/0.png}
-\caption{Częściowe uszeregowanie przed wstawieniem operacji $(J2, M4)$\label{diag:state0}}
+\caption{Częściowe uszeregowanie przed wstawieniem operacji $O_{J2M4}$\label{diag:state0}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/1_0.png}
-\caption{Wariant 1. nadania rangi: nadanie rangi $1$ - uszeregowanie jest~niepoprawne przez tę samą rangę dla $(J2, M4)$ i $(J4, M4)$\label{diag:state1_0}}
+\caption{Wariant 1. nadania rangi: nadanie rangi $1$ - uszeregowanie jest~niepoprawne przez tę samą rangę dla $r_{J2M4}$ i $r_{J4M4}$\label{diag:state1_0}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/1_1.png}
-\caption{Inkrementacja rangi $(J4, M4)$ - uszeregowanie jest niepoprawne przez tę samą rangę dla $(J4, M4)$ i $(J1, M4)$\label{diag:state1_1}}
+\caption{Inkrementacja rangi $r_{J4M4}$ - uszeregowanie jest niepoprawne przez tę samą rangę dla $r_{J4M4}$ i $r_{J1M4}$\label{diag:state1_1}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/1.png}
-\caption{Inkrementacja rangi $(J1, M4)$ - uszeregowanie jest poprawne, a~najdłuższa ścieżka przechodząca przez wstawianą operację ma długość $6 + 4 + 5 = 15$, lub $10 + 5 = 15$\label{diag:state1}}
+\caption{Inkrementacja rangi $r_{J1M4}$ - uszeregowanie jest poprawne, a~najdłuższa ścieżka przechodząca przez wstawianą operację ma długość $6 + 4 + 5 = 15$, lub $10 + 5 = 15$\label{diag:state1}}
 \source{Opracowanie własne}
 \end{figure}\medskip
  
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/3_1.png}
-\caption{Wariant 2. nadania rangi: nadanie rangi o $1$ większej niż $(J1, M4)$ - uszeregowanie jest niepoprawne przez tę samą rangę dla $(J2, M4)$ i $(J2, M1)$\label{diag:state3_1}}
+\caption{Wariant 2. nadania rangi: nadanie rangi o $1$ większej niż $r_{J1M4}$ - uszeregowanie jest niepoprawne przez tę samą rangę dla $r_{J2M4}$ i $r_{J2M1}$\label{diag:state3_1}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/2.png}
-\caption{Inkrementacja rangi $(J2, M1)$ - uszeregowanie jest poprawne, a~najdłuższa ścieżka przechodząca przez wstawianą operację ma długość $10 + 5 + 6 + 4 = 25$\label{diag:state2}}
+\caption{Inkrementacja rangi $r_{J2M1}$ - uszeregowanie jest poprawne, a~najdłuższa ścieżka przechodząca przez wstawianą operację ma długość $10 + 5 + 6 + 4 = 25$\label{diag:state2}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/3_0.png}
-\caption{Wariant 2. nadania rangi: nadanie rangi o $1$ większej niż $(J4, M4)$ - uszeregowanie jest niepoprawne przez tę samą rangę dla $(J2, M4)$ i $(J1, M4)$\label{diag:state3_0}}
+\caption{Wariant 2. nadania rangi: nadanie rangi o $1$ większej niż $r_{J4M4}$ - uszeregowanie jest niepoprawne przez tę samą rangę dla $r_{J2M4}$ i $r_{J1M4}$\label{diag:state3_0}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/3_1.png}
-\caption{Inkrementacja rangi $(J1, M4)$ - uszeregowanie jest niepoprawne przez tę samą rangę dla $(J2, M1)$ i $(J2, M4)$\label{diag:state3_1}}
+\caption{Inkrementacja rangi $r_{J1M4}$ - uszeregowanie jest niepoprawne przez tę samą rangę dla $r_{J2M1}$ i $r_{J2M4}$\label{diag:state3_1}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/3.png}
-\caption{Inkrementacja rangi $(J2, M1)$ - uszeregowanie jest poprawne, a~najdłuższa ścieżka przechodząca przez wstawianą operację ma długość $10 + 5 + 6 + 4 = 25$\label{diag:state3}}
+\caption{Inkrementacja rangi $r_{J2M1}$ - uszeregowanie jest poprawne, a~najdłuższa ścieżka przechodząca przez wstawianą operację ma długość $10 + 5 + 6 + 4 = 25$\label{diag:state3}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
 \begin{figure}[!tbh]
 \centering
 \includegraphics[width=.7\hsize]{fig/4.png}
-\caption{Wariant 3. nadania rangi: nadanie rangi o $1$ większej niż~$(J2, M1)$ - uszeregowanie jest poprawne, a najdłuższa ścieżka przechodząca przez~wstawianą operację ma długość $10 + 7 + 4 + 6 = 27$\label{diag:state4}}
+\caption{Wariant 3. nadania rangi: nadanie rangi o $1$ większej niż~$r_{J2M1}$ - uszeregowanie jest poprawne, a najdłuższa ścieżka przechodząca przez~wstawianą operację ma długość $10 + 7 + 4 + 6 = 27$\label{diag:state4}}
 \source{Opracowanie własne}
 \end{figure}\medskip
 
